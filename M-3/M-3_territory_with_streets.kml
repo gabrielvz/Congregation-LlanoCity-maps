@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>M-3 — City of Mason</name>
+<Style id="terr"><LineStyle><color>ff000000</color><width>4</width></LineStyle><PolyStyle><color>6600f5ff</color></PolyStyle></Style>
+<Style id="st"><LineStyle><color>ff8c5a3c</color><width>2</width></LineStyle></Style>
+<Style id="bd"><LineStyle><color>ff2a6cf0</color><width>4</width></LineStyle></Style>
+<Style id="lbl"><IconStyle><scale>0</scale></IconStyle><LabelStyle><color>ffffffff</color><scale>1.0</scale></LabelStyle></Style>
+<Folder><name>Territory</name><Placemark><name>M-3</name><styleUrl>#terr</styleUrl><description><![CDATA[<h3>M-3 — City of Mason, TX</h3><b>Streets to work</b><br/>Austin Street (south border)<br/>Bridge Street<br/>Cedar Street<br/>East Pontotoc Street (north border)<br/>Hawkins Street<br/>Hey Street<br/>Loving Street<br/>McCollum Street<br/>Morrow Street<br/>Pontotoc Street (north border)<br/>Bickenbach Avenue (west border)<br/>East Pontotoc Road (north border)<br/>Gooch Avenue<br/>Johnson Road (east border)<br/>Pontotoc St E<br/>Ranck Avenue<br/>State Highway 29 (south border)<br/><br/><b>Do Not Calls</b><br/>None on file<br/><br/><b>Addresses (3)</b><br/>1304 AUSTIN ST<br/>1217 E PONTOTOC ST<br/>211 RANCK AVE]]></description>
+<ExtendedData><Data name="number"><value>M-3</value></Data><Data name="locality"><value>City of Mason</value></Data><Data name="business"><value>false</value></Data><Data name="notes"><value><![CDATA[]]></value></Data><Data name="disabled"><value>false</value></Data></ExtendedData>
+<Polygon><outerBoundaryIs><LinearRing><coordinates>
+-99.207820,30.755087,0
+-99.213430,30.755210,0
+-99.215400,30.755240,0
+-99.217030,30.755300,0
+-99.220170,30.755350,0
+-99.221580,30.755370,0
+-99.221700,30.750160,0
+-99.221730,30.747830,0
+-99.215570,30.747590,0
+-99.211820,30.747530,0
+-99.208230,30.747470,0
+-99.207820,30.754990,0
+-99.207820,30.755087,0
+</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark></Folder>
+<Folder><name>Streets (U.S. Census TIGER/Line 2025 (Mason County))</name>
+<Placemark><name>Pontotoc St E</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.216921,30.755290,0 -99.217054,30.755301,0</coordinates></LineString></Placemark>
+<Placemark><name>East Pontotoc Street (north border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.221584,30.755371,0 -99.222050,30.755375,0</coordinates></LineString></Placemark>
+<Placemark><name>East Pontotoc Street (north border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.213129,30.755202,0 -99.213324,30.755206,0 -99.213440,30.755208,0 -99.213583,30.755208,0 -99.213875,30.755209,0 -99.214544,30.755223,0 -99.215413,30.755241,0 -99.216921,30.755290,0</coordinates></LineString></Placemark>
+<Placemark><name>East Pontotoc Road (north border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.207350,30.755074,0 -99.207372,30.755073,0 -99.207569,30.755077,0 -99.207698,30.755096,0 -99.207835,30.755096,0 -99.207859,30.755083,0 -99.208017,30.755077,0 -99.208198,30.755086,0 -99.208571,30.755088,0 -99.208642,30.755088,0 -99.209317,30.755112,0 -99.209679,30.755119,0 -99.210806,30.755157,0 -99.210870,30.755151,0 -99.211344,30.755161,0 -99.211878,30.755181,0 -99.211980,30.755182,0 -99.212376,30.755187,0 -99.213129,30.755202,0</coordinates></LineString></Placemark>
+<Placemark><name>Austin Street (south border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.207759,30.747477,0 -99.208233,30.747485,0 -99.209144,30.747485,0 -99.209397,30.747493,0 -99.210328,30.747523,0 -99.211187,30.747522,0 -99.211463,30.747524,0 -99.211889,30.747526,0 -99.212627,30.747530,0 -99.214047,30.747537,0 -99.215591,30.747592,0 -99.217125,30.747658,0 -99.219097,30.747729,0 -99.220460,30.747779,0 -99.221721,30.747826,0 -99.222200,30.747843,0</coordinates></LineString></Placemark>
+<Placemark><name>State Highway 29 (south border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.207759,30.747477,0 -99.208233,30.747485,0 -99.209144,30.747485,0 -99.209397,30.747493,0 -99.210328,30.747523,0 -99.211187,30.747522,0 -99.211463,30.747524,0 -99.211889,30.747526,0 -99.212627,30.747530,0 -99.214047,30.747537,0 -99.215591,30.747592,0 -99.217125,30.747658,0 -99.219097,30.747729,0 -99.220460,30.747779,0 -99.221721,30.747826,0 -99.222200,30.747843,0</coordinates></LineString></Placemark>
+<Placemark><name>Bridge Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.214047,30.747537,0 -99.214043,30.747709,0 -99.214041,30.748296,0 -99.214026,30.748983,0 -99.214012,30.749563,0 -99.214005,30.749873,0 -99.213999,30.750157,0 -99.213994,30.750364,0 -99.213986,30.750752,0 -99.213965,30.751446,0 -99.213955,30.752318,0 -99.213951,30.752702,0 -99.213909,30.753955,0 -99.213908,30.754004,0 -99.213875,30.755209,0</coordinates></LineString></Placemark>
+<Placemark><name>Hey Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.214026,30.748983,0 -99.214356,30.748993,0 -99.214622,30.749016,0 -99.215105,30.749003,0 -99.215354,30.749008,0 -99.215550,30.748986,0 -99.216089,30.748963,0 -99.217096,30.748927,0</coordinates></LineString></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213376,30.753954,0 -99.213155,30.753953,0</coordinates></LineString></Placemark>
+<Placemark><name>Hawkins Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213193,30.751440,0 -99.213168,30.752706,0</coordinates></LineString></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213234,30.753815,0 -99.213376,30.753954,0</coordinates></LineString></Placemark>
+<Placemark><name>Bickenbach Avenue (west border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.221721,30.747826,0 -99.221714,30.748404,0 -99.221706,30.749143,0 -99.221694,30.750162,0 -99.221665,30.751468,0 -99.221640,30.752635,0 -99.221585,30.755139,0 -99.221584,30.755371,0</coordinates></LineString></Placemark>
+<Placemark><name>Pontotoc Street (north border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.217054,30.755301,0 -99.218153,30.755308,0 -99.220183,30.755345,0 -99.221584,30.755371,0</coordinates></LineString></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213376,30.753954,0 -99.213909,30.753955,0 -99.214457,30.753960,0 -99.215437,30.753981,0</coordinates></LineString></Placemark>
+<Placemark><name>Gooch Avenue</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.215591,30.747592,0 -99.215586,30.747791,0 -99.215554,30.748430,0 -99.215550,30.748986,0 -99.215536,30.749872,0 -99.215532,30.750160,0 -99.215531,30.750198,0 -99.215524,30.750384,0 -99.215484,30.751461,0 -99.215462,30.752717,0 -99.215439,30.753916,0 -99.215437,30.753981,0 -99.215413,30.755241,0</coordinates></LineString></Placemark>
+<Placemark><name>Hawkins Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213129,30.755202,0 -99.213155,30.753953,0 -99.212520,30.753939,0</coordinates></LineString></Placemark>
+<Placemark><name>Ranck Avenue</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.217125,30.747658,0 -99.217115,30.747831,0 -99.217105,30.748391,0 -99.217096,30.748927,0 -99.217068,30.749839,0 -99.217058,30.750181,0 -99.217057,30.750207,0 -99.217054,30.750396,0 -99.217034,30.751484,0 -99.216993,30.752736,0 -99.216959,30.753938,0 -99.216921,30.755290,0</coordinates></LineString></Placemark>
+<Placemark><name>McCollum Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213999,30.750157,0 -99.214833,30.750182,0 -99.215531,30.750198,0 -99.217058,30.750181,0</coordinates></LineString></Placemark>
+<Placemark><name>Cedar Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.213193,30.751440,0 -99.213965,30.751446,0 -99.214269,30.751449,0 -99.215484,30.751461,0 -99.217034,30.751484,0</coordinates></LineString></Placemark>
+<Placemark><name>Johnson Road (east border)</name><styleUrl>#bd</styleUrl><LineString><coordinates>-99.208233,30.747485,0 -99.208237,30.747597,0 -99.208227,30.747768,0 -99.208218,30.747932,0 -99.208199,30.748596,0 -99.208176,30.748955,0 -99.208141,30.749323,0 -99.208127,30.749795,0 -99.208080,30.750383,0 -99.208064,30.751027,0 -99.208044,30.751451,0 -99.207951,30.752800,0 -99.207925,30.753547,0 -99.207915,30.753711,0 -99.207897,30.753828,0 -99.207877,30.754121,0 -99.207874,30.754234,0 -99.207862,30.754350,0 -99.207858,30.754498,0 -99.207867,30.754613,0 -99.207854,30.754720,0 -99.207831,30.755050,0 -99.207835,30.755096,0 -99.207809,30.755204,0 -99.207801,30.755414,0 -99.207802,30.755493,0</coordinates></LineString></Placemark>
+<Placemark><name>Morrow Street</name><styleUrl>#st</styleUrl><LineString><coordinates>-99.212629,30.752710,0 -99.213168,30.752706,0 -99.213579,30.752704,0 -99.213951,30.752702,0 -99.215462,30.752717,0 -99.216993,30.752736,0</coordinates></LineString></Placemark>
+</Folder>
+<Folder><name>Street names (labels)</name>
+<Placemark><name>Pontotoc St E</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.216988,30.755295,0</coordinates></Point></Placemark>
+<Placemark><name>East Pontotoc Street (north border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.221817,30.755373,0</coordinates></Point></Placemark>
+<Placemark><name>East Pontotoc Street (north border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.215025,30.755233,0</coordinates></Point></Placemark>
+<Placemark><name>East Pontotoc Road (north border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.210236,30.755138,0</coordinates></Point></Placemark>
+<Placemark><name>Austin Street (south border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.214982,30.747570,0</coordinates></Point></Placemark>
+<Placemark><name>State Highway 29 (south border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.214982,30.747570,0</coordinates></Point></Placemark>
+<Placemark><name>Bridge Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.213967,30.751373,0</coordinates></Point></Placemark>
+<Placemark><name>Hey Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.215560,30.748986,0</coordinates></Point></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.213265,30.753953,0</coordinates></Point></Placemark>
+<Placemark><name>Hawkins Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.213181,30.752073,0</coordinates></Point></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.213305,30.753884,0</coordinates></Point></Placemark>
+<Placemark><name>Bickenbach Avenue (west border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.221662,30.751599,0</coordinates></Point></Placemark>
+<Placemark><name>Pontotoc Street (north border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.219319,30.755329,0</coordinates></Point></Placemark>
+<Placemark><name>Loving Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.214407,30.753960,0</coordinates></Point></Placemark>
+<Placemark><name>Gooch Avenue</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.215486,30.751416,0</coordinates></Point></Placemark>
+<Placemark><name>Hawkins Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.213148,30.754303,0</coordinates></Point></Placemark>
+<Placemark><name>Ranck Avenue</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.217034,30.751474,0</coordinates></Point></Placemark>
+<Placemark><name>McCollum Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.215528,30.750198,0</coordinates></Point></Placemark>
+<Placemark><name>Cedar Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.215114,30.751457,0</coordinates></Point></Placemark>
+<Placemark><name>Johnson Road (east border)</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.208041,30.751491,0</coordinates></Point></Placemark>
+<Placemark><name>Morrow Street</name><styleUrl>#lbl</styleUrl><Point><coordinates>-99.214811,30.752711,0</coordinates></Point></Placemark>
+</Folder>
+</Document></kml>

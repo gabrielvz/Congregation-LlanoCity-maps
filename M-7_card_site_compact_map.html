@@ -14,9 +14,12 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#f4f4ef;overflow:
 .north svg{position:static;width:14px;height:20px;display:block;margin:0 auto 1px}
 .sb{position:absolute;right:8px;bottom:8px;z-index:2;background:rgba(255,255,255,.85);border-radius:6px;padding:2px 6px 3px;font:600 11px Helvetica,Arial,sans-serif;color:#111}
 .sb i{display:block;height:5px;border:2px solid #111;border-top:0;margin-top:1px}
+.gps{position:absolute;left:8px;top:46px;z-index:2;width:34px;height:34px;padding:0;border:2px solid #111;border-radius:8px;background:#fff;color:#111}.gps.on{background:#1a73e8;color:#fff}
+.gpsmsg{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);max-width:86%;background:rgba(0,0,0,.78);color:#fff;font:12px/1.3 Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:10px;z-index:4;text-align:center;pointer-events:none}
 </style></head><body>
 <div id="m">
 <div class="tag">M-7 · DRAFT</div>
+<button type="button" class="gps" id="gb" aria-label="Show my location"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="position:static;display:block;margin:auto;width:20px;height:20px"><circle cx="12" cy="12" r="3.6" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
 <div class="north"><svg viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L1 20l7-5 7 5z" fill="#111"/></svg>N</div>
 <svg id="s" xmlns="http://www.w3.org/2000/svg" viewBox="-356.0 -296.6 711.9 593.3" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Map of territory M-7">
 <g fill="none" stroke="#d2d2cb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -31,17 +34,63 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#f4f4ef;overflow:
 </div>
 <script>
 (function(){
+function mkGps(svg,host,GEO,btn,getS,center,BB){
+  if(!GEO||!btn||!navigator.geolocation){if(btn)btn.style.display='none';return function(){};}
+  var NS='http://www.w3.org/2000/svg',g=document.createElementNS(NS,'g');
+  g.style.display='none';g.setAttribute('pointer-events','none');
+  var ac=document.createElementNS(NS,'circle');
+  ac.setAttribute('fill','#1a73e8');ac.setAttribute('fill-opacity','.14');ac.setAttribute('stroke','#1a73e8');ac.setAttribute('stroke-opacity','.45');ac.setAttribute('stroke-width','1');ac.setAttribute('vector-effect','non-scaling-stroke');
+  var dg=document.createElementNS(NS,'g'),dc=document.createElementNS(NS,'circle');
+  dc.setAttribute('r','1');dc.setAttribute('fill','#1a73e8');dc.setAttribute('stroke','#fff');dc.setAttribute('stroke-width','.3');
+  dg.appendChild(dc);g.appendChild(ac);g.appendChild(dg);svg.appendChild(g);
+  var msg=document.createElement('div');msg.className='gpsmsg';msg.style.display='none';host.appendChild(msg);
+  var pos=null,wid=null,first=true,tm=null;
+  function say(t){msg.textContent=t;msg.style.display='block';clearTimeout(tm);tm=setTimeout(function(){msg.style.display='none';},6000);}
+  function upd(){
+    if(!pos){g.style.display='none';return;}
+    var s=getS();g.style.display='';
+    ac.setAttribute('cx',pos.x);ac.setAttribute('cy',pos.y);ac.setAttribute('r',Math.max(pos.a,1));
+    dg.setAttribute('transform','translate('+pos.x+' '+pos.y+') scale('+(8/s)+')');
+  }
+  function stop(){if(wid!==null){navigator.geolocation.clearWatch(wid);wid=null;}pos=null;first=true;btn.classList.remove('on');upd();}
+  function ok(p){
+    var k=111320*Math.cos(GEO[1]*Math.PI/180);
+    pos={x:(p.coords.longitude-GEO[0])*k,y:-(p.coords.latitude-GEO[1])*110540,a:p.coords.accuracy||0};
+    if(first){first=false;
+      var m=250;
+      if(pos.x>BB[0]-m&&pos.x<BB[2]+m&&pos.y>BB[1]-m&&pos.y<BB[3]+m) {center(pos.x,pos.y);msg.style.display='none';}
+      else say('You are not near this territory.');
+    }
+    upd();
+  }
+  function bad(e){
+    if(e&&e.code===1){stop();say('Location is blocked. Allow location for this page, or open the link in your browser.');}
+    else say('Looking for your location…');
+  }
+  btn.addEventListener('click',function(ev){
+    ev.preventDefault();
+    if(wid!==null){stop();return;}
+    first=true;btn.classList.add('on');say('Looking for your location…');
+    try{wid=navigator.geolocation.watchPosition(ok,bad,{enableHighAccuracy:true,maximumAge:5000,timeout:20000});}
+    catch(x){stop();say('Location is not available here.');}
+  });
+  return upd;
+}
+var gU=function(){};
 var B=[-294.2, -273.1, 294.2, 273.1],svg=document.getElementById('s'),host=document.getElementById('m');
 var st={cx:(B[0]+B[2])/2,cy:(B[1]+B[3])/2,k:1};
 function dims(){return {w:host.clientWidth||320,h:host.clientHeight||260};}
 function base(){var z=dims(),bw=B[2]-B[0],bh=B[3]-B[1],pd=0.04*Math.max(bw,bh);return Math.min(z.w/(bw+2*pd),z.h/(bh+2*pd));}
 function apply(){var z=dims(),s=base()*st.k;svg.setAttribute('viewBox',(st.cx-z.w/(2*s))+' '+(st.cy-z.h/(2*s))+' '+(z.w/s)+' '+(z.h/s));
   var mk=svg.querySelectorAll('.mk');for(var q=0;q<mk.length;q++){var m=mk[q],off=(9+7.5*s)/s,px=parseFloat(m.getAttribute('data-x'))+parseFloat(m.getAttribute('data-ux'))*off,py=parseFloat(m.getAttribute('data-y'))+parseFloat(m.getAttribute('data-uy'))*off;m.setAttribute('transform','translate('+px+' '+py+') scale('+(6/s)+')');}
+  gU();
   var c=[50,100,200,500,1000,2000],pick=c[0];for(var i=0;i<c.length;i++){if(c[i]*0.3048*s<=90)pick=c[i];}
   document.getElementById('sbt').textContent=pick+' ft';document.getElementById('sbi').style.width=(pick*0.3048*s)+'px';}
 function zoomAt(f,px,py){var z=dims(),s=base()*st.k,nk=Math.max(.8,Math.min(12,st.k*f)),ns=base()*nk;
   var wx=st.cx+(px-z.w/2)/s,wy=st.cy+(py-z.h/2)/s;st.k=nk;st.cx=wx-(px-z.w/2)/ns;st.cy=wy-(py-z.h/2)/ns;apply();}
 apply();window.addEventListener('resize',apply);
+gU=mkGps(svg,host,[-99.239475, 30.74619],document.getElementById('gb'),function(){return base()*st.k;},function(x,y){st.cx=x;st.cy=y;apply();},B);
+
 /* two fingers move and zoom the map; one finger is left alone so the page behind can scroll */
 var tp=null,td=function(a,b){return Math.sqrt((a.clientX-b.clientX)*(a.clientX-b.clientX)+(a.clientY-b.clientY)*(a.clientY-b.clientY));};
 host.addEventListener('touchstart',function(e){if(e.touches.length===2){var a=e.touches[0],b=e.touches[1];tp={d:td(a,b),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2};}else tp=null;},{passive:true});

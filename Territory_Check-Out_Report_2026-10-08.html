@@ -178,9 +178,9 @@ const cutISO=cutD.toISOString().slice(0,10);
 $('asof').textContent=fmt(D.asof,{month:'long',day:'numeric',year:'numeric'});
 
 const person='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
-// Links look like https://llanocitymaps.vercel.app/SS-1_card_site.html#SS-1. Only San Saba (SS, SSB), Mason (M, MB) and Llano (L, LB, 103) are linked.
+// Links look like https://llanocitymaps.vercel.app/SS-1_card_site.html#SS-1. Only territories that have a card file in the maps repo (L-1 to L-15, M-1 to M-11, SS-1 to SS-13) are linked.
 const LINK_BASE='https://llanocitymaps.vercel.app/';
-const LINKED=/^(L|LB|M|MB|SS|SSB)-\d+$|^103$/;
+const LINKED=/^(L|M|SS)-\d+$/;
 const hrefOf=no=>LINKED.test(no)?LINK_BASE+encodeURIComponent(no)+'_card_site.html#'+encodeURIComponent(no):null;
 const cardOpen=(t,cls,title)=>{const h=hrefOf(t.no);return h?`<a class="chip ${cls} lnk" href="${h}" target="_blank" rel="noopener"${title?` title="${title}"`:''}>`:`<div class="chip ${cls}"${title?` title="${title}"`:''}>`;};
 const cardClose=t=>hrefOf(t.no)?'</a>':'</div>';

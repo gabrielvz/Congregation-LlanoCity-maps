@@ -56,6 +56,14 @@ h2{font-size:20px;display:flex;gap:10px;align-items:center}
 .legend .sw{width:14px;height:14px;border-radius:4px}
 .legend .ct{font-weight:700;font-variant-numeric:tabular-nums}
 .legend .pc{color:var(--muted);font-size:12.5px;width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.donut path,.legend li{cursor:pointer}
+.legend li{border-radius:8px;padding:3px 4px;margin:-3px -4px}
+.legend li:hover,.legend li.sel{background:var(--chip-bg)}
+.donut path.sel{stroke:var(--ink);stroke-width:3}
+.detail{scroll-margin-top:12px}.detail .hint{color:var(--muted);font-size:14px}
+.detail .dh{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.detail .dh h3{font-size:17px;display:flex;gap:8px;align-items:center}
+.detail button{font:inherit;font-size:13px;color:var(--ink2);background:var(--chip-bg);border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
 .table{display:flex;flex-direction:column;gap:10px}
 .row{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:96px minmax(140px,1.1fr) minmax(200px,1.6fr) minmax(120px,.8fr);gap:14px;align-items:center;box-shadow:var(--shadow)}
 .row.head{background:none;border:0;box-shadow:none;padding-block:0;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -82,6 +90,7 @@ h2{font-size:20px;display:flex;gap:10px;align-items:center}
 .chip b{font-size:15px}
 .chip span{font-size:12px;color:var(--muted)}
 .chip em{font-style:normal;font-size:11.5px;color:var(--ink2);display:flex;gap:4px;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.chips.wide{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 .chip.out{border-color:var(--serious);}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
 .notes{background:var(--surface);border:1px dashed var(--muted);border-radius:14px;padding:16px 20px;color:var(--ink2);font-size:14px}
@@ -115,6 +124,7 @@ h2{font-size:20px;display:flex;gap:10px;align-items:center}
 <section class="sec">
   <h2>The big picture</h2>
   <div class="cards" id="pies"></div>
+  <div class="card detail" id="detail"><p class="hint">Tip: click any slice or any line under a chart to see which territories it is talking about.</p></div>
 </section>
 
 <section class="sec">
@@ -193,22 +203,38 @@ function donut(el,title,q,slices,centerLbl){
   <ul class="legend">${slices.map((s,i)=>`<li data-i="${i}"><span class="sw" style="background:${s.c}"></span><span>${s.l}</span><span class="ct">${s.v}</span><span class="pc">${Math.round(s.v/tot*100)}%</span></li>`).join('')}</ul>`;
   el.appendChild(card);
   const svg=card.querySelector('svg'),n=svg.querySelector('.ctr-n'),l=svg.querySelector('.ctr-l');
+  let selI=-1;
+  const mark=()=>{svg.querySelectorAll('path').forEach(p=>p.classList.toggle('sel',p.dataset.i==selI));card.querySelectorAll('li').forEach(l=>l.classList.toggle('sel',l.dataset.i==selI));};
+  card._clear=()=>{selI=-1;mark();};
+  card.querySelectorAll('path,li').forEach(e=>e.addEventListener('click',()=>{const i=+e.dataset.i;if(selI===i){selI=-1;mark();showDetail(null);return;}document.querySelectorAll('#pies .card').forEach(c=>c!==card&&c._clear());selI=i;mark();showDetail(slices[i],tot);}));
   const on=i=>{svg.classList.add('hov');svg.querySelectorAll('path').forEach(p=>p.classList.toggle('on',p.dataset.i==i));n.textContent=slices[i].v;l.textContent=slices[i].l.length>20?slices[i].l.slice(0,19)+'…':slices[i].l;};
   const off=()=>{svg.classList.remove('hov');svg.querySelectorAll('path').forEach(p=>p.classList.remove('on'));n.textContent=tot;l.textContent=centerLbl;};
   card.querySelectorAll('path,li').forEach(e=>{e.addEventListener('mouseenter',()=>on(e.dataset.i));e.addEventListener('mouseleave',off);});
 }
+const byTier=k=>T_.filter(t=>tierOf(t)===k);
 const cnt=k=>T_.filter(t=>tierOf(t)===k).length;
 donut($('pies'),'How long since each territory was worked','Based on the last completed date',[
- {l:'Within 6 months',v:cnt('a'),c:'var(--good)'},{l:'6 to 12 months ago',v:cnt('b'),c:'var(--warn)'},
- {l:'1 to 2 years ago',v:cnt('c'),c:'var(--serious)'},{l:'More than 2 years ago',v:cnt('d'),c:'var(--crit)'},
- {l:'No date on record',v:cnt('none'),c:'var(--none)'}],'territories');
+ {l:'Within 6 months',v:cnt('a'),c:'var(--good)',items:byTier('a'),m:'last'},{l:'6 to 12 months ago',v:cnt('b'),c:'var(--warn)',items:byTier('b'),m:'last'},
+ {l:'1 to 2 years ago',v:cnt('c'),c:'var(--serious)',items:byTier('c'),m:'last'},{l:'More than 2 years ago',v:cnt('d'),c:'var(--crit)',items:byTier('d'),m:'last'},
+ {l:'No date on record',v:cnt('none'),c:'var(--none)',items:byTier('none'),m:'last'}],'territories');
 donut($('pies'),'Where the territories are right now','Checked out or on the shelf',[
- {l:'On the shelf',v:T_.length-out.length,c:'var(--s1)'},{l:'Out under 4 months',v:shortOut.length,c:'var(--s3)'},{l:'Out over 4 months',v:longOut.length,c:'var(--crit)'}],'territories');
+ {l:'On the shelf',v:T_.length-out.length,c:'var(--s1)',items:T_.filter(t=>!t.since),m:'last'},{l:'Out under 4 months',v:shortOut.length,c:'var(--s3)',items:shortOut,m:'out'},{l:'Out over 4 months',v:longOut.length,c:'var(--crit)',items:longOut,m:'out'}],'territories');
 const by={};out.forEach(t=>by[t.who]=(by[t.who]||0)+1);
 const ppl=Object.entries(by).sort((a,b)=>(b[0]==='Name not recorded')-(a[0]==='Name not recorded')||b[1]-a[1]||a[0].localeCompare(b[0]));
 const cols=['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)','var(--s7)'];let ci=0;
-donut($('pies'),'Who has the territories checked out','Number of territories per person',ppl.map(([n,v])=>({l:n,v,c:n==='Name not recorded'?'var(--none)':cols[ci++%7]})),'checked out');
+donut($('pies'),'Who has the territories checked out','Number of territories per person',ppl.map(([n,v])=>({l:n,v,c:n==='Name not recorded'?'var(--none)':cols[ci++%7],items:out.filter(t=>t.who===n).sort((a,b)=>a.since.localeCompare(b.since)),m:'out'})),'checked out');
 
+function showDetail(s){
+  const d=$('detail');
+  if(!s){d.innerHTML='<p class="hint">Tip: click any slice or any line under a chart to see which territories it is talking about.</p>';return;}
+  const chips=s.items.slice().sort((a,b)=>s.m==='out'?a.since.localeCompare(b.since):(a.last||'').localeCompare(b.last||'')).map(t=>{
+    const sub=s.m==='out'?'Out since '+fmt(t.since,{month:'short',day:'numeric',year:'numeric'}):t.last?'Last worked '+fmt(t.last,{month:'short',year:'numeric'}):'No date';
+    const who=s.m==='out'?t.who:(t.since?t.who:'');
+    return `<div class="chip${t.since?' out':''}"><b>${t.no}</b><span>${sub}</span>${who?`<em>${person}${who}</em>`:''}</div>`;}).join('');
+  d.innerHTML=`<div class="dh"><h3><span class="dot" style="background:${s.c}"></span>${s.l}: ${s.items.length} ${s.items.length===1?'territory':'territories'}</h3><button type="button" id="dclose">Close</button></div><div class="chips wide">${chips}</div>`;
+  $('dclose').onclick=()=>{document.querySelectorAll('#pies .card').forEach(c=>c._clear&&c._clear());showDetail(null);};
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 // rows
 const rowHTML=(t,long)=>{const d=days(t.since,T),m=mo(d);const w=Math.min(m/12,1)*100;
  const col=m>=8?'var(--crit)':m>=4?'var(--serious)':'var(--s3)';

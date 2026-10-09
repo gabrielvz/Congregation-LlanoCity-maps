@@ -148,18 +148,6 @@ h2{font-size:20px;display:flex;gap:10px;align-items:center}
   <div class="chips" id="none"></div>
 </section>
 
-<aside class="notes">
-  <p class="q2">How this was worked out</p>
-  <ul>
-    <li><b>Last worked</b> is the later of the “Last date completed” column and any completed date logged in 2026.</li>
-    <li><b>Checked out</b> means a date was assigned and no completed date has been entered yet.</li>
-    <li><b>Over 4 months</b> means assigned before <span id="cut2"></span>. L-13 and SS-5 are just over the line (123 days).</li>
-    <li>Campaign territories are left out, along with 777 and Test T1, which look like test entries. Territory 103 (Llano) and MB-2 have no dates at all.</li>
-    <li>Several territories (LB-2, LB-3, LB-4, SSB-1, SSB-2) all show 06/30/2022, which looks like a placeholder date, so their age may be overstated.</li>
-    <li>MR-3 was assigned 04/17/2026 with no name written in.</li>
-    <li>Area names are cut off in your document (for example “Buchanan La…”), so this mockup shows territory numbers only.</li>
-  </ul>
-</aside>
 </div>
 
 <script>
@@ -171,7 +159,7 @@ const mo=d=>d/30.4375;
 const $=id=>document.getElementById(id);
 const cutD=new Date(T);cutD.setMonth(cutD.getMonth()-4);
 const cutISO=cutD.toISOString().slice(0,10);
-['cut','cut2'].forEach(i=>$(i).textContent=fmt(cutISO));
+['cut'].forEach(i=>$(i).textContent=fmt(cutISO));
 $('asof').textContent=fmt(D.asof,{month:'long',day:'numeric',year:'numeric'});
 
 const person='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
@@ -244,6 +232,6 @@ function drawStale(){
 }
 $('shelf').addEventListener('change',drawStale);drawStale();
 $('none').innerHTML=none.map(t=>`<div class="chip"><b>${t.no}</b><span>No date</span>${t.since?`<em>${person}${t.who==='Name not recorded'?'No name':t.who.split(',')[0]}</em>`:''}</div>`).join('');
-</script>
+</script></body>
 
 </html>

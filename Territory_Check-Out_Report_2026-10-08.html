@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Territory Check-Out Report</title>
+<style>
+/* Layout: friendly one-page report. Header, four headline tiles, three donut cards, the 4-month list, then chip grids of stale territories. */
+:root{
+  --page:#f4f6f8; --surface:#ffffff; --ink:#14202b; --ink2:#4a5866; --muted:#7a8794; --line:#e1e6eb;
+  --brand:#1f5f8b; --brand-soft:#e3eef6;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b; --none:#aeb7c0;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7;
+  --crit-text:#b02a2a; --chip-bg:#f4f6f8; --shadow:0 1px 2px rgba(20,32,43,.06);
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#0f1418; --surface:#182027; --ink:#f1f4f7; --ink2:#c0c9d2; --muted:#8c98a4; --line:#2a343d;
+  --brand:#6fb1e0; --brand-soft:#1d2c38;
+  --none:#6b7783; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+  --crit-text:#f08a8a; --chip-bg:#1f2830; --shadow:none; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --page:#0f1418; --surface:#182027; --ink:#f1f4f7; --ink2:#c0c9d2; --muted:#8c98a4; --line:#2a343d;
+  --brand:#6fb1e0; --brand-soft:#1d2c38;
+  --none:#6b7783; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+  --crit-text:#f08a8a; --chip-bg:#1f2830; --shadow:none; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3,p{margin:0}
+.hero{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--brand-soft);border-radius:16px;padding:22px 24px}
+.hero .txt{min-width:0;flex:1 1 320px;display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);font-weight:700}
+h1{font-size:30px;line-height:1.15;text-wrap:balance}
+.sub{color:var(--ink2)}
+.mock{display:inline-block;align-self:flex-start;font-size:12px;font-weight:600;color:var(--ink2);border:1px dashed var(--muted);border-radius:999px;padding:2px 10px;margin-top:4px}
+.hero svg{flex:0 0 auto;width:150px;height:auto}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.tile{background:var(--surface);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:center;box-shadow:var(--shadow);border:1px solid var(--line)}
+.tile .ic{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.tile .num{font-size:32px;font-weight:750;line-height:1}
+.tile .lbl{color:var(--ink2);font-size:13px;margin-top:4px}
+.tile .lbl small{display:block;color:var(--muted);font-size:12px}
+h2{font-size:20px;display:flex;gap:10px;align-items:center}
+.lede{color:var(--ink2);margin-top:4px;max-width:70ch}
+.sec{display:flex;flex-direction:column;gap:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:var(--shadow)}
+.card h3{font-size:15px}
+.card .q{color:var(--muted);font-size:12.5px;margin-top:-8px}
+.donut{display:flex;justify-content:center}
+.donut svg{width:190px;height:190px;overflow:visible}
+.donut path{stroke:var(--surface);stroke-width:2;cursor:default;transition:opacity .15s}
+.donut svg.hov path{opacity:.35}.donut svg.hov path.on{opacity:1}
+.ctr-n{font-size:30px;font-weight:750;fill:var(--ink);text-anchor:middle}
+.ctr-l{font-size:11.5px;fill:var(--ink2);text-anchor:middle}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.legend li{display:grid;grid-template-columns:20px 1fr auto auto;gap:8px;align-items:center;font-size:13.5px}
+.legend .sw{width:14px;height:14px;border-radius:4px}
+.legend .ct{font-weight:700;font-variant-numeric:tabular-nums}
+.legend .pc{color:var(--muted);font-size:12.5px;width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.table{display:flex;flex-direction:column;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:96px minmax(140px,1.1fr) minmax(200px,1.6fr) minmax(120px,.8fr);gap:14px;align-items:center;box-shadow:var(--shadow)}
+.row.head{background:none;border:0;box-shadow:none;padding-block:0;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tno{font-weight:800;font-size:17px;background:var(--chip-bg);border-radius:10px;padding:6px 0;text-align:center}
+.who{display:flex;gap:8px;align-items:center;min-width:0;font-weight:600}
+.who svg{flex:0 0 auto;color:var(--muted)}
+.who span{overflow-wrap:anywhere}
+.who .miss{color:var(--crit-text)}
+.since small,.lw small{display:block;color:var(--muted);font-size:12px}
+.bar{height:12px;border-radius:99px;background:var(--chip-bg);position:relative;margin-top:6px;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:99px}
+.bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
+.barlbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:3px}
+.mo{font-weight:750;font-size:16px}
+.badge{display:inline-flex;gap:5px;align-items:center;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--chip-bg);color:var(--ink2)}
+.badge.crit{background:color-mix(in srgb,var(--crit) 14%,transparent);color:var(--crit-text)}
+.tools{display:flex;gap:16px;align-items:center;flex-wrap:wrap;color:var(--ink2);font-size:14px}
+.tools input{width:18px;height:18px;accent-color:var(--brand)}
+.tools label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.band{display:flex;flex-direction:column;gap:10px}
+.band h3{font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:68px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.chip b{font-size:15px}
+.chip span{font-size:12px;color:var(--muted)}
+.chip em{font-style:normal;font-size:11.5px;color:var(--ink2);display:flex;gap:4px;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.chip.out{border-color:var(--serious);}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.notes{background:var(--surface);border:1px dashed var(--muted);border-radius:14px;padding:16px 20px;color:var(--ink2);font-size:14px}
+.notes ul{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.q2{font-weight:600;color:var(--ink)}
+@media (max-width:760px){
+  .row{grid-template-columns:1fr 1fr}.row.head{display:none}
+  .row .tno{grid-column:1}.row .who{grid-column:2}.row .since{grid-column:1/-1}.row .lw{grid-column:1/-1}
+}
+</style>
+
+<body><div class="wrap">
+<header class="hero">
+  <div class="txt">
+    <span class="eyebrow">Llano, TX · Service year 2026</span>
+    <h1>Territory Check-Out Report</h1>
+    <p class="sub">Which territories are overdue for coverage, and who has the ones that have been out too long. Numbers as of <span id="asof"></span>.</p>
+    
+  </div>
+  <svg viewBox="0 0 150 110" role="img" aria-label="Folded map with location pins">
+    <path d="M10 28 L50 16 L100 30 L140 18 V84 L100 96 L50 82 L10 94 Z" fill="var(--surface)" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M50 16 V82 M100 30 V96" stroke="var(--brand)" stroke-width="2" opacity=".45"/>
+    <path d="M30 70 Q55 50 75 62 T122 44" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-dasharray="5 5" opacity=".8"/>
+    <g fill="var(--crit)"><path d="M104 12c-8 0-14 6-14 14 0 10 14 24 14 24s14-14 14-24c0-8-6-14-14-14z"/><circle cx="104" cy="26" r="5" fill="var(--surface)"/></g>
+    <g fill="var(--good)"><path d="M34 40c-6 0-10 4-10 10 0 7 10 17 10 17s10-10 10-17c0-6-4-10-10-10z"/><circle cx="34" cy="50" r="3.5" fill="var(--surface)"/></g>
+  </svg>
+</header>
+
+<section class="tiles" id="tiles"></section>
+
+<section class="sec">
+  <h2>The big picture</h2>
+  <div class="cards" id="pies"></div>
+</section>
+
+<section class="sec">
+  <div>
+    <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--crit)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.5l3.5 2"/></svg>Checked out for more than 4 months</h2>
+    <p class="lede">These have been with the same person since before <span id="cut"></span>. The black tick on each bar marks the 4-month line.</p>
+  </div>
+  <div class="table" id="long"></div>
+</section>
+
+<section class="sec">
+  <div>
+    <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Also checked out (under 4 months)</h2>
+    <p class="lede">Recent check-outs, listed so you can see everything that is out right now.</p>
+  </div>
+  <div class="table" id="recent"></div>
+</section>
+
+<section class="sec">
+  <div>
+    <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--serious)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Not worked in a while</h2>
+    <p class="lede">Territories with no completed date in the last 12 months, oldest first. Orange outline means someone has it checked out right now.</p>
+  </div>
+  <div class="tools"><label><input type="checkbox" id="shelf"> Only show territories sitting on the shelf (not checked out)</label><span id="shelfCount" class="badge"></span></div>
+  <div id="stale" class="sec"></div>
+</section>
+
+<section class="sec">
+  <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--none)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.6 2.6 0 115 .8c0 1.6-2.5 2-2.5 3.7M12 17.2v.1"/></svg>No date on record</h2>
+  <p class="lede">These show no completed date anywhere on the sheet, so there is nothing to measure them against.</p>
+  <div class="chips" id="none"></div>
+</section>
+
+<aside class="notes">
+  <p class="q2">How this was worked out</p>
+  <ul>
+    <li><b>Last worked</b> is the later of the “Last date completed” column and any completed date logged in 2026.</li>
+    <li><b>Checked out</b> means a date was assigned and no completed date has been entered yet.</li>
+    <li><b>Over 4 months</b> means assigned before <span id="cut2"></span>. L-13 and SS-5 are just over the line (123 days).</li>
+    <li>Campaign territories are left out, along with 777 and Test T1, which look like test entries. Territory 103 (Llano) and MB-2 have no dates at all.</li>
+    <li>Several territories (LB-2, LB-3, LB-4, SSB-1, SSB-2) all show 06/30/2022, which looks like a placeholder date, so their age may be overstated.</li>
+    <li>MR-3 was assigned 04/17/2026 with no name written in.</li>
+    <li>Area names are cut off in your document (for example “Buchanan La…”), so this mockup shows territory numbers only.</li>
+  </ul>
+</aside>
+</div>
+
+<script>
+const D={"asof": "2026-10-08", "total": 90, "terr": [{"no": "BL-1", "last": "2025-02-20", "who": null, "since": null}, {"no": "BL-10", "last": "2024-02-09", "who": "Smith, Steve", "since": "2026-07-29"}, {"no": "BL-2", "last": "2026-04-14", "who": null, "since": null}, {"no": "BL-3", "last": "2026-05-09", "who": null, "since": null}, {"no": "BL-4", "last": "2025-11-09", "who": null, "since": null}, {"no": "BL-5", "last": "2026-07-15", "who": null, "since": null}, {"no": "BL-6", "last": "2026-08-22", "who": null, "since": null}, {"no": "BL-7", "last": "2025-12-30", "who": null, "since": null}, {"no": "BL-8", "last": "2026-10-07", "who": null, "since": null}, {"no": "BL-9", "last": "2026-01-21", "who": null, "since": null}, {"no": "C-1", "last": "2024-09-26", "who": null, "since": null}, {"no": "L-1", "last": "2024-08-12", "who": null, "since": null}, {"no": "L-10", "last": "2024-03-29", "who": null, "since": null}, {"no": "L-11", "last": "2025-01-16", "who": null, "since": null}, {"no": "L-12", "last": "2024-03-20", "who": null, "since": null}, {"no": "L-13", "last": "2024-03-15", "who": "Smith, Steve", "since": "2026-06-07"}, {"no": "L-14", "last": "2024-03-29", "who": null, "since": null}, {"no": "L-15", "last": "2024-08-17", "who": null, "since": null}, {"no": "L-2", "last": "2025-03-13", "who": null, "since": null}, {"no": "L-3", "last": "2024-09-02", "who": null, "since": null}, {"no": "L-4", "last": "2024-05-18", "who": null, "since": null}, {"no": "L-5", "last": "2024-12-17", "who": null, "since": null}, {"no": "L-6", "last": "2024-03-10", "who": null, "since": null}, {"no": "L-7", "last": "2025-05-19", "who": null, "since": null}, {"no": "L-8", "last": "2024-11-30", "who": null, "since": null}, {"no": "L-9", "last": "2024-11-30", "who": null, "since": null}, {"no": "M-1", "last": "2025-11-29", "who": null, "since": null}, {"no": "M-10", "last": "2026-07-18", "who": null, "since": null}, {"no": "M-11", "last": "2024-09-21", "who": "Britton, John", "since": "2025-12-06"}, {"no": "M-2", "last": "2023-08-30", "who": null, "since": null}, {"no": "M-3", "last": "2026-04-11", "who": null, "since": null}, {"no": "M-4", "last": "2025-03-04", "who": null, "since": null}, {"no": "M-5", "last": "2026-03-17", "who": null, "since": null}, {"no": "M-6", "last": "2026-01-11", "who": null, "since": null}, {"no": "M-7", "last": "2026-07-12", "who": null, "since": null}, {"no": "M-8", "last": "2023-08-30", "who": null, "since": null}, {"no": "M-9", "last": "2024-07-26", "who": null, "since": null}, {"no": "SS-1", "last": "2026-10-06", "who": null, "since": null}, {"no": "SS-10", "last": "2025-02-15", "who": null, "since": null}, {"no": "SS-11", "last": "2023-05-30", "who": null, "since": null}, {"no": "SS-12", "last": "2026-06-06", "who": null, "since": null}, {"no": "SS-13", "last": "2025-02-01", "who": null, "since": null}, {"no": "SS-2", "last": "2025-11-29", "who": null, "since": null}, {"no": "SS-3", "last": "2024-02-05", "who": "Davis, Dale", "since": "2025-10-17"}, {"no": "SS-4", "last": "2024-03-30", "who": "Sines, Johanna", "since": "2025-11-23"}, {"no": "SS-5", "last": "2025-02-09", "who": "Smith, Steve", "since": "2026-06-07"}, {"no": "SS-6", "last": "2025-12-25", "who": null, "since": null}, {"no": "SS-7", "last": "2026-09-23", "who": null, "since": null}, {"no": "SS-8", "last": "2026-01-11", "who": null, "since": null}, {"no": "SS-9", "last": "2026-10-08", "who": null, "since": null}, {"no": "103", "last": null, "who": null, "since": null}, {"no": "LB-1", "last": "2026-08-26", "who": null, "since": null}, {"no": "LB-2", "last": "2022-06-30", "who": "Chamberlain, Wendy", "since": "2026-04-19"}, {"no": "LB-3", "last": "2022-06-30", "who": null, "since": null}, {"no": "LB-4", "last": "2022-06-30", "who": null, "since": null}, {"no": "LR-1", "last": "2026-05-15", "who": null, "since": null}, {"no": "LR-10", "last": "2024-11-23", "who": null, "since": null}, {"no": "LR-11", "last": "2025-03-05", "who": null, "since": null}, {"no": "LR-12", "last": "2026-06-06", "who": null, "since": null}, {"no": "LR-13", "last": "2022-11-19", "who": null, "since": null}, {"no": "LR-2", "last": "2026-04-17", "who": null, "since": null}, {"no": "LR-3", "last": "2023-12-26", "who": null, "since": null}, {"no": "LR-4", "last": "2025-03-01", "who": null, "since": null}, {"no": "LR-5", "last": "2026-05-18", "who": null, "since": null}, {"no": "LR-6", "last": "2024-09-03", "who": "Davis, Dale", "since": "2026-07-16"}, {"no": "LR-7", "last": "2024-09-25", "who": null, "since": null}, {"no": "LR-8", "last": "2026-09-11", "who": null, "since": null}, {"no": "LR-9", "last": "2025-03-16", "who": null, "since": null}, {"no": "MB-1", "last": "2023-07-15", "who": "Chamberlain, Wendy", "since": "2026-04-19"}, {"no": "MB-2", "last": null, "who": null, "since": null}, {"no": "MR-1", "last": "2025-03-16", "who": null, "since": null}, {"no": "MR-2", "last": "2023-11-12", "who": "Sheppard, William", "since": "2026-07-13"}, {"no": "MR-3", "last": "2023-03-20", "who": "Name not recorded", "since": "2026-04-17"}, {"no": "MR-4", "last": "2023-10-28", "who": "Smith, Steve", "since": "2026-07-18"}, {"no": "MR-5", "last": "2023-12-02", "who": null, "since": null}, {"no": "MR-6", "last": "2023-10-08", "who": null, "since": null}, {"no": "MR-7", "last": "2025-09-04", "who": null, "since": null}, {"no": "SSB-1", "last": "2022-06-30", "who": null, "since": null}, {"no": "SSB-2", "last": "2022-06-30", "who": null, "since": null}, {"no": "SSR-1", "last": "2025-01-16", "who": null, "since": null}, {"no": "SSR-10", "last": "2024-04-28", "who": null, "since": null}, {"no": "SSR-11", "last": "2025-02-09", "who": null, "since": null}, {"no": "SSR-2", "last": "2024-04-05", "who": null, "since": null}, {"no": "SSR-3", "last": "2026-03-17", "who": null, "since": null}, {"no": "SSR-4", "last": "2024-09-22", "who": null, "since": null}, {"no": "SSR-5", "last": "2023-01-24", "who": null, "since": null}, {"no": "SSR-6", "last": "2023-10-30", "who": null, "since": null}, {"no": "SSR-7", "last": "2023-08-30", "who": null, "since": null}, {"no": "SSR-8", "last": "2024-01-10", "who": null, "since": null}, {"no": "SSR-9", "last": "2025-01-13", "who": null, "since": null}]};
+const T=new Date(D.asof+'T00:00:00');
+const fmt=(s,o)=>new Date(s+'T00:00:00').toLocaleDateString('en-US',o||{month:'short',day:'numeric',year:'numeric'});
+const days=(a,b)=>Math.round((b-new Date(a+'T00:00:00'))/864e5);
+const mo=d=>d/30.4375;
+const $=id=>document.getElementById(id);
+const cutD=new Date(T);cutD.setMonth(cutD.getMonth()-4);
+const cutISO=cutD.toISOString().slice(0,10);
+['cut','cut2'].forEach(i=>$(i).textContent=fmt(cutISO));
+$('asof').textContent=fmt(D.asof,{month:'long',day:'numeric',year:'numeric'});
+
+const person='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
+const T_=D.terr;
+const out=T_.filter(t=>t.since);
+const longOut=out.filter(t=>t.since<cutISO).sort((a,b)=>a.since.localeCompare(b.since));
+const shortOut=out.filter(t=>t.since>=cutISO).sort((a,b)=>a.since.localeCompare(b.since));
+const ageM=t=>t.last?mo(days(t.last,T)):null;
+const tierOf=t=>!t.last?'none':ageM(t)<6?'a':ageM(t)<12?'b':ageM(t)<24?'c':'d';
+const stale=T_.filter(t=>['c','d'].includes(tierOf(t))).sort((a,b)=>a.last.localeCompare(b.last));
+const none=T_.filter(t=>!t.last);
+
+// tiles
+const tile=(c,svg,n,l,s)=>`<div class="tile"><div class="ic" style="background:${c}">${svg}</div><div><div class="num">${n}</div><div class="lbl">${l}${s?`<small>${s}</small>`:''}</div></div></div>`;
+const ico=p=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+$('tiles').innerHTML=
+ tile('var(--brand)',ico('<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>'),T_.length,'Territories tracked','on the 2026 sheet')+
+ tile('var(--s3)',ico('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>'),out.length,'Checked out right now')+
+ tile('var(--crit)',ico('<circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.5l3.5 2"/>'),longOut.length,'Out more than 4 months','needs a follow-up')+
+ tile('var(--serious)',ico('<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),stale.length,'Not worked in 12+ months',stale.filter(t=>!t.since).length+' of them are on the shelf');
+
+// donuts
+function donut(el,title,q,slices,centerLbl){
+  const tot=slices.reduce((a,s)=>a+s.v,0);let a0=-Math.PI/2;const R=88,r=54,cx=100,cy=100;
+  let paths='';
+  slices.forEach((s,i)=>{const a1=a0+s.v/tot*2*Math.PI-(s.v===tot?1e-4:0);const lg=(a1-a0)>Math.PI?1:0;
+    const p=(R_,a)=>[cx+R_*Math.cos(a),cy+R_*Math.sin(a)].join(' ');
+    paths+=`<path data-i="${i}" fill="${s.c}" d="M${p(R,a0)} A${R} ${R} 0 ${lg} 1 ${p(R,a1)} L${p(r,a1)} A${r} ${r} 0 ${lg} 0 ${p(r,a0)} Z"><title>${s.l}: ${s.v}</title></path>`;a0+=s.v/tot*2*Math.PI;});
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<h3>${title}</h3><p class="q">${q}</p><div class="donut"><svg viewBox="0 0 200 200" role="img" aria-label="${title}">${paths}<text class="ctr-n" x="100" y="106">${tot}</text><text class="ctr-l" x="100" y="124">${centerLbl}</text></svg></div>
+  <ul class="legend">${slices.map((s,i)=>`<li data-i="${i}"><span class="sw" style="background:${s.c}"></span><span>${s.l}</span><span class="ct">${s.v}</span><span class="pc">${Math.round(s.v/tot*100)}%</span></li>`).join('')}</ul>`;
+  el.appendChild(card);
+  const svg=card.querySelector('svg'),n=svg.querySelector('.ctr-n'),l=svg.querySelector('.ctr-l');
+  const on=i=>{svg.classList.add('hov');svg.querySelectorAll('path').forEach(p=>p.classList.toggle('on',p.dataset.i==i));n.textContent=slices[i].v;l.textContent=slices[i].l.length>20?slices[i].l.slice(0,19)+'…':slices[i].l;};
+  const off=()=>{svg.classList.remove('hov');svg.querySelectorAll('path').forEach(p=>p.classList.remove('on'));n.textContent=tot;l.textContent=centerLbl;};
+  card.querySelectorAll('path,li').forEach(e=>{e.addEventListener('mouseenter',()=>on(e.dataset.i));e.addEventListener('mouseleave',off);});
+}
+const cnt=k=>T_.filter(t=>tierOf(t)===k).length;
+donut($('pies'),'How long since each territory was worked','Based on the last completed date',[
+ {l:'Within 6 months',v:cnt('a'),c:'var(--good)'},{l:'6 to 12 months ago',v:cnt('b'),c:'var(--warn)'},
+ {l:'1 to 2 years ago',v:cnt('c'),c:'var(--serious)'},{l:'More than 2 years ago',v:cnt('d'),c:'var(--crit)'},
+ {l:'No date on record',v:cnt('none'),c:'var(--none)'}],'territories');
+donut($('pies'),'Where the territories are right now','Checked out or on the shelf',[
+ {l:'On the shelf',v:T_.length-out.length,c:'var(--s1)'},{l:'Out under 4 months',v:shortOut.length,c:'var(--s3)'},{l:'Out over 4 months',v:longOut.length,c:'var(--crit)'}],'territories');
+const by={};out.forEach(t=>by[t.who]=(by[t.who]||0)+1);
+const ppl=Object.entries(by).sort((a,b)=>(b[0]==='Name not recorded')-(a[0]==='Name not recorded')||b[1]-a[1]||a[0].localeCompare(b[0]));
+const cols=['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)','var(--s7)'];let ci=0;
+donut($('pies'),'Who has the territories checked out','Number of territories per person',ppl.map(([n,v])=>({l:n,v,c:n==='Name not recorded'?'var(--none)':cols[ci++%7]})),'checked out');
+
+// rows
+const rowHTML=(t,long)=>{const d=days(t.since,T),m=mo(d);const w=Math.min(m/12,1)*100;
+ const col=m>=8?'var(--crit)':m>=4?'var(--serious)':'var(--s3)';
+ return `<div class="row"><div class="tno">${t.no}</div>
+ <div class="who">${person}<span class="${t.who==='Name not recorded'?'miss':''}">${t.who}</span></div>
+ <div class="since"><div><span class="mo">${m.toFixed(1)} months</span> <span style="color:var(--muted);font-size:12.5px">(${d} days)</span></div>
+   <div class="bar"><i style="width:${w}%;background:${col}"></i><b style="left:${4/12*100}%"></b></div>
+   <div class="barlbl"><span>0</span><span>4 mo</span><span>12+ mo</span></div></div>
+ <div class="lw">${fmt(t.since)}<small>date checked out</small></div></div>`;};
+const head='<div class="row head"><div>Territory no.</div><div>Checked out to</div><div>Time out</div><div>Date out</div></div>';
+$('long').innerHTML=head+longOut.map(t=>rowHTML(t)).join('');
+$('recent').innerHTML=head+shortOut.map(t=>rowHTML(t)).join('');
+
+// stale chips
+function chip(t){const o=!!t.since;return `<div class="chip${o?' out':''}" title="${t.no}: last worked ${fmt(t.last)}${o?'. Out to '+t.who:''}"><b>${t.no}</b><span>${fmt(t.last,{month:'short',year:'numeric'})}</span>${o?`<em>${person}${t.who==='Name not recorded'?'No name':t.who.split(',')[0]}</em>`:''}</div>`;}
+function drawStale(){
+  const only=$('shelf').checked;const list=stale.filter(t=>!only||!t.since);
+  $('shelfCount').textContent=list.length+' territories shown';
+  const bands=[['3 years or more','var(--crit)',t=>days(t.last,T)>=1095],['2 to 3 years','var(--crit)',t=>days(t.last,T)<1095&&days(t.last,T)>=730],['1 to 2 years','var(--serious)',t=>days(t.last,T)<730]];
+  $('stale').innerHTML=bands.map(([n,c,f])=>{const g=list.filter(f);return g.length?`<div class="band"><h3><span class="dot" style="background:${c}"></span>${n} since last worked <span class="badge">${g.length}</span></h3><div class="chips">${g.map(chip).join('')}</div></div>`:''}).join('');
+}
+$('shelf').addEventListener('change',drawStale);drawStale();
+$('none').innerHTML=none.map(t=>`<div class="chip"><b>${t.no}</b><span>No date</span>${t.since?`<em>${person}${t.who==='Name not recorded'?'No name':t.who.split(',')[0]}</em>`:''}</div>`).join('');
+</script>
+
+</html>

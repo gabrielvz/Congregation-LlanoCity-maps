@@ -156,6 +156,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .panel .none{margin:0;font-size:.88rem;color:#555}
 .single #bPrint{display:inline-flex}
 @page{size:landscape;margin:.35in}
+@media(min-width:760px){.panel.bl{width:440px}.panel.bl ul:not(.dnc){columns:2;column-gap:16px;font-size:.88rem}.panel.bl .bignum{font-size:2.2rem}}
 @media print{
   html,body{background:#fff!important;min-height:0;padding:0;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .top,.fab,.mapctl,.pglabel,.ov,.gpsmsg,.north{display:none!important}
@@ -293,7 +294,7 @@ function frontHTML(t){
   return '<section class="pg" data-p="0"><div class="pglabel">Front <i></i></div><div class="card">'+
     '<h2 class="cardttl">Territory Map Card</h2>'+
     '<div class="fields"><span>Locality</span><span class="v grow">'+esc(t.loc)+'</span><span>Terr. No.</span><span class="v">'+t.n+'</span></div>'+
-    '<div class="frame"><aside class="panel'+(t.streets.length>=22?' many':'')+(t.streets.length>=30?' huge':'')+'"><div class="bignum">'+t.n+'</div>'+(t.bnd?'<h3>BOUNDARIES</h3><ul style="columns:1;margin-bottom:4px"><li><b>North:</b> '+esc(t.bnd.N)+'</li><li><b>South:</b> '+esc(t.bnd.S)+'</li><li><b>East:</b> '+esc(t.bnd.E)+'</li><li><b>West:</b> '+esc(t.bnd.W)+'</li></ul>':'')+'<h3>STREETS TO WORK</h3><ul>'+li+'</ul>'+dncBox(t)+'</aside>'+
+    '<div class="frame"><aside class="panel'+(t.streets.length>=22?' many':'')+(t.streets.length>=30?' huge':'')+(t.bnd?' bl':'')+'"><div class="bignum">'+t.n+'</div>'+(t.bnd?'<h3>BOUNDARIES</h3><ul style="columns:1;margin-bottom:4px"><li><b>North:</b> '+esc(t.bnd.N)+'</li><li><b>South:</b> '+esc(t.bnd.S)+'</li><li><b>East:</b> '+esc(t.bnd.E)+'</li><li><b>West:</b> '+esc(t.bnd.W)+'</li></ul>':'')+'<h3>STREETS TO WORK</h3><ul>'+li+'</ul>'+dncBox(t)+'</aside>'+
     '<div class="mapwrap"><div class="map" data-map="1"></div></div></div>'+
     (t.draft?'<p class="draftnote">DRAFT \u2014 this border is approximate (territory KML not received yet). Do not print until the KML is added.</p>':'')+'<p class="fine">Please keep this card in the envelope. Do not soil, mark, or bend it. Each time the territory is covered, please inform the brother who cares for the territory files.</p>'+
     '</div></section>';

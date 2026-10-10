@@ -1,0 +1,715 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>House-to-House Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one sheet of paper on a quiet desk, a slim sheet toolbar above it, everything typed in pen-blue ink. */
+:root {
+  --desk: #e6e9e9;
+  --paper: #ffffff;
+  --ink: #15191c;
+  --rule: #2a3034;
+  --faint: #66717a;
+  --pen: #1d4f9c;
+  --wash: #edf3fc;
+  --btn: #ffffff;
+  --btn-line: #c2c9cc;
+  --danger: #a3261f;
+  --serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --sans: 'Arimo', Arial, Helvetica, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --desk: #0f1213; --paper: #1a1e20; --ink: #e8ebed; --rule: #7f8a91; --faint: #93a0a8;
+    --pen: #8db8f5; --wash: #232d3a; --btn: #262c30; --btn-line: #3b4348; --danger: #f08a82;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --desk: #0f1213; --paper: #1a1e20; --ink: #e8ebed; --rule: #7f8a91; --faint: #93a0a8;
+  --pen: #8db8f5; --wash: #232d3a; --btn: #262c30; --btn-line: #3b4348; --danger: #f08a82;
+  color-scheme: dark;
+}
+body {
+  background: var(--desk);
+  color: var(--ink);
+  font-family: var(--sans);
+  padding-inline: 12px;
+  padding-block: 12px 48px;
+}
+.wrap { max-width: 680px; margin-inline: auto; display: flex; flex-direction: column; gap: 12px; }
+button, select, input, textarea { font-family: var(--sans); }
+
+/* toolbar */
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.bar select {
+  flex: 1 1 160px; min-width: 0; height: 40px; padding: 0 10px; font-size: 15px;
+  background: var(--btn); color: var(--ink); border: 1px solid var(--btn-line); border-radius: 6px;
+}
+.btn {
+  height: 40px; padding: 0 14px; font-size: 14px; font-weight: 700; cursor: pointer;
+  background: var(--btn); color: var(--ink); border: 1px solid var(--btn-line); border-radius: 6px;
+}
+.btn.danger { color: var(--danger); }
+.btn:focus-visible, select:focus-visible, .chip:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+.confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; }
+.confirm span { flex: 1 1 200px; }
+.status { font-size: 12px; color: var(--faint); min-height: 16px; }
+
+/* the sheet */
+.paper {
+  background: var(--paper);
+  border: 1px solid var(--btn-line);
+  padding: 18px 12px 12px;
+}
+h1 {
+  font-family: var(--serif); font-weight: 700; font-size: 17px; letter-spacing: .02em;
+  text-align: center; margin: 0 0 20px; text-wrap: balance;
+}
+.line { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.line label { font-size: 14px; letter-spacing: .03em; white-space: nowrap; }
+.dot {
+  flex: 1; min-width: 0; height: 34px; padding: 0 2px; font-size: 16px; color: var(--pen);
+  background: transparent; border: 0; border-bottom: 1.5px dotted var(--rule); border-radius: 0;
+}
+.dot.terr { flex: 0 0 76px; }
+.dot:focus { outline: none; background: var(--wash); border-bottom-style: solid; border-bottom-color: var(--pen); }
+
+.symbols-title { font-size: 14px; margin: 14px 0 6px; }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.chip {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px;
+  min-height: 46px; padding: 4px 8px; cursor: pointer; text-align: left;
+  background: var(--btn); color: var(--ink); border: 1px solid var(--btn-line); border-radius: 6px;
+}
+.chip b { font-size: 15px; }
+.chip small { font-size: 12px; color: var(--faint); }
+.chip.on { border-color: var(--pen); }
+.hint { font-size: 12px; color: var(--faint); margin: 8px 0 12px; min-height: 16px; }
+
+table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+th {
+  font-size: 12.5px; font-weight: 400; line-height: 1.2; text-align: center; padding: 6px 2px;
+  border-top: 1.5px solid var(--rule); border-bottom: 1.5px solid var(--rule);
+}
+td { padding: 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+tbody tr:last-child td { border-bottom-width: 1.5px; }
+th:not(:last-child), td:not(:last-child) { border-right: 1px solid var(--rule); }
+td:focus-within { background: var(--wash); }
+td input, td textarea {
+  display: block; width: 100%; box-sizing: border-box; border: 0; border-radius: 0; background: transparent;
+  color: var(--pen); font-size: 15px; line-height: 20px; padding: 10px 4px; min-width: 0;
+}
+td input { height: 40px; padding-block: 0; }
+td textarea { resize: none; overflow: hidden; min-height: 40px; }
+td input.sym { text-align: center; text-transform: uppercase; letter-spacing: .02em; padding-inline: 2px; }
+td textarea.dt { padding-inline: 3px; font-size: 14px; }
+.stamp { width: 100%; margin-top: 6px; }
+td input:focus, td textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--pen); }
+
+.foot { display: flex; gap: 24px; font-size: 12px; color: var(--faint); margin-top: 10px; }
+.add { align-self: flex-start; }
+
+/* share */
+.share h2 { font-size: 14px; margin: 8px 0; }
+.sharegrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.share .btn { width: 100%; }
+.sharestatus { min-height: 20px; margin-top: 8px; font-size: 14px; font-weight: 700; }
+a.btn { display: flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none; }
+.grp { display: flex; gap: 8px; align-items: center; font-size: 14px; margin: 4px 0 2px; }
+.grp input { width: 18px; height: 18px; }
+.copybox {
+  width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; font: 13px/1.4 monospace;
+  background: var(--btn); color: var(--ink); border: 1px solid var(--btn-line); border-radius: 6px;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div class="wrap">
+  <div class="bar">
+    <select id="sheetSel" aria-label="Choose a sheet"></select>
+    <button class="btn" id="newBtn" type="button">New sheet</button>
+    <button class="btn danger" id="delBtn" type="button">Delete</button>
+  </div>
+  <div class="confirm" id="confirmBar" hidden>
+    <span>Delete this sheet and everything on it?</span>
+    <button class="btn danger" id="delYes" type="button">Delete sheet</button>
+    <button class="btn" id="delNo" type="button">Keep it</button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <div class="paper">
+    <h1>HOUSE-TO-HOUSE RECORD</h1>
+    <div class="line">
+      <label for="street">STREET</label>
+      <input class="dot" id="street" type="text" autocomplete="off" autocapitalize="words">
+      <label for="terr">Terr. No.</label>
+      <input class="dot terr" id="terr" type="text" autocomplete="off">
+    </div>
+    <div class="line">
+      <label for="pubname">PUBLISHER’S NAME</label>
+      <input class="dot" id="pubname" type="text" autocomplete="off" autocapitalize="words">
+    </div>
+
+    <div class="symbols-title">Symbols</div>
+    <div class="chips" id="chips">
+      <button class="chip" type="button" data-sym="CA"><b>CA</b><small>Call Again</small></button>
+      <button class="chip" type="button" data-sym="B"><b>B</b><small>Busy</small></button>
+      <button class="chip" type="button" data-sym="M"><b>M</b><small>Man</small></button>
+      <button class="chip" type="button" data-sym="NH"><b>NH</b><small>Not Home</small></button>
+      <button class="chip" type="button" data-sym="C"><b>C</b><small>Child</small></button>
+      <button class="chip" type="button" data-sym="W"><b>W</b><small>Woman</small></button>
+    </div>
+    <button class="btn stamp" id="stampBtn" type="button">Stamp date and time on this row</button>
+    <div class="hint" id="hint">Tap a row, then Stamp, to fill its Date from your phone’s clock. Tapping a symbol stamps an empty Date too.</div>
+
+    <table>
+      <colgroup><col style="width:17%"><col style="width:15%"><col style="width:13%"><col style="width:55%"></colgroup>
+      <thead>
+        <tr><th>House or Apt. No.</th><th>Date</th><th>Symbol</th><th>Name, Placement, and Remarks</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="foot"><span>S-8-E</span><span>10/53</span></div>
+  </div>
+
+  <button class="btn add" id="addRow" type="button">Add row</button>
+
+  <section class="share" id="share" aria-label="Share this sheet">
+    <h2>Share or print</h2>
+    <label class="grp"><input type="checkbox" id="grpChk" checked> Include every sheet for this territory</label>
+    <div class="hint" id="grpInfo"></div>
+    <div class="sharegrid">
+      <button class="btn" id="pdfBtn" type="button">Save as PDF</button>
+      <button class="btn" id="copyBtn" type="button">Copy text</button>
+      <a class="btn" id="mailLink" href="mailto:" rel="noopener">Email</a>
+      <a class="btn" id="smsLink" href="sms:" rel="noopener">Text message</a>
+    </div>
+    <h2 style="margin-top:16px">Save to this device</h2>
+    <div class="sharegrid">
+      <button class="btn" id="txtBtn" type="button">Save as text file</button>
+      <button class="btn" id="bakBtn" type="button">Save backup of all sheets</button>
+      <button class="btn" id="loadBtn" type="button" style="grid-column:1 / -1">Load a saved backup</button>
+      <input type="file" id="loadFile" accept=".json,application/json" hidden>
+    </div>
+    <div class="sharestatus" id="shareStatus" role="status" aria-live="polite"></div>
+    <p class="hint" id="shareNote">To print, save the PDF and print it from your files app. Saved files go to your Downloads or Files app. Email and Text open your apps with the entries filled in. If one doesn’t open, use Copy text.</p>
+    <textarea class="copybox" id="copyBox" rows="8" readonly hidden aria-label="Sheet as text"></textarea>
+  </section>
+</div>
+
+<script>
+(function () {
+  var LS = 'h2h-sheets-v1';
+  var ROWS = 24;
+  var sheets = {};
+  var cur = null;
+  var coll = null;
+  var lastSym = null;
+  var dirty = {};
+  var timer = null, busy = false, again = false;
+  var sessionTouched = {};
+  var $ = function (id) { return document.getElementById(id); };
+
+  function blankRows(n) { var a = []; for (var i = 0; i < n; i++) a.push({ h: '', d: '', s: '', r: '' }); return a; }
+  function blank() {
+    var id = 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    return { id: id, street: '', terr: '', name: '', rows: blankRows(ROWS), updatedAt: Date.now(), untouched: true };
+  }
+  function latestId(skip) {
+    var best = null;
+    Object.keys(sheets).forEach(function (id) {
+      if (id === skip) return;
+      if (best === null || (sheets[id].updatedAt || 0) > (sheets[best].updatedAt || 0)) best = id;
+    });
+    return best;
+  }
+  function stamp() {
+    var n = new Date(), h = n.getHours(), m = n.getMinutes();
+    return (n.getMonth() + 1) + '/' + n.getDate() + ' ' + (h % 12 || 12) + ':' + (m < 10 ? '0' : '') + m + (h < 12 ? 'a' : 'p');
+  }
+  var lastRow = null;
+  function setStatus(t) { $('status').textContent = t; }
+  function persistLocal() { try { localStorage.setItem(LS, JSON.stringify({ cur: cur, sheets: sheets })); } catch (e) {} }
+
+  function label(s) {
+    var t = (s.street || '').trim() || 'New sheet';
+    if ((s.terr || '').trim()) t += ' · Terr. ' + s.terr.trim();
+    return t;
+  }
+  function renderPicker() {
+    var sel = $('sheetSel');
+    var ids = Object.keys(sheets).sort(function (a, b) { return (sheets[b].updatedAt || 0) - (sheets[a].updatedAt || 0); });
+    sel.textContent = '';
+    ids.forEach(function (id) {
+      var o = document.createElement('option');
+      o.value = id; o.textContent = label(sheets[id]);
+      if (id === cur) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  function fit(t) { t.style.height = 'auto'; t.style.height = Math.max(40, t.scrollHeight) + 'px'; }
+  function fitAll() { var all = document.querySelectorAll('#rows textarea'); for (var i = 0; i < all.length; i++) fit(all[i]); }
+
+  function mk(tag, props) {
+    var e = document.createElement(tag);
+    Object.keys(props).forEach(function (k) { e[k] = props[k]; });
+    return e;
+  }
+  function rowEl(r, i) {
+    var tr = document.createElement('tr');
+    var cells = [
+      mk('input', { id: 'h-' + i, type: 'text', value: r.h, autocomplete: 'off', ariaLabel: 'House or apartment, row ' + (i + 1) }),
+      mk('textarea', { id: 'd-' + i, rows: 1, className: 'dt', value: r.d, ariaLabel: 'Date and time, row ' + (i + 1) }),
+      mk('input', { id: 's-' + i, type: 'text', className: 'sym', value: r.s, autocomplete: 'off', autocapitalize: 'characters', maxLength: 8, ariaLabel: 'Symbol, row ' + (i + 1) }),
+      mk('textarea', { id: 'r-' + i, rows: 1, value: r.r, ariaLabel: 'Name, placement, and remarks, row ' + (i + 1) })
+    ];
+    var keys = ['h', 'd', 's', 'r'];
+    cells.forEach(function (c, k) {
+      c.dataset.i = i; c.dataset.f = keys[k];
+      var td = document.createElement('td'); td.appendChild(c); tr.appendChild(td);
+    });
+    return tr;
+  }
+  function renderForm() {
+    var s = sheets[cur];
+    $('street').value = s.street || '';
+    $('terr').value = s.terr || '';
+    $('pubname').value = s.name || '';
+    var body = $('rows'); body.textContent = '';
+    s.rows.forEach(function (r, i) { body.appendChild(rowEl(r, i)); });
+    lastSym = null; lastRow = null;
+    requestAnimationFrame(fitAll);
+  }
+  function renderAll() { renderPicker(); renderForm(); updateLinks(); }
+
+  /* saving */
+  function strip(s) { return { street: s.street || '', terr: s.terr || '', name: s.name || '', rows: s.rows, updatedAt: s.updatedAt }; }
+  function touch() {
+    var s = sheets[cur];
+    s.updatedAt = Date.now(); delete s.untouched;
+    sessionTouched[cur] = true; dirty[cur] = true;
+    persistLocal();
+    setStatus('Saving…');
+    clearTimeout(timer); timer = setTimeout(flush, 700);
+    updateLinks();
+  }
+  function flush() {
+    if (busy) { again = true; return; }
+    busy = true;
+    var ids = Object.keys(dirty); dirty = {};
+    var chain = Promise.resolve();
+    if (coll) {
+      ids.forEach(function (id) {
+        if (!sheets[id]) return;
+        chain = chain.then(function () { return coll.doc(id).set(strip(sheets[id])); });
+      });
+    }
+    chain.then(function () {
+      setStatus(coll ? 'Saved to your account' : 'Saved on this phone');
+    }, function () {
+      setStatus('Kept on this phone. Could not reach your account.');
+    }).then(function () {
+      busy = false;
+      if (again || Object.keys(dirty).length) { again = false; flush(); }
+    });
+  }
+
+  /* editing */
+  $('rows').addEventListener('input', function (e) {
+    var t = e.target; if (!t.dataset || t.dataset.f === undefined) return;
+    if (t.dataset.f === 's') t.value = t.value.toUpperCase();
+    sheets[cur].rows[+t.dataset.i][t.dataset.f] = t.value;
+    if (t.tagName === 'TEXTAREA') fit(t);
+    touch();
+  });
+  $('rows').addEventListener('focusin', function (e) {
+    if (e.target.dataset && e.target.dataset.f !== undefined) lastRow = +e.target.dataset.i;
+    if (e.target.dataset && e.target.dataset.f === 's') { lastSym = e.target; $('hint').textContent = 'Row ' + (+e.target.dataset.i + 1) + ': tap a symbol above.'; }
+  });
+  [['street', 'street'], ['terr', 'terr'], ['pubname', 'name']].forEach(function (p) {
+    $(p[0]).addEventListener('input', function (e) {
+      sheets[cur][p[1]] = e.target.value;
+      touch();
+      if (p[1] !== 'name') renderPicker();
+    });
+  });
+
+  var chips = $('chips');
+  chips.addEventListener('mousedown', function (e) { e.preventDefault(); });
+  chips.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    if (!lastSym || !document.body.contains(lastSym)) { $('hint').textContent = 'Tap a Symbol box in the table first.'; return; }
+    var i = +lastSym.dataset.i, r = sheets[cur].rows[i], sym = b.dataset.sym;
+    var parts = r.s ? r.s.split(/\s+/).filter(Boolean) : [];
+    var k = parts.indexOf(sym);
+    if (k >= 0) parts.splice(k, 1); else parts.push(sym);
+    r.s = parts.join(' ');
+    $('s-' + i).value = r.s;
+    if (!r.d) { r.d = stamp(); var dEl = $('d-' + i); dEl.value = r.d; fit(dEl); }
+    touch();
+  });
+
+  $('addRow').addEventListener('click', function () {
+    var rows = sheets[cur].rows; rows.push({ h: '', d: '', s: '', r: '' });
+    $('rows').appendChild(rowEl(rows[rows.length - 1], rows.length - 1));
+    touch();
+    var el = $('h-' + (rows.length - 1)); if (el) el.focus();
+  });
+
+  $('stampBtn').addEventListener('mousedown', function (e) { e.preventDefault(); });
+  $('stampBtn').addEventListener('click', function () {
+    if (lastRow === null || !sheets[cur].rows[lastRow]) { $('hint').textContent = 'Tap a row first, then Stamp.'; return; }
+    var r = sheets[cur].rows[lastRow];
+    r.d = stamp();
+    var d = $('d-' + lastRow); d.value = r.d; fit(d);
+    touch();
+    $('hint').textContent = 'Row ' + (lastRow + 1) + ' stamped ' + r.d + '.';
+  });
+
+  /* sheets */
+  $('sheetSel').addEventListener('change', function (e) {
+    cur = e.target.value; persistLocal(); renderForm(); updateLinks(); $('confirmBar').hidden = true;
+  });
+  $('newBtn').addEventListener('click', function () {
+    var prev = sheets[cur], b = blank();
+    if (prev) { b.terr = prev.terr || ''; b.city = prev.city || ''; }
+    sheets[b.id] = b; cur = b.id; persistLocal();
+    renderAll(); $('confirmBar').hidden = true;
+    var nf = $('streetSel') && b.terr ? $('streetSel') : $('street'); if (nf) nf.focus();
+  });
+  $('delBtn').addEventListener('click', function () { $('confirmBar').hidden = false; });
+  $('delNo').addEventListener('click', function () { $('confirmBar').hidden = true; });
+  $('delYes').addEventListener('click', function () {
+    var id = cur;
+    delete sheets[id]; delete dirty[id];
+    if (coll) coll.doc(id).delete().catch(function () {});
+    cur = latestId();
+    if (!cur) { var b = blank(); sheets[b.id] = b; cur = b.id; }
+    persistLocal(); renderAll(); $('confirmBar').hidden = true;
+    setStatus('Sheet deleted');
+  });
+  window.addEventListener('resize', fitAll);
+
+  /* sharing */
+  var downloadsNs = null;
+  function setShare(t) { $('shareStatus').textContent = t; }
+  function showText() { var box = $('copyBox'); box.hidden = false; box.value = sheetText(); }
+  function hasData(s) { return s.rows.some(function (r) { return r.h || r.d || r.s || r.r; }); }
+  function groupIds() {
+    var s = sheets[cur], t = (s.terr || '').trim().toLowerCase();
+    var chk = $('grpChk');
+    if (!t || (chk && !chk.checked)) return [cur];
+    var ids = Object.keys(sheets).filter(function (id) {
+      return id === cur || ((sheets[id].terr || '').trim().toLowerCase() === t && hasData(sheets[id]));
+    });
+    ids.sort(function (a, b) {
+      var c = (sheets[a].street || '').localeCompare(sheets[b].street || '', undefined, { numeric: true, sensitivity: 'base' });
+      return c || (sheets[a].updatedAt || 0) - (sheets[b].updatedAt || 0);
+    });
+    return ids;
+  }
+  function sheetText() {
+    var ids = groupIds();
+    if (ids.length < 2) return sheetOne(sheets[ids[0]]);
+    var s = sheets[cur];
+    var head = 'HOUSE-TO-HOUSE RECORDS - TERRITORY ' + (s.terr || '').trim() + (s.city ? ' (' + s.city + ')' : '') + ' - ' + ids.length + ' sheets';
+    var parts = ids.map(function (id, k) { return '===== Sheet ' + (k + 1) + ' of ' + ids.length + ' =====\n' + sheetOne(sheets[id]); });
+    return head + '\n\n' + parts.join('\n\n');
+  }
+  function sheetOne(s) {
+    var out = ['HOUSE-TO-HOUSE RECORD',
+      'Street: ' + (s.street || '') + (s.terr ? '   Terr. No.: ' + s.terr : ''),
+      'Publisher’s name: ' + (s.name || ''),
+      'Symbols: CA Call Again, NH Not Home, B Busy, C Child, M Man, W Woman',
+      '',
+      'House/Apt | Date | Symbol | Name, Placement, and Remarks'];
+    s.rows.forEach(function (r) {
+      if (!(r.h || r.d || r.s || r.r)) return;
+      out.push([r.h || '-', r.d || '-', r.s || '-', r.r || '-'].join(' | '));
+    });
+    return out.join('\n');
+  }
+  function updateLinks() {
+    if (!sheets[cur]) return;
+    var gi = groupIds(), s = sheets[cur], t = sheetText();
+    $('grpInfo').textContent = gi.length > 1 ? 'Sending or saving ' + gi.length + ' sheets for Territory ' + (s.terr || '').trim() + ': ' + gi.map(function (id) { return (sheets[id].street || '(no street)'); }).join(', ') : ((s.terr || '').trim() ? 'Only this sheet will be sent or saved.' : 'Pick a territory to group its sheets together.');
+    var subj = gi.length > 1 ? 'House-to-House Record - Territory ' + s.terr.trim() : 'House-to-House Record' + ((s.street || '').trim() ? ' - ' + s.street.trim() : '');
+    $('mailLink').href = 'mailto:?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(t);
+    $('smsLink').href = 'sms:?&body=' + encodeURIComponent(t.length > 900 ? t.slice(0, 900) + '…' : t);
+  }
+  $('share').addEventListener('pointerdown', updateLinks, true);
+  $('share').addEventListener('focusin', updateLinks);
+  $('grpChk').addEventListener('change', updateLinks);
+  updateLinks();
+
+  $('copyBtn').addEventListener('click', function () {
+    var t = sheetText();
+    var fail = function () {
+      var box = $('copyBox'); box.hidden = false; box.value = t; box.focus(); box.select();
+      setShare('Copy didn’t work here. Press and hold the text below to select and copy it.');
+    };
+    try {
+      navigator.clipboard.writeText(t).then(function () { setShare('Copied. Paste it into an email or text.'); }, fail);
+    } catch (e) { fail(); }
+  });
+
+  function buildPdf() {
+    var J = window.jspdf && window.jspdf.jsPDF;
+    if (!J) return null;
+    var list = groupIds().map(function (id) { return sheets[id]; });
+    var doc = new J({ unit: 'pt', format: 'letter' });
+    var M = 54, W = 504, bottom = 735, PEN = [29, 79, 156], INK = [30, 34, 38];
+    var c0 = Math.round(W * 0.17), c1 = Math.round(W * 0.15), c2 = Math.round(W * 0.13);
+    var cw = [c0, c1, c2, W - c0 - c1 - c2];
+    var xs = [M, M + cw[0], M + cw[0] + cw[1], M + cw[0] + cw[1] + cw[2], M + W];
+
+    function footer() {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(110);
+      doc.text('S-8-E', M, 760); doc.text('10/53', M + 40, 760);
+    }
+    function vlines(y1, y2) { for (var k = 0; k < 5; k++) doc.line(xs[k], y1, xs[k], y2); }
+    function tableHead(y) {
+      doc.setDrawColor.apply(doc, INK); doc.setLineWidth(1);
+      doc.line(M, y, M + W, y); doc.line(M, y + 30, M + W, y + 30);
+      vlines(y, y + 30);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor.apply(doc, INK);
+      doc.text('House or', xs[0] + cw[0] / 2, y + 13, { align: 'center' });
+      doc.text('Apt. No.', xs[0] + cw[0] / 2, y + 24, { align: 'center' });
+      doc.text('Date', xs[1] + cw[1] / 2, y + 19, { align: 'center' });
+      doc.text('Symbol', xs[2] + cw[2] / 2, y + 19, { align: 'center' });
+      doc.text('Name, Placement, and Remarks', xs[3] + cw[3] / 2, y + 19, { align: 'center' });
+      return y + 30;
+    }
+
+    var compact = list.some(hasData);
+    function pageTop() {
+      doc.setTextColor.apply(doc, INK);
+      doc.setFont('times', 'bold'); doc.setFontSize(15);
+      doc.text('HOUSE-TO-HOUSE RECORD', 306, 54, { align: 'center' });
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+      doc.text('CA Call Again    NH Not Home    B Busy    C Child    M Man    W Woman', 306, 70, { align: 'center' });
+      return 84;
+    }
+    function blockHead(s, y) {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, INK);
+      doc.text('STREET', M, y + 12); doc.text('Terr. No.', M + 330, y + 12); doc.text('PUBLISHER’S NAME', M, y + 34);
+      doc.setDrawColor(90); doc.setLineWidth(0.7); doc.setLineDashPattern([1, 2], 0);
+      doc.line(M + 46, y + 13, M + 316, y + 13); doc.line(M + 382, y + 13, M + W, y + 13); doc.line(M + 112, y + 35, M + W, y + 35);
+      doc.setLineDashPattern([], 0);
+      doc.setTextColor.apply(doc, PEN);
+      doc.text(doc.splitTextToSize((s.street || '') + (s.city ? (s.street ? ', ' : '') + s.city : ''), 262)[0] || '', M + 48, y + 10);
+      doc.text(doc.splitTextToSize(s.terr || '', 116)[0] || '', M + 384, y + 10);
+      doc.text(doc.splitTextToSize(s.name || '', 388)[0] || '', M + 114, y + 32);
+      return tableHead(y + 46);
+    }
+    function drawCompact() {
+      var top = pageTop(), y = top;
+      list.forEach(function (s) {
+        var rows = s.rows.filter(function (r) { return r.h || r.d || r.s || r.r; });
+        if (!rows.length) return;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        var hs = rows.map(function (r) {
+          var lines = doc.splitTextToSize(r.r || '', cw[3] - 10), dl = doc.splitTextToSize(r.d || '', cw[1] - 8);
+          return Math.max(24, Math.max(lines.length, dl.length) * 12 + 12);
+        });
+        var total = 76 + hs.reduce(function (a, b) { return a + b; }, 0);
+        if (y + total > bottom && y > top && total <= bottom - top) { footer(); doc.addPage(); top = pageTop(); y = top; }
+        else if (y + 76 + hs[0] > bottom) { footer(); doc.addPage(); top = pageTop(); y = top; }
+        y = blockHead(s, y);
+        rows.forEach(function (r, i) {
+          var h = hs[i];
+          if (y + h > bottom) { footer(); doc.addPage(); top = pageTop(); y = blockHead(s, top); }
+          var lines = doc.splitTextToSize(r.r || '', cw[3] - 10), dl = doc.splitTextToSize(r.d || '', cw[1] - 8);
+          doc.setDrawColor.apply(doc, INK); doc.setLineWidth(0.7);
+          doc.line(M, y + h, M + W, y + h); vlines(y, y + h);
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, PEN);
+          doc.text(doc.splitTextToSize(r.h || '', cw[0] - 8)[0] || '', xs[0] + 4, y + 16);
+          doc.text(dl, xs[1] + 4, y + 16);
+          doc.text(doc.splitTextToSize(r.s || '', cw[2] - 6)[0] || '', xs[2] + cw[2] / 2, y + 16, { align: 'center' });
+          doc.text(lines, xs[3] + 5, y + 16);
+          y += h;
+        });
+        y += 26;
+      });
+      footer();
+    }
+    if (compact) { drawCompact(); return doc; }
+    list.forEach(function (s, si) {
+    if (si) doc.addPage();
+    doc.setTextColor.apply(doc, INK);
+    doc.setFont('times', 'bold'); doc.setFontSize(15);
+    doc.text('HOUSE-TO-HOUSE RECORD', 306, 62, { align: 'center' });
+
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+    doc.text('STREET', M, 96); doc.text('Terr. No.', M + 330, 96); doc.text('PUBLISHER’S NAME', M, 122);
+    doc.setDrawColor(90); doc.setLineWidth(0.7); doc.setLineDashPattern([1, 2], 0);
+    doc.line(M + 46, 97, M + 316, 97); doc.line(M + 382, 97, M + W, 97); doc.line(M + 112, 123, M + W, 123);
+    doc.setLineDashPattern([], 0);
+    doc.setTextColor.apply(doc, PEN);
+    doc.text(doc.splitTextToSize(s.street || '', 262)[0] || '', M + 48, 94);
+    doc.text(doc.splitTextToSize(s.terr || '', 116)[0] || '', M + 384, 94);
+    doc.text(doc.splitTextToSize(s.name || '', 388)[0] || '', M + 114, 120);
+
+    doc.setTextColor.apply(doc, INK);
+    doc.text('Symbols', M, 148);
+    var leg = [['CA — Call Again', 'NH — Not Home'], ['B — Busy', 'C — Child'], ['M — Man', 'W — Woman']];
+    leg.forEach(function (col, k) {
+      doc.text(col[0], M + 18 + k * 170, 162); doc.text(col[1], M + 18 + k * 170, 175);
+    });
+
+    var y = tableHead(190);
+    doc.setFontSize(10);
+    s.rows.forEach(function (r) {
+      var lines = doc.splitTextToSize(r.r || '', cw[3] - 10);
+      var dl = doc.splitTextToSize(r.d || '', cw[1] - 8);
+      var h = Math.max(24, Math.max(lines.length, dl.length) * 12 + 12);
+      if (y + h > bottom) { footer(); doc.addPage(); y = tableHead(54); doc.setFontSize(10); }
+      doc.setDrawColor.apply(doc, INK); doc.setLineWidth(0.7);
+      doc.line(M, y + h, M + W, y + h); vlines(y, y + h);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, PEN);
+      doc.text(doc.splitTextToSize(r.h || '', cw[0] - 8)[0] || '', xs[0] + 4, y + 16);
+      doc.text(dl, xs[1] + 4, y + 16);
+      doc.text(doc.splitTextToSize(r.s || '', cw[2] - 6)[0] || '', xs[2] + cw[2] / 2, y + 16, { align: 'center' });
+      doc.text(lines, xs[3] + 5, y + 16);
+      y += h;
+    });
+    footer();
+    });
+    return doc;
+  }
+
+  $('pdfBtn').addEventListener('click', async function () {
+    try {
+      setShare('Making your PDF…');
+      var doc = buildPdf();
+      if (!doc) { setShare('The PDF tool did not load. The text version is below.'); showText(); return; }
+      var s = sheets[cur];
+      var name = fname('.pdf');
+      if (!downloadsNs) { doc.save(name); setShare('PDF saved. Look in your Downloads or Files app.'); return; }
+      setShare('Waiting for your OK to save the PDF…');
+      var slow = setTimeout(function () { setShare('No save prompt yet. If none appears, use Copy text.'); }, 6000);
+      try { await downloadsNs.save({ filename: name, data: doc.output('arraybuffer') }); } finally { clearTimeout(slow); }
+      setShare('PDF saved. Open it from your files app to print it, or attach it to an email or text.');
+    } catch (e) {
+      var code = e && e.code ? e.code : 'error';
+      setShare(code === 'declined' ? 'The PDF was not saved.' : 'Could not save the PDF (' + code + '). The text version is below.');
+      if (code !== 'declined') showText();
+    }
+  });
+  (async function () {
+    try { if (window.claude && window.claude.use) downloadsNs = await window.claude.use('downloads'); } catch (e) {}
+    if (!(window.jspdf && window.jspdf.jsPDF)) {
+      $('pdfBtn').hidden = true;
+      setShare('Printing is not available here. Copy the text and print it from another app. Email and Text open your apps with the entries filled in. If one doesn’t open, use Copy text.');
+    }
+  })();
+
+  /* save to this device */
+  function fname(ext) {
+    var s = sheets[cur], n = groupIds().length > 1 ? 'House-to-House Record - Territory ' + s.terr.trim() : 'House-to-House Record' + ((s.street || '').trim() ? ' - ' + s.street.trim() : '') + ((s.terr || '').trim() ? ' ' + s.terr.trim() : '');
+    return n.replace(/[^\w\- ]+/g, '').replace(/\s+/g, ' ').trim() + ext;
+  }
+  function download(name, text, type) {
+    try {
+      var blob = new Blob([text], { type: type }), url = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href = url; a.download = name; a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
+      return true;
+    } catch (e) { return false; }
+  }
+  $('txtBtn').addEventListener('click', function () {
+    if (download(fname('.txt'), sheetText(), 'text/plain')) setShare('Text file saved. Look in your Downloads or Files app.');
+    else { setShare('This view cannot save files. The text is below to copy.'); showText(); }
+  });
+  $('bakBtn').addEventListener('click', function () {
+    var n = Object.keys(sheets).length;
+    var d = new Date(), ds = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    var data = JSON.stringify({ type: 'h2h-backup', version: 1, saved: d.toISOString(), sheets: sheets });
+    if (download('House-to-House backup ' + ds + '.json', data, 'application/json')) setShare('Backup of ' + n + ' sheet' + (n === 1 ? '' : 's') + ' saved. Keep the file; use Load a saved backup to bring it back.');
+    else setShare('This view cannot save files. Open this page in your phone browser to save a backup.');
+  });
+  $('loadBtn').addEventListener('click', function () { $('loadFile').click(); });
+  $('loadFile').addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var d = JSON.parse(rd.result);
+        if (!d || d.type !== 'h2h-backup' || !d.sheets) throw new Error('bad');
+        var n = 0;
+        Object.keys(d.sheets).forEach(function (id) {
+          var v = d.sheets[id]; if (!v || !Array.isArray(v.rows)) return;
+          var l = sheets[id];
+          if (!l || (v.updatedAt || 0) >= (l.updatedAt || 0)) { v.id = id; delete v.untouched; sheets[id] = v; dirty[id] = true; n++; }
+        });
+        Object.keys(sheets).forEach(function (id) { if (sheets[id].untouched && n) delete sheets[id]; });
+        if (!sheets[cur]) cur = latestId();
+        if (!cur) { var b = blank(); sheets[b.id] = b; cur = b.id; }
+        persistLocal(); renderAll();
+        if (coll) flush();
+        setShare('Loaded ' + n + ' sheet' + (n === 1 ? '' : 's') + ' from the backup.');
+      } catch (x) { setShare('That file is not a House-to-House backup.'); }
+      e.target.value = '';
+    };
+    rd.readAsText(f);
+  });
+
+  /* start from this phone's copy, then add the account copy */
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) {}
+  if (saved && saved.sheets && Object.keys(saved.sheets).length) {
+    sheets = saved.sheets;
+    Object.keys(sheets).forEach(function (id) { if (!Array.isArray(sheets[id].rows)) sheets[id].rows = blankRows(ROWS); });
+    cur = sheets[saved.cur] ? saved.cur : latestId();
+  } else {
+    var b0 = blank(); sheets[b0.id] = b0; cur = b0.id;
+  }
+  renderAll();
+
+  async function connect() {
+    try {
+      if (!window.claude || !window.claude.use) { setStatus('Saved on this phone'); return; }
+      var user = await window.claude.use('user');
+      var db = await window.claude.use('db');
+      var uid = user ? await user.id() : null;
+      if (!db || !uid) { setStatus('Saved on this phone'); return; }
+      coll = db.collection('data/users/' + uid);
+      var snap = await coll.get();
+      var remote = {};
+      snap.docs.forEach(function (d) {
+        var v = d.data();
+        if (v && Array.isArray(v.rows)) remote[d.id] = Object.assign({}, JSON.parse(JSON.stringify(v)), { id: d.id });
+      });
+      var rerender = false;
+      Object.keys(remote).forEach(function (id) {
+        var l = sheets[id];
+        if (!l || (remote[id].updatedAt || 0) > (l.updatedAt || 0)) {
+          if (id === cur && sessionTouched[id]) return;
+          sheets[id] = remote[id];
+          if (id === cur) rerender = true;
+        }
+      });
+      Object.keys(sheets).forEach(function (id) {
+        if (!remote[id] && !sheets[id].untouched) dirty[id] = true;
+      });
+      if (sheets[cur] && sheets[cur].untouched && Object.keys(remote).length) {
+        delete sheets[cur]; cur = latestId(); rerender = true;
+      }
+      persistLocal();
+      renderPicker();
+      if (rerender) renderForm();
+      setStatus('Saved to your account');
+      if (Object.keys(dirty).length) flush();
+    } catch (e) {
+      coll = null; setStatus('Saved on this phone');
+    }
+  }
+  connect();
+})();
+</script>
+
+</body></html>

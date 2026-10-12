@@ -123,10 +123,9 @@ function houseKey(h){return String(h).trim().toLowerCase()}
 function swRender(){const st=$('#st').value,box=$('#sw');if(!st||st==='__other'){const t=curStreet();if(!t){box.classList.add('hide');return}}
  const name=st==='__other'?curStreet():st;const rs=ROWS.filter(r=>r.street===name);const all=C.addr[name]||[];
  const done=new Set(rs.map(r=>houseKey(r.house)));const left=all.filter(h=>!done.has(houseKey(h)));
- let h='<b>'+esc(name)+'</b> · '+done.size+' worked'+(all.length?' ('+all.filter(x=>done.has(houseKey(x))).length+' of '+all.length+' on the address list)':'');
+ let h='<b>'+esc(name)+'</b> · '+done.size+' worked';
  if(rs.length)h+='<div style="margin-top:5px">'+rs.map(r=>'<span style="display:inline-block;margin:2px 4px 2px 0;padding:2px 7px;border-radius:99px;background:#fff;border:1px solid #bcc9e3" onclick="openEdit(\''+esc(r.id)+'\')"><b>'+esc(r.house)+'</b> '+esc(r.sym)+' <span style="color:#777">'+esc(String(r.date).split(' ')[0])+(r.pub&&r.pub!='—'?' · '+esc(r.pub):'')+'</span></span>').join('')+'</div>';
  else h+='<div style="margin-top:4px;color:#666">Nothing recorded on this street yet.</div>';
- if(all.length)h+='<div style="margin-top:6px;color:#444"><b>Not yet worked:</b> '+(left.length?left.map(esc).join(', '):'all done')+'</div>';
  box.innerHTML=h;box.classList.remove('hide')}
 function syncForm(){$('#tb').querySelectorAll('tr[data-id]').forEach(tr=>{const r=ROWS.find(x=>x.id===tr.dataset.id);const i=tr.querySelectorAll('input');
   if(!r){i.forEach(x=>{x.value='';x.readOnly=false});['id','done','queued','street'].forEach(k=>delete tr.dataset[k]);tr.style.background='';tr.style.cursor='';return}

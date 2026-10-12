@@ -36,12 +36,13 @@ iframe{width:100%;height:68vh;border:2px solid #000;background:#fff}
  <a class="btn" href="#" onclick="tab(2);return false">Open the House-to-House record</a></section>
 <section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
  <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
- <div class="fld"><span>STREET</span><select id="st"></select></div>
+ <div class="fld"><span>STREET</span><select id="st" onchange="stChg()"></select></div>
+ <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name"></div>
  <div class="fld"><span>PUBLISHER’S NAME</span><input id="pn" placeholder="your name"></div>
- <div style="font-size:12px;color:#666;margin-bottom:6px">Type the house number. Tap the <b>Date</b> box to stamp the date and time, and the <b>Symbol</b> box to pick CA, B, M, NH, C or W. Add as many rows as you need, then Save.</div>
+ <div style="font-size:12px;color:#666;margin-bottom:6px">Type the house number. Tap the <b>Date</b> box to stamp the date and time, and the <b>Symbol</b> box to pick CA, B, M, NH, C or W. Rows save by themselves a few seconds after you pick the symbol.</div>
  <table class="f"><colgroup><col style="width:19%"><col style="width:24%"><col style="width:13%"><col></colgroup><thead><tr><th>House or Apt. No.</th><th>Date</th><th>Symbol</th><th>Name, Placement, and Remarks</th></tr></thead><tbody id="tb"></tbody></table>
  <div style="font-size:11px;color:#444;margin-top:6px">S-8-E &nbsp; 10/53</div></div>
- <button class="btn alt" onclick="addRow()">Add row</button><button class="btn" id="sv" onclick="save()">Save to the shared record</button><div id="msg" style="font-size:13px;font-weight:700;margin-top:8px"></div>
+ <button class="btn alt" onclick="addRow()">Add row</button><button class="btn" id="sv" onclick="saveNow()">Save now</button><div id="msg" style="font-size:13px;font-weight:700;margin-top:8px"></div>
  <div class="g2"><button class="btn alt" onclick="printAll()">Print all records</button><button class="btn" style="background:#2e7d4f" onclick="askDone()">Completed</button></div>
  <div id="dn" class="hide sheet" style="border:2px solid #2e7d4f;margin-top:10px"><b>Mark this territory as completed?</b><div style="font-size:13px;margin:6px 0">This <b>removes all saved records</b> and stops this link from working. The totals are kept for the overview. Print a copy first.</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><button class="btn alt" style="margin:0;font-size:13px" onclick="printAll()">Print first</button><button class="btn alt" style="margin:0;font-size:13px" onclick="$('#dn').classList.add('hide')">Cancel</button><button class="btn" style="margin:0;font-size:13px;background:#c62828" onclick="finish()">Yes, clear</button></div></div>
  <div class="sheet" style="margin-top:12px"><b style="font-size:13px">Latest entries from everyone</b><div id="oth"></div></div></section>
@@ -69,18 +70,39 @@ $('#fr').src=C.map;if(/card_site/.test(C.map)){$('#sl').parentNode.classList.add
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
-$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('');
+$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus()}
 const today=()=>{const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()};
-let sel=null,PK=null;
+let PK=null,QUEUE=[],FLUSHING=false,SEQ=0;
 const stamp=()=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a';h=h%12||12;return (d.getMonth()+1)+'/'+d.getDate()+' '+h+':'+(m<10?'0':'')+m+ap};
+const QK='q_'+C.tid;
+function persist(){try{localStorage.setItem(QK,JSON.stringify(QUEUE.map(q=>({id:q.id,street:q.street,house:q.house,date:q.date,sym:q.sym,note:q.note,pub:q.pub}))))}catch(e){}}
+function curStreet(){if($('#st').value==='__other'){const t=$('#stx').value.trim();return t?t.replace(/\b\w/g,c=>c.toUpperCase()).replace(/(\d)(St|Nd|Rd|Th)\b/g,(m,d,x)=>d+x.toLowerCase()):''}return $('#st').value}
 function mk(){const tr=document.createElement('tr');tr.innerHTML='<td><input></td><td><input readonly style="font-size:12px"></td><td><input readonly></td><td><input></td>';
  const i=tr.querySelectorAll('input');
- i[1].onclick=()=>{if(!i[1].value)i[1].value=stamp();else if(confirm_clear(i[1]))i[1].value=''};
- i[2].onclick=()=>{PK=tr;$('#pk').classList.add('on')};
+ const touch=()=>{if(!tr.dataset.street){const s=curStreet();if(s)tr.dataset.street=s}};
+ i[0].oninput=()=>{touch();sched(tr)};i[3].oninput=()=>{touch();sched(tr)};i[3].onblur=()=>sched(tr,300);i[0].onblur=()=>sched(tr,300);
+ i[1].onclick=()=>{if(tr.dataset.done)return;if(!i[1].value)i[1].value=stamp();touch();sched(tr)};
+ i[2].onclick=()=>{if(tr.dataset.done)return;touch();PK=tr;$('#pk').classList.add('on')};
  return tr}
-function confirm_clear(el){return false}
+function sched(tr,ms){if(tr.dataset.done||tr.dataset.queued)return;clearTimeout(tr._t);const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;tr._t=setTimeout(()=>commit(tr),ms==null?3500:ms)}
+function commit(tr){if(tr.dataset.done||tr.dataset.queued)return;const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;
+ const st=tr.dataset.street||curStreet();if(!st){status('Type the street name first (Street: Other).',true);return}
+ tr.dataset.queued='1';tr.style.background='#fff8e1';
+ QUEUE.push({id:++SEQ+'-'+Date.now(),tr,street:st,house:v[0],date:v[1]||stamp(),sym:v[2].toUpperCase(),note:v[3],pub:$('#pn').value.trim()||'—'});persist();flush()}
 function addRow(){$('#tb').appendChild(mk())}for(let i=0;i<14;i++)addRow();
-function pick(c){if(!PK)return;const i=PK.querySelectorAll('input');i[2].value=c;if(c&&!i[1].value)i[1].value=stamp();if(!c)i[1].value='';$('#pk').classList.remove('on');PK=null}
+function pick(c){if(!PK)return;const tr=PK,i=tr.querySelectorAll('input');i[2].value=c;if(c&&!i[1].value)i[1].value=stamp();if(!c)i[1].value='';$('#pk').classList.remove('on');PK=null;sched(tr)}
+function status(t,bad){const m=$('#msg');m.style.color=bad?'#a00':'#2e7d4f';m.textContent=t}
+async function flush(){if(FLUSHING||!QUEUE.length)return;if(!OK){status(QUEUE.length+' row'+(QUEUE.length>1?'s':'')+' waiting to save',true);return}
+ FLUSHING=true;const batch=QUEUE.slice();
+ try{const d=await api({action:'add',rows:batch.map(q=>({street:q.street,house:q.house,date:q.date,sym:q.sym,note:q.note,pub:q.pub}))});if(!d.ok)throw 0;
+  batch.forEach(q=>{if(q.tr){q.tr.dataset.done='1';q.tr.style.background='#eaf6ee';q.tr.querySelectorAll('input').forEach(i=>i.readOnly=true);q.tr.querySelector('td').insertAdjacentHTML('beforeend','')}});
+  QUEUE=QUEUE.filter(q=>!batch.includes(q));persist();status('✓ Saved. Everyone can see it now.');await load()}
+ catch(e){status(QUEUE.length+' row'+(QUEUE.length>1?'s':'')+' waiting to save. It will retry by itself.',true);setTimeout(flush,15000)}
+ FLUSHING=false;if(QUEUE.length&&OK)setTimeout(flush,500)}
+function saveNow(){$('#tb').querySelectorAll('tr').forEach(tr=>commit(tr));if(!QUEUE.length)status('Nothing new to save.');flush()}
+window.addEventListener('online',()=>{load().then(flush)});
+window.addEventListener('beforeunload',e=>{if(QUEUE.length){e.preventDefault();e.returnValue=''}});
+try{const q=JSON.parse(localStorage.getItem(QK)||'[]');if(q.length){QUEUE=q;setTimeout(flush,1500)}}catch(e){}
 async function api(body){const r=await fetch(C.api,{method:'POST',body:JSON.stringify(Object.assign({t:C.tid,k:KEY},body))});return r.json()}
 async function load(){
  if(!KEY){err('Open this page from your territory link. The link carries the key for this territory.');return}
@@ -95,18 +117,10 @@ function render(){
  const sm={};ROWS.forEach(r=>sm[r.sym]=(sm[r.sym]||0)+1);const ks=Object.keys(SYMC).filter(k=>sm[k]);
  $('#sb').innerHTML=ks.map(k=>'<i style="width:'+100*sm[k]/ROWS.length+'%;background:'+SYMC[k]+'"></i>').join('')||'<span style="font-size:12px;color:#888;padding:3px">No entries yet</span>';
  $('#lg').innerHTML=ks.map(k=>'<span><i style="background:'+SYMC[k]+'"></i>'+k+' '+sm[k]+'</span>').join('');
- $('#ts').innerHTML=ST.map(s=>{const rs=ROWS.filter(r=>r.street==s),ww=new Set(rs.map(key)).size,t=C.addr[s].length;return '<tr><td><b>'+esc(s)+'</b></td><td style="width:28%"><div class="bar"><i style="width:'+Math.min(100,100*ww/t)+'%"></i></div></td><td>'+ww+'/'+t+'</td><td>'+rs.filter(r=>r.sym=='NH').length+'</td><td>'+rs.filter(r=>r.sym=='CA').length+'</td></tr>'}).join('');
+ const EX=[...new Set(ROWS.map(r=>r.street))].filter(x=>!C.addr[x]);
+ $('#ts').innerHTML=ST.concat(EX).map(s=>{const rs=ROWS.filter(r=>r.street==s),ww=new Set(rs.map(key)).size,t=(C.addr[s]||[]).length;if(!t)return '<tr><td><b>'+esc(s)+'</b> <span style="font-size:11px;color:#c77700">new street</span></td><td></td><td>'+ww+'</td><td>'+rs.filter(r=>r.sym=="NH").length+'</td><td>'+rs.filter(r=>r.sym=="CA").length+'</td></tr>';return '<tr><td><b>'+esc(s)+'</b></td><td style="width:28%"><div class="bar"><i style="width:'+Math.min(100,100*ww/t)+'%"></i></div></td><td>'+ww+'/'+t+'</td><td>'+rs.filter(r=>r.sym=='NH').length+'</td><td>'+rs.filter(r=>r.sym=='CA').length+'</td></tr>'}).join('');
  const todo=ST.filter(s=>new Set(ROWS.filter(r=>r.street==s).map(key)).size<C.addr[s].length);
  $('#att').innerHTML=todo.length?'<b>Streets not finished:</b> '+todo.map(esc).join(', ')+'<br><b>Call Again to revisit:</b> '+ca+' addresses':'All streets worked.'}
-async function save(){const rows=[];const trs=[...$('#tb').querySelectorAll('tr')];
- trs.forEach(tr=>{const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(v[0]&&v[2])rows.push({tr,street:$('#st').value,house:v[0],date:v[1]||stamp(),sym:v[2].toUpperCase(),note:v[3],pub:$('#pn').value.trim()||'—'})});
- const m=$('#msg');if(!rows.length){m.style.color='#a00';m.textContent='Fill in at least a house number and a symbol.';return}
- if(!OK){m.style.color='#a00';m.textContent='Not connected to the shared record.';return}
- $('#sv').disabled=true;m.style.color='#555';m.textContent='Saving…';
- try{const d=await api({action:'add',rows:rows.map(r=>({street:r.street,house:r.house,date:r.date,sym:r.sym,note:r.note,pub:r.pub}))});
-  if(!d.ok)throw 0;rows.forEach(r=>r.tr.querySelectorAll('input').forEach(i=>i.value=''));m.style.color='#2e7d4f';m.textContent=d.added+' rows saved. Everyone can see them now.';await load()}
- catch(e){m.style.color='#a00';m.textContent='Could not save. Nothing was lost; the rows are still on the form. Try again.'}
- $('#sv').disabled=false}
 function printAll(){const g={};ROWS.forEach(r=>(g[r.street]=g[r.street]||[]).push(r));
  let h='<h2 style="text-align:center;font-family:Georgia,serif;margin:0 0 4px">HOUSE-TO-HOUSE RECORD</h2><p style="margin:0 0 10px;font-size:13px"><b>TERRITORY</b> '+esc(C.tid)+' '+esc(C.city)+'</p>';
  Object.keys(g).forEach(s=>{h+='<div class="blk"><div class="bh"><b>STREET</b> '+esc(s)+'</div><table><tr><th style="width:17%">House or Apt. No.</th><th style="width:20%">Date</th><th style="width:10%">Symbol</th><th>Name, Placement, and Remarks</th></tr>'+g[s].map(r=>'<tr><td>'+esc(r.house)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.sym)+'</td><td>'+esc(r.note)+(r.pub&&r.pub!='—'?' ('+esc(r.pub)+')':'')+'</td></tr>').join('')+'</table></div>'});

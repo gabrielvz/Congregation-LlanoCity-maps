@@ -37,7 +37,9 @@ iframe{width:100%;height:68vh;border:2px solid #000;background:#fff}
 <section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
  <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
  <div class="fld"><span>STREET</span><select id="st" onchange="stChg()"></select></div>
- <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name"></div>
+ <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name" oninput="swRender()"></div>
+ <div id="sw" class="hide" style="border:1px solid #cdd7ea;background:#f4f8ff;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px"></div>
+ <div id="swh" class="hide" style="background:#fff4d6;border:1px solid #ecd48a;border-radius:8px;padding:7px 10px;margin:6px 0;font-size:13px"></div>
  <div class="fld"><span>PUBLISHER’S NAME</span><input id="pn" placeholder="your name"></div>
  <div style="font-size:12px;color:#666;margin-bottom:6px">Type the house number. Tap the <b>Date</b> box to stamp the date and time, and the <b>Symbol</b> box to pick CA, B, M, NH, C or W. Rows save by themselves a few seconds after you pick the symbol.</div>
  <table class="f"><colgroup><col style="width:19%"><col style="width:24%"><col style="width:13%"><col></colgroup><thead><tr><th>House or Apt. No.</th><th>Date</th><th>Symbol</th><th>Name, Placement, and Remarks</th></tr></thead><tbody id="tb"></tbody></table>
@@ -75,7 +77,7 @@ $('#fr').src=C.map;if(/card_site/.test(C.map)){$('#sl').parentNode.classList.add
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
-$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus()}
+$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus();swRender()}
 const today=()=>{const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()};
 let PK=null,QUEUE=[],FLUSHING=false,SEQ=0;
 const stamp=()=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a';h=h%12||12;return (d.getMonth()+1)+'/'+d.getDate()+' '+h+':'+(m<10?'0':'')+m+ap};
@@ -85,10 +87,12 @@ function curStreet(){if($('#st').value==='__other'){const t=$('#stx').value.trim
 function mk(){const tr=document.createElement('tr');tr.innerHTML='<td><input></td><td><input readonly style="font-size:12px"></td><td><input readonly></td><td><input></td>';
  const i=tr.querySelectorAll('input');
  const touch=()=>{if(!tr.dataset.street){const s=curStreet();if(s)tr.dataset.street=s}};
- i[0].oninput=()=>{touch();sched(tr)};i[3].oninput=()=>{touch();sched(tr)};i[3].onblur=()=>sched(tr,300);i[0].onblur=()=>sched(tr,300);
+ i[0].oninput=()=>{touch();sched(tr);dupHint(tr)};i[3].oninput=()=>{touch();sched(tr)};i[3].onblur=()=>sched(tr,300);i[0].onblur=()=>sched(tr,300);
  i[1].onclick=()=>{if(tr.dataset.done)return;if(!i[1].value)i[1].value=stamp();touch();sched(tr)};
  i[2].onclick=()=>{if(tr.dataset.done)return;touch();PK=tr;$('#pk').classList.add('on')};
  return tr}
+function dupHint(tr){const i=tr.querySelectorAll('input');if(tr.dataset.done)return;const st=tr.dataset.street||curStreet(),h=houseKey(i[0].value);if(!h)return;
+ const m=ROWS.filter(r=>r.street===st&&houseKey(r.house)===h);const b=$('#swh');if(m.length){const r=m[m.length-1];b.textContent='Already recorded: '+r.house+' '+st+' — '+r.sym+', '+String(r.date)+(r.pub&&r.pub!='—'?' by '+r.pub:'')+'. Saving adds another visit.';b.classList.remove('hide')}else b.classList.add('hide')}
 function sched(tr,ms){if(tr.dataset.done||tr.dataset.queued)return;clearTimeout(tr._t);const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;tr._t=setTimeout(()=>commit(tr),ms==null?3500:ms)}
 function commit(tr){if(tr.dataset.done||tr.dataset.queued)return;const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;
  const st=tr.dataset.street||curStreet();if(!st){status('Type the street name first (Street: Other).',true);return}
@@ -115,6 +119,15 @@ async function load(){
   if(!d.ok){err('This link is no longer active. If the territory was completed, ask the servant for the new link.');OK=false;return}
   OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
 function key(r){return r.house+' '+r.street}
+function houseKey(h){return String(h).trim().toLowerCase()}
+function swRender(){const st=$('#st').value,box=$('#sw');if(!st||st==='__other'){const t=curStreet();if(!t){box.classList.add('hide');return}}
+ const name=st==='__other'?curStreet():st;const rs=ROWS.filter(r=>r.street===name);const all=C.addr[name]||[];
+ const done=new Set(rs.map(r=>houseKey(r.house)));const left=all.filter(h=>!done.has(houseKey(h)));
+ let h='<b>'+esc(name)+'</b> · '+done.size+' worked'+(all.length?' ('+all.filter(x=>done.has(houseKey(x))).length+' of '+all.length+' on the address list)':'');
+ if(rs.length)h+='<div style="margin-top:5px">'+rs.map(r=>'<span style="display:inline-block;margin:2px 4px 2px 0;padding:2px 7px;border-radius:99px;background:#fff;border:1px solid #bcc9e3" onclick="openEdit(\''+esc(r.id)+'\')"><b>'+esc(r.house)+'</b> '+esc(r.sym)+' <span style="color:#777">'+esc(String(r.date).split(' ')[0])+(r.pub&&r.pub!='—'?' · '+esc(r.pub):'')+'</span></span>').join('')+'</div>';
+ else h+='<div style="margin-top:4px;color:#666">Nothing recorded on this street yet.</div>';
+ if(all.length)h+='<div style="margin-top:6px;color:#444"><b>Not yet worked:</b> '+(left.length?left.map(esc).join(', '):'all done')+'</div>';
+ box.innerHTML=h;box.classList.remove('hide')}
 function syncForm(){$('#tb').querySelectorAll('tr[data-id]').forEach(tr=>{const r=ROWS.find(x=>x.id===tr.dataset.id);const i=tr.querySelectorAll('input');
   if(!r){i.forEach(x=>{x.value='';x.readOnly=false});['id','done','queued','street'].forEach(k=>delete tr.dataset[k]);tr.style.background='';tr.style.cursor='';return}
   i[0].value=r.house;i[1].value=r.date;i[2].value=r.sym;i[3].value=r.note||''})}
@@ -128,7 +141,7 @@ async function saveEdit(){if(!ED)return;const row={street:$('#es').value,house:$
  if(!row.house||!row.sym){$('#em').textContent='House number and symbol are needed.';return}
  try{const d=await api({action:'update',id:ED.id,row});if(!d.ok)throw 0;closeEdit();await load();status('✓ Entry updated.')}catch(e){$('#em').textContent='Could not save the change. Try again.'}}
 async function delEdit(){if(!ED)return;try{const d=await api({action:'delete',id:ED.id});if(!d.ok)throw 0;closeEdit();await load();status('Entry deleted.')}catch(e){$('#em').textContent='Could not delete. Try again.'}}
-function render(){syncForm();
+function render(){syncForm();swRender();
  $('#oth').innerHTML=ROWS.slice().reverse().map(r=>'<div class="er" style="cursor:pointer" onclick="openEdit(\''+esc(r.id)+'\')"><b style="width:130px">'+esc(r.house+' '+r.street)+'</b><span style="width:38px;color:#666">'+esc(r.date)+'</span><span style="width:30px;font-weight:700">'+esc(r.sym)+'</span><span style="flex:1;color:#555">'+esc(r.note)+'</span><span style="color:#888;font-size:11px">'+esc(r.pub)+'</span></div>').join('')||'<div style="color:#888;font-size:13px;padding:6px 0">No records saved yet.</div>';
  const w=new Set(ROWS.map(key)).size,nh=ROWS.filter(r=>r.sym=='NH').length,ca=ROWS.filter(r=>r.sym=='CA').length;
  $('#s1').textContent=w+' / '+TOTAL;$('#s2').textContent=ROWS.length?Math.round(100*nh/ROWS.length)+'%':'–';$('#s3').textContent=ca;$('#s4').textContent=ROWS.length;

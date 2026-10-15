@@ -26,6 +26,11 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)
 .tag{font-size:12px;border-radius:10px;padding:2px 8px;color:#fff}.tag.r{background:var(--red)}.tag.g{background:#6b7280}.tag.y{background:#d97706}
 .tw{overflow-x:auto}
 #msg{margin-top:10px;font-size:14px}
+.lg{cursor:pointer;border-radius:8px;padding:4px 6px;margin:0 -6px}.lg:hover{background:#f1f5fb}.lg.on{background:#e3eefc;outline:2px solid #2563eb}
+svg.d path{cursor:pointer;transition:opacity .15s}svg.d path.dim{opacity:.22}
+.st{cursor:pointer}.st:hover,.st.on{border-color:#2563eb;box-shadow:0 0 0 2px #2563eb33}
+#sel{margin-top:18px;border:2px solid #2563eb}#sel .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}#sel .hd b{font-size:18px}.clr{border:1px solid #1e5a8a;background:#fff;color:#1e5a8a;border-radius:8px;padding:6px 12px;font:600 14px inherit;cursor:pointer}
+.hint{color:var(--mut);font-size:13px;margin:-4px 0 10px}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.hero h1{font-size:28px}}
 @media print{.btns{display:none}body{background:#fff}}
 </style></head><body><div class="w">
@@ -34,7 +39,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)
 <div class="btns"><button class="btn p" id="up">Upload new Hourglass PDF</button><button class="btn" id="dl" style="display:none">Save updated report file</button>
 <a class="btn" href="Overview.html?a=20747b654642ea8dc519534b">Not-at-home overview &rarr;</a><input type="file" id="f" accept="application/pdf" hidden></div><div id="msg"></div></div></div>
 <div class="stats" id="stats"></div>
-<h2>The big picture</h2><div class="g3" id="donuts"></div>
+<h2>The big picture</h2><div class="hint">Tap a color, a name, or a total to see exactly which territories it is.</div><div class="g3" id="donuts"></div>
+<div class="c tw" id="sel" hidden></div>
 <h2>Needs a follow-up <small style="font-size:14px;color:var(--mut);font-weight:400">checked out more than 4 months</small></h2>
 <div class="c tw"><table id="t1"></table></div>
 <h2>Checked out right now</h2><div class="c tw"><table id="t2"></table></div>
@@ -93,37 +99,55 @@ function donut(parts,total,lab){
  parts.filter(function(p){return p.n>0}).forEach(function(p){
   var f=p.n/total,b=a+f*2*Math.PI,lg=f>.5?1:0;if(f>=.9999)b-=.001;
   var P=function(rr,t){return (cx+rr*Math.cos(t)).toFixed(2)+' '+(cy+rr*Math.sin(t)).toFixed(2)};
-  s+='<path d="M'+P(R,a)+' A'+R+' '+R+' 0 '+lg+' 1 '+P(R,b)+' L'+P(r,b)+' A'+r+' '+r+' 0 '+lg+' 0 '+P(r,a)+'Z" fill="'+p.c+'"/>';a=b});
+  s+='<path d="M'+P(R,a)+' A'+R+' '+R+' 0 '+lg+' 1 '+P(R,b)+' L'+P(r,b)+' A'+r+' '+r+' 0 '+lg+' 0 '+P(r,a)+'Z" fill="'+p.c+'" data-sel="'+p.k+'"><title>'+p.l+': '+p.n+'</title></path>';a=b});
  return s+'<text x="105" y="108" text-anchor="middle" font-size="30" font-weight="700">'+total+'</text><text x="105" y="126" text-anchor="middle" font-size="12" fill="#6b7280">'+lab+'</text></svg>';
 }
 function card(t,sub,parts,total,lab){
  return '<div class="c"><h3>'+t+'</h3><div class="sub">'+sub+'</div>'+donut(parts,total,lab)+parts.map(function(p){
-  return '<div class="lg"><i style="background:'+p.c+'"></i><span>'+p.l+'</span><b>'+p.n+'</b><em>'+(total?Math.round(p.n/total*100):0)+'%</em></div>'}).join('')+'</div>';
+  return '<div class="lg" data-sel="'+p.k+'"><i style="background:'+p.c+'"></i><span>'+p.l+'</span><b>'+p.n+'</b><em>'+(total?Math.round(p.n/total*100):0)+'%</em></div>'}).join('')+'</div>';
 }
+var CUR={},SEL=null;
+function bucket(r){var a=r.age;return a==null?4:a<182.6?0:a<365?1:a<730?2:3}
+function showSel(){
+ document.querySelectorAll('[data-sel]').forEach(function(e){var k=e.getAttribute('data-sel'),same=SEL&&k==SEL;
+  if(e.tagName.toLowerCase()=='path'){var g=SEL?SEL.split(':')[0]:'';e.classList.toggle('dim',!!SEL&&k.split(':')[0]==g&&!same)}else e.classList.toggle('on',!!same)});
+ var box=$('sel');if(!SEL){box.hidden=true;return}
+ var R=CUR.R,sel=R.filter(CUR.pr[SEL]).sort(function(x,y){return (y.out||0)-(x.out||0)||(y.age||0)-(x.age||0)});
+ var rows=sel.map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+(r.open?nameOf(r.open.name):'<span class="tag g">On the shelf</span>')+'</td><td>'+(r.open?fmt(r.open.assigned):'\u2014')+'</td><td>'+(r.open?(r.out>122?'<span class="tag r">'+r.out+' days</span>':r.out):'\u2014')+'</td><td>'+fmt(r.last)+'</td></tr>'}).join('');
+ box.innerHTML='<div class="hd"><b>'+CUR.lb[SEL]+' \u00b7 '+sel.length+(sel.length==1?' territory':' territories')+'</b><button class="clr" onclick="SEL=null;showSel()">Clear</button></div><table><tr><th>Territory</th><th>Checked out to</th><th>Date assigned</th><th>Days out</th><th>Last completed</th></tr>'+(rows||'<tr><td colspan="5">None</td></tr>')+'</table>';
+ box.hidden=false;
+}
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('[data-sel]');if(!t)return;var k=t.getAttribute('data-sel');SEL=(SEL==k)?null:k;showSel();if(SEL)$('sel').scrollIntoView({behavior:'smooth',block:'nearest'})});
 function render(){
  var A=DATA.asOf,R=DATA.rows;$('asof').textContent=new Date(A+'T12:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
  $('sy').textContent=A.slice(0,4);
  R.forEach(function(r){r.age=r.last?days(r.last,A):null;r.out=r.open?days(r.open.assigned,A):null});
  var open=R.filter(function(r){return r.open}),over=open.filter(function(r){return r.out>122}),old=R.filter(function(r){return r.age!=null&&r.age>365}),oldShelf=old.filter(function(r){return !r.open});
  var ic=function(p,c){return '<div class="ic" style="background:'+c+'"><svg viewBox="0 0 24 24">'+p+'</svg></div>'};
- $('stats').innerHTML=[[ic('<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>','#1e5a8a'),R.length,'Territories tracked','on the sheet'],
-  [ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>','#17a673'),open.length,'Checked out right now',''],
-  [ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','#d13b3b'),over.length,'Out more than 4 months','need a follow-up'],
-  [ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>','#e8683a'),old.length,'Not worked in 12+ months',oldShelf.length+' of them are on the shelf']
- ].map(function(x){return '<div class="st">'+x[0]+'<div><b>'+x[1]+'</b><span>'+x[2]+'</span><small>'+x[3]+'</small></div></div>'}).join('');
+ $('stats').innerHTML=[[ic('<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>','#1e5a8a'),R.length,'Territories tracked','on the sheet','st:all'],
+  [ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>','#17a673'),open.length,'Checked out right now','','st:out'],
+  [ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','#d13b3b'),over.length,'Out more than 4 months','need a follow-up','st:over'],
+  [ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>','#e8683a'),old.length,'Not worked in 12+ months',oldShelf.length+' of them are on the shelf','st:old']
+ ].map(function(x){return '<div class="st" data-sel="'+x[4]+'">'+x[0]+'<div><b>'+x[1]+'</b><span>'+x[2]+'</span><small>'+x[3]+'</small></div></div>'}).join('');
  var b=[0,0,0,0,0],c6=182.6,c12=365,c24=730;
  R.forEach(function(r){var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
  var ppl={};open.forEach(function(r){var k=nameOf(r.open.name);ppl[k]=(ppl[k]||0)+1});
- var pl=Object.keys(ppl).sort(function(a,b){return ppl[b]-ppl[a]||(a<b?-1:1)}).map(function(k,i){return{l:k,n:ppl[k],c:k=='Name not recorded'?'#9ca3af':PAL[i%8]}});
+ var pl=Object.keys(ppl).sort(function(a,b){return ppl[b]-ppl[a]||(a<b?-1:1)}).map(function(k,i){return{l:k,n:ppl[k],c:k=='Name not recorded'?'#9ca3af':PAL[i%8],k:'who:'+i}});
  $('donuts').innerHTML=card('How long since each territory was worked','Based on the last completed date',
-  [{l:'Within 6 months',n:b[0],c:'#12a312'},{l:'6 to 12 months ago',n:b[1],c:'#f7b00e'},{l:'1 to 2 years ago',n:b[2],c:'#ec8459'},{l:'More than 2 years ago',n:b[3],c:'#d13b3b'},{l:'No date on record',n:b[4],c:'#aeb4bd'}],R.length,'territories')
-  +card('Where the territories are right now','Checked out or on the shelf',[{l:'On the shelf',n:R.length-open.length,c:'#2f7ad9'},{l:'Out under 4 months',n:open.length-over.length,c:'#17a673'},{l:'Out over 4 months',n:over.length,c:'#d13b3b'}],R.length,'territories')
+  [{l:'Within 6 months',n:b[0],c:'#12a312',k:'age:0'},{l:'6 to 12 months ago',n:b[1],c:'#f7b00e',k:'age:1'},{l:'1 to 2 years ago',n:b[2],c:'#ec8459',k:'age:2'},{l:'More than 2 years ago',n:b[3],c:'#d13b3b',k:'age:3'},{l:'No date on record',n:b[4],c:'#aeb4bd',k:'age:4'}],R.length,'territories')
+  +card('Where the territories are right now','Checked out or on the shelf',[{l:'On the shelf',n:R.length-open.length,c:'#2f7ad9',k:'wh:shelf'},{l:'Out under 4 months',n:open.length-over.length,c:'#17a673',k:'wh:u4'},{l:'Out over 4 months',n:over.length,c:'#d13b3b',k:'wh:o4'}],R.length,'territories')
   +card('Who has the territories checked out','Number of territories per person',pl,open.length,'checked out');
+ var pr={'st:all':function(){return true},'st:out':function(r){return !!r.open},'st:over':function(r){return r.open&&r.out>122},'st:old':function(r){return r.age!=null&&r.age>365},
+  'wh:shelf':function(r){return !r.open},'wh:u4':function(r){return r.open&&r.out<=122},'wh:o4':function(r){return r.open&&r.out>122}},lb={'st:all':'All territories','st:out':'Checked out right now','st:over':'Out more than 4 months','st:old':'Not worked in 12+ months','wh:shelf':'On the shelf','wh:u4':'Out under 4 months','wh:o4':'Out over 4 months'};
+ ['Within 6 months','6 to 12 months ago','1 to 2 years ago','More than 2 years ago','No date on record'].forEach(function(n,i){pr['age:'+i]=function(r){return bucket(r)==i};lb['age:'+i]=n});
+ pl.forEach(function(p,i){pr['who:'+i]=function(r){return r.open&&nameOf(r.open.name)==p.l};lb['who:'+i]=p.l});
+ CUR={R:R,pr:pr,lb:lb};if(SEL&&!pr[SEL])SEL=null;
  var tb=function(h,rows){return '<tr>'+h.map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>'+(rows.join('')||'<tr><td colspan="9">None</td></tr>')};
  var o=function(a){return a.slice().sort(function(x,y){return y.out-x.out})};
  $('t1').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out'],o(over).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td><span class="tag r">'+r.out+' days</span></td></tr>'}));
  $('t2').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out','Last completed'],o(open).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td>'+r.out+'</td><td>'+fmt(r.last)+'</td></tr>'}));
  $('t3').innerHTML=tb(['Territory','Last completed','Years since','Status'],old.sort(function(x,y){return y.age-x.age}).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+fmt(r.last)+'</td><td>'+(r.age/365).toFixed(1)+'</td><td>'+(r.open?'<span class="tag y">Out: '+nameOf(r.open.name)+'</span>':'<span class="tag g">On the shelf</span>')+'</td></tr>'}));
+ showSel();
 }
 $('up').onclick=function(){$('f').click()};
 $('f').onchange=async function(e){

@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Territory Overview (private)</title><meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1d2330;--mut:#6b7280;--br:#e2e5ea;--ac:#2563eb;--ok:#16a34a;--warn:#d97706;--no:#9ca3af}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif}
+header{background:#1f2937;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+header h1{margin:0;font-size:18px}header small{color:#cbd5e1}header .b{display:flex;gap:8px}
+header a,header button{background:#2563eb;color:#fff;text-decoration:none;font:600 13px inherit;padding:7px 12px;border-radius:8px;border:0;cursor:pointer;white-space:nowrap}
+header button{background:#374151}
+main{max-width:900px;margin:0 auto;padding:14px 16px 40px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{background:var(--card);border:1px solid var(--br);border-radius:10px;padding:10px}
+.tile b{display:block;font-size:22px}.tile span{font-size:12px;color:var(--mut)}
+.bar{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}.bar.ok i{background:var(--ok)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 8px}
+.tabs button{border:1px solid var(--br);background:var(--card);padding:6px 12px;border-radius:16px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.city{background:var(--card);border:1px solid var(--br);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.city .row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.list{display:grid;gap:6px}
+.t{background:var(--card);border:1px solid var(--br);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center}
+.t .id{font-weight:700}.t .meta{font-size:12px;color:var(--mut);margin-top:4px}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;white-space:nowrap}
+.s-done{background:var(--ok)}.s-prog{background:var(--warn)}.s-none{background:var(--no)}
+.t a{font-size:12px;color:var(--ac);text-decoration:none;margin-left:8px}
+#msg{padding:30px 10px;text-align:center;color:var(--mut)}
+@media(max-width:560px){.tiles{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<header><div><h1>Territory Overview</h1><small>Private &middot; overseer view &middot; <span id="up">loading&hellip;</span></small></div>
+<div class="b"><button id="rf">Refresh</button><a href="Territory_Check-Out_Report.html">Check-Out Report &rarr;</a></div></header>
+<main><div id="msg"></div><div id="body" style="display:none">
+<div class="tiles" id="tiles"></div><div class="tabs" id="tabs"></div><div id="cities"></div><div class="list" id="list"></div></div></main>
+<script>
+var API='https://script.google.com/macros/s/AKfycbzqy4QeE-7NmIJTUbCFMJ8dcDGc2eh6yc-WoRPbv_0u4MawCgx1eS2YBGW6AUFLjZX3/exec',TOT={"BL-10":0,"BL-1":0,"BL-2":0,"BL-3":0,"BL-4":0,"BL-5":0,"BL-6":0,"BL-7":0,"BL-8":0,"BL-9":0,"L-10":57,"L-11":82,"L-12":117,"L-13":48,"L-14":69,"L-15":85,"L-1":55,"L-2":48,"L-3":69,"L-4":78,"L-5":64,"L-6":93,"L-7":72,"L-8":67,"L-9":110,"M-10":65,"M-11":11,"M-1":139,"M-2":41,"M-3":3,"M-4":4,"M-5":1,"M-6":8,"M-7":6,"M-8":62,"M-9":14,"SS-10":63,"SS-11":56,"SS-12":48,"SS-13":62,"SS-1":79,"SS-2":68,"SS-3":72,"SS-4":62,"SS-5":28,"SS-6":50,"SS-7":56,"SS-8":49,"SS-9":80},CITY={'Llano':'L','San Saba':'SS','Mason':'M','Buchanan Lake':'BL'};
+var KEY=new URLSearchParams(location.search).get('a'),D=[],cur='All',$=function(i){return document.getElementById(i)};
+function cityOf(id){var p=id.split('-')[0];for(var c in CITY)if(CITY[c]==p)return c}
+function fmt(s){if(!s)return '';var m=String(s).match(/^(\d{4})-(\d\d)-(\d\d)$/);return m?(+m[2])+'/'+(+m[3])+'/'+m[1]:s}
+function num(id){return +id.split('-')[1]}
+async function load(){
+ if(!KEY){$('msg').textContent='This page needs your private link (it ends in ?a=...). It is on the Admin tab of the Google Sheet.';return}
+ $('msg').textContent='Loading…';
+ try{var r=await fetch(API+'?a='+encodeURIComponent(KEY)),d=await r.json();if(!d.ok)throw new Error(d.error||'error');
+  D=d.terrs.map(function(t){var tt={};try{tt=JSON.parse(t.totals||'{}')}catch(e){}
+   t.city=cityOf(t.id);t.tot=TOT[t.id]||0;t.lt=tt;t.st=t.entries>0?'prog':t.completed?'done':'none';return t});
+  $('msg').style.display='none';$('body').style.display='';$('up').textContent='updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});draw();
+ }catch(e){$('body').style.display='none';$('msg').style.display='';$('msg').textContent='Could not load. '+(String(e.message).indexOf('bad key')>=0?'That private link is not valid.':'Check your connection and press Refresh.')}
+}
+function draw(){
+ var all=D,cnt=function(s){return all.filter(function(t){return t.st==s}).length};
+ var hw=all.reduce(function(a,t){return a+t.houses},0),en=all.reduce(function(a,t){return a+t.entries},0),nh=all.reduce(function(a,t){return a+t.nh},0);
+ $('tiles').innerHTML=[[cnt('done')+' / '+all.length,'Completed (records cleared)'],[cnt('prog'),'In progress'],[cnt('none'),'Not started'],[hw+' houses · '+en+' visits','Open records right now'+(en?' ('+Math.round(100*nh/en)+'% NH)':'')]]
+  .map(function(x){return '<div class="tile"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('');
+ var tabs=['All'].concat(Object.keys(CITY),['In progress','Not started','Completed']);
+ $('tabs').innerHTML=tabs.map(function(c){return '<button class="'+(c==cur?'on':'')+'" onclick="cur=\''+c+'\';draw()">'+c+'</button>'}).join('');
+ var inCity=Object.keys(CITY).indexOf(cur)>=0;
+ $('cities').innerHTML=Object.keys(CITY).filter(function(c){return cur=='All'||c==cur}).map(function(c){
+  var a=all.filter(function(t){return t.city==c}),dn=a.filter(function(t){return t.st=='done'}).length,pg=a.filter(function(t){return t.st=='prog'}).length;
+  return '<div class="city"><div class="row"><b>'+c+'</b><span>'+dn+' completed · '+pg+' in progress · '+(a.length-dn-pg)+' not started</span></div><div class="bar ok"><i style="width:'+Math.round(dn/a.length*100)+'%"></i></div></div>'}).join('');
+ var sel=all.filter(function(t){return cur=='All'||t.city==cur||(cur=='In progress'&&t.st=='prog')||(cur=='Not started'&&t.st=='none')||(cur=='Completed'&&t.st=='done')});
+ sel.sort(function(a,b){return Object.keys(CITY).indexOf(a.city)-Object.keys(CITY).indexOf(b.city)||num(a.id)-num(b.id)});
+ $('list').innerHTML=sel.map(function(t){
+  var pc=t.tot?Math.min(100,Math.round(100*t.houses/t.tot)):(t.st=='done'?100:0),lab=t.st=='done'?'Completed':t.st=='prog'?'In progress':'Not started';
+  var m=t.st=='prog'?t.houses+(t.tot?' of '+t.tot:'')+' houses worked · '+t.entries+' visits · '+t.nh+' NH · '+t.ca+' CA'+(t.last?' · last entry '+fmt(t.last):''):'No records open';
+  if(t.completed)m+=(t.st=='prog'?' · ':' · ')+'last completed '+t.completed+(t.lt.addresses?' ('+t.lt.addresses+' houses, '+t.lt.entries+' visits)':'');
+  return '<div class="t"><div class="id">'+t.id+'</div><div><div class="bar'+(t.st=='done'?' ok':'')+'"><i style="width:'+pc+'%"></i></div><div class="meta">'+m+'</div></div><div><span class="pill s-'+t.st+'">'+lab+'</span><a href="'+t.id+'_card_site.html">Map</a></div></div>'}).join('');
+}
+$('rf').onclick=load;load();setInterval(function(){if(!document.hidden)load()},60000);
+</script></body></html>

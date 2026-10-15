@@ -1,0 +1,163 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Territory Record</title>
+<style>
+:root{--ink:#1d2327;--mut:#666;--blue:#1c4fa8}*{box-sizing:border-box}
+body{margin:0;background:#e8eaec;color:var(--ink);font:15px/1.35 Arial,Helvetica,sans-serif}
+.top{background:#fff;border-bottom:1px solid #ccc;padding:10px 14px;position:sticky;top:0;z-index:5}.top h1{margin:0;font-size:16px}.top small{color:var(--mut);font-weight:400;display:block;font-size:12px}
+.tb{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border:1.5px solid var(--blue);border-radius:99px;background:#fff;color:var(--blue);font:inherit;font-size:13px;font-weight:700;cursor:pointer}.tabs{display:flex;gap:6px;margin-top:8px}.tabs button{flex:1;padding:9px 4px;border:1px solid #bbb;background:#fff;border-radius:8px;font:inherit;font-weight:700;color:#555;font-size:14px}.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+main{max-width:860px;margin:0 auto;padding:12px}.hide{display:none!important}
+.sheet{background:#fff;border:1px solid #999;padding:12px;margin-bottom:12px}
+.btn{display:block;width:100%;padding:13px;border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:15px;margin-top:10px;text-align:center;text-decoration:none;cursor:pointer}.btn.alt{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+h2.f{font-family:Georgia,serif;text-align:center;letter-spacing:.5px;margin:2px 0 12px;font-size:19px}
+.fld{display:flex;gap:8px;align-items:baseline;margin:7px 0;font-size:13px}.fld span{white-space:nowrap}
+.fld input,.fld select{flex:1;border:0;border-bottom:1px dotted #333;font:inherit;color:var(--blue);padding:3px 2px;background:transparent;font-size:15px;min-width:0}
+.sym{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.sym button{border:1px solid #aaa;background:#fff;border-radius:6px;padding:6px;text-align:left;font:inherit;font-size:12px;color:#555}.sym b{display:block;font-size:15px;color:#000}
+table.f{width:100%;border-collapse:collapse;table-layout:fixed}table.f th{border:1px solid #000;font-weight:400;font-size:12px;padding:6px 2px}table.f td{border:1px solid #000;padding:0;height:36px}
+table.f input{width:100%;height:36px;border:0;padding:4px;font:inherit;font-size:14px;color:var(--blue);background:transparent}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}@media(max-width:640px){.kp{grid-template-columns:repeat(2,1fr)}}
+.k,.k2{background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px;margin-bottom:10px}.kp .k{margin:0}.k .n{font-size:24px;font-weight:800}.k .l{font-size:11.5px;color:var(--mut)}.k2 h3{margin:0 0 8px;font-size:14px}
+table.s{width:100%;border-collapse:collapse;font-size:13px}table.s th{font-size:11.5px;color:#666;text-align:left;padding:5px 3px;border-bottom:1px solid #ccc}table.s td{padding:6px 3px;border-bottom:1px solid #eee}
+.bar{background:#e4e4de;border-radius:5px;height:9px;overflow:hidden}.bar i{display:block;height:100%;background:#2e7d4f}
+.sb{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:4px 0}.sb i{display:block;height:100%}.lg{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;color:#555}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+.er{display:flex;gap:8px;border-top:1px solid #eee;padding:6px 0;font-size:13px}
+iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
+#qr{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;align-items:center;justify-content:center;padding:20px;display:none}#qr.on{display:flex}
+#pk{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #1c4fa8;padding:10px 12px 14px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.25)}#pk.on{display:block}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg3 button{padding:14px 4px;border:1px solid #aaa;border-radius:10px;background:#f7f9fd;font:inherit;font-size:12px;color:#555}.pg3 b{display:block;font-size:20px;color:#000}#pk .clr{margin-top:8px;margin-right:8px;padding:9px 14px;border:1px solid #bbb;border-radius:8px;background:#fff;font:inherit}#ed2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;align-items:flex-end;justify-content:center}#ed2.on{display:flex}.edc{background:#fff;border-radius:14px 14px 0 0;padding:16px;width:100%;max-width:560px;max-height:90vh;overflow:auto}.edc label{display:block;font-size:12px;color:#666;margin:8px 0 2px}.edc input,.edc select{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit}#pa{display:none}@media print{body{background:#fff}.top,main,#qr{display:none!important}#pa{display:block!important;padding:14px}#pa .blk{margin-bottom:14px;break-inside:avoid}#pa .bh{font-size:13px;border-bottom:2px solid #000;padding:2px 0;margin-bottom:3px}#pa table{width:100%;border-collapse:collapse}#pa tr{break-inside:avoid}#pa th,#pa td{border:1px solid #000;padding:3px 5px;font-size:11.5px;text-align:left}#pa th{font-weight:400;font-size:11px}}
+</style></head><body>
+<div class="top"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h1 id="ttl" style="min-width:0"></h1><div style="display:flex;gap:6px;flex:none"><button class="tb" onclick="share()" aria-label="Share link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Share</button><button class="tb" onclick="showQR()" aria-label="Show QR code"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3M20 17v4"/></svg>QR</button></div></div><div id="shm" style="font-size:12px;color:#2e7d4f;font-weight:700"></div>
+<div class="tabs"><button id="b1" class="on" onclick="tab(1)">Territory map</button><button id="b2" onclick="tab(2)">House-to-House</button><button id="b3" onclick="tab(3)">Statistics</button></div></div>
+<main>
+<div id="err" class="hide sheet" style="border-color:#c62828;color:#8c0000"></div>
+<section id="p1"><div style="margin:-4px -4px 10px"><iframe id="fr" allow="geolocation" title="Territory map"></iframe></div>
+ <div class="sheet"><b style="font-size:13px">STREETS TO WORK</b><ul id="sl" style="columns:2;font-size:13px;margin:6px 0 0;padding-left:16px"></ul></div>
+ <div id="dncb" class="sheet" style="border:1.5px solid #c62828;background:#fff4f2;border-radius:8px"></div>
+</section>
+<section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
+ <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
+ <div class="fld"><span>STREET</span><select id="st" onchange="stChg()"></select></div>
+ <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name" oninput="swRender()"></div>
+ <div id="sw" class="hide" style="border:1px solid #cdd7ea;background:#f4f8ff;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px"></div>
+ <div id="swh" class="hide" style="background:#fff4d6;border:1px solid #ecd48a;border-radius:8px;padding:7px 10px;margin:6px 0;font-size:13px"></div>
+ <div class="fld"><span>PUBLISHER’S NAME</span><input id="pn" placeholder="your name"></div>
+ <div style="font-size:12px;color:#666;margin-bottom:6px">Type the house number. Tap the <b>Date</b> box to stamp the date and time, and the <b>Symbol</b> box to pick CA, B, M, NH, C or W. Rows save by themselves a few seconds after you pick the symbol.</div>
+ <table class="f"><colgroup><col style="width:19%"><col style="width:24%"><col style="width:13%"><col></colgroup><thead><tr><th>House or Apt. No.</th><th>Date</th><th>Symbol</th><th>Name, Placement, and Remarks</th></tr></thead><tbody id="tb"></tbody></table>
+ <div style="font-size:11px;color:#444;margin-top:6px">S-8-E &nbsp; 10/53</div></div>
+ <button class="btn alt" onclick="addRow()">Add row</button><button class="btn" id="sv" onclick="saveNow()">Save now</button><div id="msg" style="font-size:13px;font-weight:700;margin-top:8px"></div>
+ <div class="g2"><button class="btn alt" onclick="printAll()">Print all records</button><button class="btn" style="background:#2e7d4f" onclick="askDone()">Completed</button></div>
+ <div id="dn" class="hide sheet" style="border:2px solid #2e7d4f;margin-top:10px"><b>Mark this territory as completed?</b><div style="font-size:13px;margin:6px 0">This <b>removes all saved records</b> for this territory so the next publisher starts clean. The link stays the same. The totals are kept for the overview. Print a copy first.</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><button class="btn alt" style="margin:0;font-size:13px" onclick="printAll()">Print first</button><button class="btn alt" style="margin:0;font-size:13px" onclick="$('#dn').classList.add('hide')">Cancel</button><button class="btn" style="margin:0;font-size:13px;background:#c62828" onclick="finish()">Yes, clear</button></div></div>
+ <div class="sheet" style="margin-top:12px"><b style="font-size:13px">Entries from everyone</b> <span style="font-size:12px;color:#666">· tap one to fix or delete it</span><div id="oth" style="max-height:320px;overflow:auto"></div></div></section>
+<section id="p3" class="hide"><div class="k2"><b id="stt"></b><div style="font-size:12px;color:#666">From the records saved for this territory only</div></div>
+ <div class="kp"><div class="k"><div class="n" id="s1"></div><div class="l">addresses worked</div></div><div class="k"><div class="n" id="s2"></div><div class="l">Not Home (NH) rate</div></div><div class="k"><div class="n" id="s3"></div><div class="l">Call Again to follow up</div></div><div class="k"><div class="n" id="s4"></div><div class="l">total entries</div></div></div>
+ <div class="k2"><h3>Results by symbol</h3><div class="sb" id="sb"></div><div class="lg" id="lg"></div></div>
+ <div class="k2"><h3>Progress by street</h3><table class="s"><thead><tr><th>Street</th><th>Worked / addresses</th><th></th><th>NH</th><th>CA</th></tr></thead><tbody id="ts"></tbody></table></div>
+ <div class="k2"><h3>Still to do</h3><div id="att" style="font-size:13px"></div></div></section>
+</main>
+<div id="qr" onclick="this.classList.remove('on')"><div style="background:#fff;border-radius:14px;padding:18px;max-width:320px;width:100%;text-align:center" onclick="event.stopPropagation()"><b id="qt" style="font-size:17px"></b><div style="font-size:12.5px;color:#555;margin:2px 0 10px">Scan with the phone camera to open this territory</div><div id="qc" style="display:inline-block;padding:6px;border:1px solid #ccc"></div><button class="btn" onclick="$('#qr').classList.remove('on')">Close</button></div></div>
+<div id="pk"><div style="font-size:12px;color:#666;margin-bottom:6px;text-align:center">Choose a symbol</div><div class="pg3"><button onclick="pick('NH')"><b>NH</b>Not Home</button><button onclick="pick('CA')"><b>CA</b>Call Again</button><button onclick="pick('B')"><b>B</b>Busy</button><button onclick="pick('M')"><b>M</b>Man</button><button onclick="pick('W')"><b>W</b>Woman</button><button onclick="pick('C')"><b>C</b>Child</button></div><button class="clr" onclick="pick('')">Clear this row</button><button class="clr" onclick="$('#pk').classList.remove('on');PK=null">Cancel</button></div><div id="ed2"><div class="edc"><b>Fix this entry</b> <span id="ep" style="font-size:12px;color:#777"></span>
+ <label>Street</label><select id="es"></select><label>House or Apt. No.</label><input id="eh"><label>Date and time</label><input id="ed"><label>Symbol</label><select id="ey"><option>NH</option><option>CA</option><option>B</option><option>M</option><option>W</option><option>C</option></select><label>Name, Placement, and Remarks</label><input id="en">
+ <div id="em" style="color:#a00;font-size:13px;margin-top:6px"></div>
+ <button class="btn" onclick="saveEdit()">Save changes</button>
+ <div class="g2"><button class="btn alt" onclick="closeEdit()">Cancel</button><button class="btn alt" style="color:#c62828;border-color:#c62828" onclick="$('#edel').classList.remove('hide')">Delete</button></div>
+ <div id="edel" class="hide" style="margin-top:8px;font-size:13px">Delete this entry for good? <button class="btn" style="background:#c62828;margin-top:6px" onclick="delEdit()">Yes, delete it</button></div></div></div><div id="pa"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const C={"tid": "M-9", "loc": "City of Mason, TX", "city": "Mason", "api": "https://script.google.com/macros/s/AKfycbzqy4QeE-7NmIJTUbCFMJ8dcDGc2eh6yc-WoRPbv_0u4MawCgx1eS2YBGW6AUFLjZX3/exec", "map": "compact_maps/M-9_card_site_compact_map.html", "streets": ["East Rainey Street (south border)", "Elm Street", "Moody Street", "Post Hill Street (east border)", "South Pecan Street", "Wheeler Street", "Ave F (west border)", "Coolidge Avenue", "East College Avenue (north border)", "Ranch Road 1871 (west border)", "Wilson Avenue"], "dnc": [["849 Wheeler St", "07/16/2013"], ["848 Moody St", "8/11/2022"], ["104 College St", "6/2023"]], "addr": {"College St": ["104"], "Moody St": ["717", "705", "848"], "Post Hill St": ["704"], "S Pecan St": ["761"], "W College Ave": ["531"], "Wheeler St": ["749", "711", "716", "742", "854", "910", "849"]}};const $=s=>document.querySelector(s);
+const KEY=new URLSearchParams(location.search).get('k')||'';
+const SYMC={NH:'#c77700',CA:'#7a3fa0',B:'#557',M:'#1f5f8b',W:'#2e7d4f',C:'#b0457b'};
+const ST=Object.keys(C.addr);const TOTAL=ST.reduce((a,s)=>a+C.addr[s].length,0);
+let ROWS=[],DONE='',OK=false;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function tab(n){for(let i=1;i<=3;i++){$('#p'+i).classList.toggle('hide',i!=n);$('#b'+i).classList.toggle('on',i==n)}window.scrollTo(0,0)}
+function err(t){const e=$('#err');e.textContent=t;e.classList.toggle('hide',!t)}
+$('#ttl').innerHTML='Territory '+C.tid+' <small>· '+esc(C.loc)+'</small>';document.title='Territory '+C.tid+' record';
+$('#tr').value=C.tid;$('#cty').textContent=C.city;$('#stt').textContent='Territory '+C.tid+' statistics';
+$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#dncb').classList.add('hide');$('#fr').style.height='calc(100vh - 170px)'}
+$('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
+$('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
+if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
+$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus();swRender()}
+const today=()=>{const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()};
+let PK=null,QUEUE=[],FLUSHING=false,SEQ=0;
+const stamp=()=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a';h=h%12||12;return (d.getMonth()+1)+'/'+d.getDate()+' '+h+':'+(m<10?'0':'')+m+ap};
+const QK='q_'+C.tid;
+function persist(){try{localStorage.setItem(QK,JSON.stringify(QUEUE.map(q=>({id:q.id,street:q.street,house:q.house,date:q.date,sym:q.sym,note:q.note,pub:q.pub}))))}catch(e){}}
+function curStreet(){if($('#st').value==='__other'){const t=$('#stx').value.trim();return t?t.replace(/\b\w/g,c=>c.toUpperCase()).replace(/(\d)(St|Nd|Rd|Th)\b/g,(m,d,x)=>d+x.toLowerCase()):''}return $('#st').value}
+function mk(){const tr=document.createElement('tr');tr.innerHTML='<td><input></td><td><input readonly style="font-size:12px"></td><td><input readonly></td><td><input></td>';
+ const i=tr.querySelectorAll('input');
+ const touch=()=>{if(!tr.dataset.street){const s=curStreet();if(s)tr.dataset.street=s}};
+ i[0].oninput=()=>{touch();sched(tr);dupHint(tr)};i[3].oninput=()=>{touch();sched(tr)};i[3].onblur=()=>sched(tr,300);i[0].onblur=()=>sched(tr,300);
+ i[1].onclick=()=>{if(tr.dataset.done)return;if(!i[1].value)i[1].value=stamp();touch();sched(tr)};
+ i[2].onclick=()=>{if(tr.dataset.done)return;touch();PK=tr;$('#pk').classList.add('on')};
+ return tr}
+function dupHint(tr){const i=tr.querySelectorAll('input');if(tr.dataset.done)return;const st=tr.dataset.street||curStreet(),h=houseKey(i[0].value);if(!h)return;
+ const m=ROWS.filter(r=>r.street===st&&houseKey(r.house)===h);const b=$('#swh');if(m.length){const r=m[m.length-1];b.textContent='Already recorded: '+r.house+' '+st+' — '+r.sym+', '+String(r.date)+(r.pub&&r.pub!='—'?' by '+r.pub:'')+'. Saving adds another visit.';b.classList.remove('hide')}else b.classList.add('hide')}
+function sched(tr,ms){if(tr.dataset.done||tr.dataset.queued)return;clearTimeout(tr._t);const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;tr._t=setTimeout(()=>commit(tr),ms==null?3500:ms)}
+function commit(tr){if(tr.dataset.done||tr.dataset.queued)return;const v=[...tr.querySelectorAll('input')].map(i=>i.value.trim());if(!(v[0]&&v[2]))return;
+ const st=tr.dataset.street||curStreet();if(!st){status('Type the street name first (Street: Other).',true);return}
+ tr.dataset.queued='1';tr.style.background='#fff8e1';
+ QUEUE.push({id:++SEQ+'-'+Date.now(),tr,street:st,house:v[0],date:v[1]||stamp(),sym:v[2].toUpperCase(),note:v[3],pub:$('#pn').value.trim()||'—'});persist();flush()}
+function addRow(){const t=mk();t.onclick=e=>{if(t.dataset.done&&t.dataset.id)openEdit(t.dataset.id)};$('#tb').appendChild(t)}for(let i=0;i<14;i++)addRow();
+function pick(c){if(!PK)return;const tr=PK,i=tr.querySelectorAll('input');i[2].value=c;if(c&&!i[1].value)i[1].value=stamp();if(!c)i[1].value='';$('#pk').classList.remove('on');PK=null;sched(tr)}
+function status(t,bad){const m=$('#msg');m.style.color=bad?'#a00':'#2e7d4f';m.textContent=t}
+async function flush(){if(FLUSHING||!QUEUE.length)return;if(!OK){status(QUEUE.length+' row'+(QUEUE.length>1?'s':'')+' waiting to save',true);return}
+ FLUSHING=true;const batch=QUEUE.slice();
+ try{const d=await api({action:'add',rows:batch.map(q=>({id:q.id,street:q.street,house:q.house,date:q.date,sym:q.sym,note:q.note,pub:q.pub}))});if(!d.ok)throw 0;
+  batch.forEach(q=>{if(q.tr){q.tr.dataset.done='1';q.tr.dataset.id=q.id;q.tr.style.cursor='pointer';q.tr.style.background='#eaf6ee';q.tr.querySelectorAll('input').forEach(i=>i.readOnly=true);q.tr.querySelector('td').insertAdjacentHTML('beforeend','')}});
+  QUEUE=QUEUE.filter(q=>!batch.includes(q));persist();status('✓ Saved. Everyone can see it now.');await load()}
+ catch(e){status(QUEUE.length+' row'+(QUEUE.length>1?'s':'')+' waiting to save. It will retry by itself.',true);setTimeout(flush,15000)}
+ FLUSHING=false;if(QUEUE.length&&OK)setTimeout(flush,500)}
+function saveNow(){$('#tb').querySelectorAll('tr').forEach(tr=>commit(tr));if(!QUEUE.length)status('Nothing new to save.');flush()}
+window.addEventListener('online',()=>{load().then(flush)});
+window.addEventListener('beforeunload',e=>{if(QUEUE.length){e.preventDefault();e.returnValue=''}});
+try{const q=JSON.parse(localStorage.getItem(QK)||'[]');if(q.length){QUEUE=q;setTimeout(flush,1500)}}catch(e){}
+async function api(body){const r=await fetch(C.api,{method:'POST',body:JSON.stringify(Object.assign({t:C.tid,k:KEY},body))});return r.json()}
+async function load(){
+ if(!KEY){err('Open this page from your territory link. The link carries the key for this territory.');return}
+ try{const r=await fetch(C.api+'?t='+encodeURIComponent(C.tid)+'&k='+encodeURIComponent(KEY));const d=await r.json();
+  if(!d.ok){err('This link is no longer active. If the territory was completed, ask the servant for the new link.');OK=false;return}
+  OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
+function key(r){return r.house+' '+r.street}
+function houseKey(h){return String(h).trim().toLowerCase()}
+function swRender(){const st=$('#st').value,box=$('#sw');if(!st||st==='__other'){const t=curStreet();if(!t){box.classList.add('hide');return}}
+ const name=st==='__other'?curStreet():st;const rs=ROWS.filter(r=>r.street===name);const all=C.addr[name]||[];
+ const done=new Set(rs.map(r=>houseKey(r.house)));const left=all.filter(h=>!done.has(houseKey(h)));
+ let h='<b>'+esc(name)+'</b> · '+done.size+(done.size==1?' house':' houses')+' worked'+(rs.length>done.size?' · '+rs.length+' visits':'');
+ if(rs.length)h+='<div style="margin-top:5px">'+rs.map(r=>'<span style="display:inline-block;margin:2px 4px 2px 0;padding:2px 7px;border-radius:99px;background:#fff;border:1px solid #bcc9e3" onclick="openEdit(\''+esc(r.id)+'\')"><b>'+esc(r.house)+'</b> '+esc(r.sym)+' <span style="color:#777">'+esc(String(r.date).split(' ')[0])+(r.pub&&r.pub!='—'?' · '+esc(r.pub):'')+'</span></span>').join('')+'</div>';
+ else h+='<div style="margin-top:4px;color:#666">Nothing recorded on this street yet.</div>';
+ box.innerHTML=h;box.classList.remove('hide')}
+function syncForm(){$('#tb').querySelectorAll('tr[data-id]').forEach(tr=>{const r=ROWS.find(x=>x.id===tr.dataset.id);const i=tr.querySelectorAll('input');
+  if(!r){i.forEach(x=>{x.value='';x.readOnly=false});['id','done','queued','street'].forEach(k=>delete tr.dataset[k]);tr.style.background='';tr.style.cursor='';return}
+  i[0].value=r.house;i[1].value=r.date;i[2].value=r.sym;i[3].value=r.note||''})}
+let ED=null;
+function openEdit(id){const r=ROWS.find(x=>x.id===id);if(!r){status('That entry is not loaded yet. Try again in a moment.',true);return}ED=r;
+ const opts=ST.slice();if(!opts.includes(r.street))opts.push(r.street);
+ $('#es').innerHTML=opts.map(x=>'<option'+(x===r.street?' selected':'')+'>'+esc(x)+'</option>').join('');
+ $('#eh').value=r.house;$('#ed').value=r.date;$('#ey').value=r.sym;$('#en').value=r.note||'';$('#ep').textContent=r.pub&&r.pub!='—'?'Entered by '+r.pub:'';$('#edel').classList.add('hide');$('#em').textContent='';$('#ed2').classList.add('on')}
+function closeEdit(){$('#ed2').classList.remove('on');ED=null}
+async function saveEdit(){if(!ED)return;const row={street:$('#es').value,house:$('#eh').value.trim(),date:$('#ed').value.trim(),sym:$('#ey').value.trim().toUpperCase(),note:$('#en').value.trim()};
+ if(!row.house||!row.sym){$('#em').textContent='House number and symbol are needed.';return}
+ try{const d=await api({action:'update',id:ED.id,row});if(!d.ok)throw 0;closeEdit();await load();status('✓ Entry updated.')}catch(e){$('#em').textContent='Could not save the change. Try again.'}}
+async function delEdit(){if(!ED)return;try{const d=await api({action:'delete',id:ED.id});if(!d.ok)throw 0;closeEdit();await load();status('Entry deleted.')}catch(e){$('#em').textContent='Could not delete. Try again.'}}
+function render(){syncForm();swRender();
+ $('#oth').innerHTML=ROWS.slice().reverse().map(r=>'<div class="er" style="cursor:pointer" onclick="openEdit(\''+esc(r.id)+'\')"><b style="width:130px">'+esc(r.house+' '+r.street)+'</b><span style="width:38px;color:#666">'+esc(r.date)+'</span><span style="width:30px;font-weight:700">'+esc(r.sym)+'</span><span style="flex:1;color:#555">'+esc(r.note)+'</span><span style="color:#888;font-size:11px">'+esc(r.pub)+'</span></div>').join('')||'<div style="color:#888;font-size:13px;padding:6px 0">No records saved yet.</div>';
+ const w=new Set(ROWS.map(key)).size,nh=ROWS.filter(r=>r.sym=='NH').length,ca=ROWS.filter(r=>r.sym=='CA').length;
+ $('#s1').textContent=TOTAL?w+' / '+TOTAL:w;$('#s2').textContent=ROWS.length?Math.round(100*nh/ROWS.length)+'%':'–';$('#s3').textContent=ca;$('#s4').textContent=ROWS.length;
+ const sm={};ROWS.forEach(r=>sm[r.sym]=(sm[r.sym]||0)+1);const ks=Object.keys(SYMC).filter(k=>sm[k]);
+ $('#sb').innerHTML=ks.map(k=>'<i style="width:'+100*sm[k]/ROWS.length+'%;background:'+SYMC[k]+'"></i>').join('')||'<span style="font-size:12px;color:#888;padding:3px">No entries yet</span>';
+ $('#lg').innerHTML=ks.map(k=>'<span><i style="background:'+SYMC[k]+'"></i>'+k+' '+sm[k]+'</span>').join('');
+ const EX=[...new Set(ROWS.map(r=>r.street))].filter(x=>!C.addr[x]);
+ $('#ts').innerHTML=ST.concat(EX).map(s=>{const rs=ROWS.filter(r=>r.street==s),ww=new Set(rs.map(key)).size,t=(C.addr[s]||[]).length;if(!t)return '<tr><td><b>'+esc(s)+'</b> <span style="font-size:11px;color:#c77700">new street</span></td><td></td><td>'+ww+'</td><td>'+rs.filter(r=>r.sym=="NH").length+'</td><td>'+rs.filter(r=>r.sym=="CA").length+'</td></tr>';return '<tr><td><b>'+esc(s)+'</b></td><td style="width:28%"><div class="bar"><i style="width:'+Math.min(100,100*ww/t)+'%"></i></div></td><td>'+ww+'/'+t+'</td><td>'+rs.filter(r=>r.sym=='NH').length+'</td><td>'+rs.filter(r=>r.sym=='CA').length+'</td></tr>'}).join('');
+ const todo=ST.filter(s=>new Set(ROWS.filter(r=>r.street==s).map(key)).size<C.addr[s].length);
+ $('#att').innerHTML=todo.length?'<b>Streets not finished:</b> '+todo.map(esc).join(', ')+'<br><b>Call Again to revisit:</b> '+ca+' addresses':'All streets worked.'}
+function printAll(){const g={};ROWS.forEach(r=>(g[r.street]=g[r.street]||[]).push(r));
+ let h='<h2 style="text-align:center;font-family:Georgia,serif;margin:0 0 4px">HOUSE-TO-HOUSE RECORD</h2><p style="margin:0 0 10px;font-size:13px"><b>TERRITORY</b> '+esc(C.tid)+' '+esc(C.city)+'</p>';
+ Object.keys(g).forEach(s=>{h+='<div class="blk"><div class="bh"><b>STREET</b> '+esc(s)+'</div><table><tr><th style="width:17%">House or Apt. No.</th><th style="width:20%">Date</th><th style="width:10%">Symbol</th><th>Name, Placement, and Remarks</th></tr>'+g[s].map(r=>'<tr><td>'+esc(r.house)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.sym)+'</td><td>'+esc(r.note)+(r.pub&&r.pub!='—'?' ('+esc(r.pub)+')':'')+'</td></tr>').join('')+'</table></div>'});
+ h+='<p style="font-size:11px">S-8-E 10/53</p>';
+ $('#pa').innerHTML=Object.keys(g).length?h:'<p>No records.</p>';window.print()}
+function askDone(){$('#dn').classList.remove('hide');$('#dn').scrollIntoView({behavior:'smooth',block:'center'})}
+async function finish(){const m=$('#msg');try{const d=await api({action:'complete'});if(!d.ok)throw 0;$('#dn').classList.add('hide');ROWS=[];render();m.style.color='#2e7d4f';m.textContent=d.cleared+' records cleared. This territory is ready for the next publisher. The link stays the same.'}catch(e){m.style.color='#a00';m.textContent='Could not complete. Try again.'}}
+function share(){const m=$('#shm');const u=location.href;if(navigator.share){navigator.share({title:'Territory '+C.tid+' – '+C.city,text:'Territory '+C.tid,url:u}).catch(()=>{})}else{(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>m.textContent='Link copied. Paste it into WhatsApp or a text.').catch(()=>m.textContent='Link: '+u)}}
+function showQR(){$('#qt').textContent='Territory '+C.tid;$('#qc').innerHTML='';try{new QRCode($('#qc'),{text:location.href,width:230,height:230,correctLevel:QRCode.CorrectLevel.M})}catch(e){$('#qc').textContent=location.href}$('#qr').classList.add('on')}
+load();setInterval(()=>{if(!document.hidden&&OK)load()},30000);
+</script></body></html>

@@ -1,0 +1,142 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Territory Check-Out Report</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--tx:#111827;--mut:#6b7280;--br:#e5e7eb;--hd:#e3edf6;--blue:#2563eb;--red:#d13b3b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,Segoe UI,sans-serif}
+.w{max-width:1300px;margin:0 auto;padding:24px 16px 60px}
+.hero{background:var(--hd);border-radius:18px;padding:26px 30px;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.hero small{letter-spacing:.14em;font-weight:700;color:#1e5a8a;font-size:13px}.hero h1{margin:6px 0 8px;font-size:36px}.hero p{margin:0;color:#374151;max-width:760px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:1px solid #1e5a8a;background:#fff;color:#1e5a8a;border-radius:8px;padding:8px 14px;font:600 14px inherit;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.p{background:#1e5a8a;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:18px 0}
+.st{background:var(--card);border:1px solid var(--br);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:center}
+.ic{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ic svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2}
+.st b{font-size:38px;line-height:1;display:block}.st span{color:#4b5563;font-size:15px;display:block}.st small{color:var(--mut)}
+h2{font-size:24px;margin:30px 0 12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.c{background:var(--card);border:1px solid var(--br);border-radius:16px;padding:22px}
+.c h3{margin:0;font-size:18px}.c .sub{color:var(--mut);font-size:14px;margin-bottom:12px}
+.c svg.d{display:block;margin:6px auto 14px;width:210px;height:210px}
+.lg{display:grid;grid-template-columns:16px 1fr auto 44px;gap:10px;align-items:center;padding:4px 0;font-size:15px}
+.lg i{width:16px;height:16px;border-radius:4px}.lg em{font-style:normal;color:#9ca3af;font-size:13px;text-align:right}.lg b{text-align:right}
+table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--br)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);cursor:pointer}
+.tag{font-size:12px;border-radius:10px;padding:2px 8px;color:#fff}.tag.r{background:var(--red)}.tag.g{background:#6b7280}.tag.y{background:#d97706}
+.tw{overflow-x:auto}
+#msg{margin-top:10px;font-size:14px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.hero h1{font-size:28px}}
+@media print{.btns{display:none}body{background:#fff}}
+</style></head><body><div class="w">
+<div class="hero"><div><small>LLANO, TX &middot; SERVICE YEAR <span id="sy"></span></small><h1>Territory Check-Out Report</h1>
+<p>Which territories are overdue for coverage, and who has the ones that have been out too long. Numbers as of <span id="asof"></span>.</p>
+<div class="btns"><button class="btn p" id="up">Upload new Hourglass PDF</button><button class="btn" id="dl" style="display:none">Save updated report file</button>
+<a class="btn" href="Overview.html">Not-at-home overview &rarr;</a><input type="file" id="f" accept="application/pdf" hidden></div><div id="msg"></div></div></div>
+<div class="stats" id="stats"></div>
+<h2>The big picture</h2><div class="g3" id="donuts"></div>
+<h2>Needs a follow-up <small style="font-size:14px;color:var(--mut);font-weight:400">checked out more than 4 months</small></h2>
+<div class="c tw"><table id="t1"></table></div>
+<h2>Checked out right now</h2><div class="c tw"><table id="t2"></table></div>
+<h2>Not worked in 12+ months</h2><div class="c tw"><table id="t3"></table></div>
+</div>
+<script id="data" type="application/json">{"asOf":"2026-10-13","rows":[{"id":"103","last":null,"open":null,"age":null,"out":null},{"id":"BL-1","last":"2025-02-20","open":null,"age":600,"out":null},{"id":"BL-10","last":"2024-02-09","open":{"name":"Smith, Steve","assigned":"2026-07-29"},"age":977,"out":76},{"id":"BL-2","last":"2026-04-14","open":null,"age":182,"out":null},{"id":"BL-3","last":"2026-05-09","open":null,"age":157,"out":null},{"id":"BL-4","last":"2025-11-09","open":null,"age":338,"out":null},{"id":"BL-5","last":"2026-07-15","open":null,"age":90,"out":null},{"id":"BL-6","last":"2026-08-22","open":null,"age":52,"out":null},{"id":"BL-7","last":"2025-12-30","open":null,"age":287,"out":null},{"id":"BL-8","last":"2026-10-07","open":null,"age":6,"out":null},{"id":"BL-9","last":"2026-01-21","open":null,"age":265,"out":null},{"id":"C-1","last":"2024-09-26","open":null,"age":747,"out":null},{"id":"L-1","last":"2024-08-12","open":null,"age":792,"out":null},{"id":"L-10","last":"2024-03-29","open":null,"age":928,"out":null},{"id":"L-11","last":"2025-01-16","open":null,"age":635,"out":null},{"id":"L-12","last":"2024-03-20","open":null,"age":937,"out":null},{"id":"L-13","last":"2024-03-15","open":{"name":"Smith, Steve","assigned":"2026-06-07"},"age":942,"out":128},{"id":"L-14","last":"2024-03-29","open":null,"age":928,"out":null},{"id":"L-15","last":"2024-08-17","open":null,"age":787,"out":null},{"id":"L-2","last":"2025-03-13","open":null,"age":579,"out":null},{"id":"L-3","last":"2024-09-02","open":null,"age":771,"out":null},{"id":"L-4","last":"2024-05-18","open":null,"age":878,"out":null},{"id":"L-5","last":"2024-12-17","open":null,"age":665,"out":null},{"id":"L-6","last":"2024-03-10","open":null,"age":947,"out":null},{"id":"L-7","last":"2025-05-19","open":null,"age":512,"out":null},{"id":"L-8","last":"2024-11-30","open":null,"age":682,"out":null},{"id":"L-9","last":"2024-11-30","open":null,"age":682,"out":null},{"id":"LB-1","last":"2026-08-26","open":null,"age":48,"out":null},{"id":"LB-2","last":"2022-06-30","open":{"name":"Chamberlain, Wendy","assigned":"2026-04-19"},"age":1566,"out":177},{"id":"LB-3","last":"2022-06-30","open":null,"age":1566,"out":null},{"id":"LB-4","last":"2022-06-30","open":null,"age":1566,"out":null},{"id":"LR-1","last":"2026-05-15","open":null,"age":151,"out":null},{"id":"LR-10","last":"2024-11-23","open":null,"age":689,"out":null},{"id":"LR-11","last":"2025-03-05","open":null,"age":587,"out":null},{"id":"LR-12","last":"2026-06-06","open":null,"age":129,"out":null},{"id":"LR-13","last":"2022-11-19","open":null,"age":1424,"out":null},{"id":"LR-2","last":"2026-04-17","open":null,"age":179,"out":null},{"id":"LR-3","last":"2023-12-26","open":null,"age":1022,"out":null},{"id":"LR-4","last":"2025-03-01","open":null,"age":591,"out":null},{"id":"LR-5","last":"2026-05-18","open":null,"age":148,"out":null},{"id":"LR-6","last":"2024-09-03","open":{"name":"Davis, Dale","assigned":"2026-07-16"},"age":770,"out":89},{"id":"LR-7","last":"2026-09-05","open":null,"age":38,"out":null},{"id":"LR-8","last":"2026-09-11","open":null,"age":32,"out":null},{"id":"LR-9","last":"2025-03-16","open":null,"age":576,"out":null},{"id":"M-1","last":"2025-11-29","open":null,"age":318,"out":null},{"id":"M-10","last":"2026-07-18","open":null,"age":87,"out":null},{"id":"M-11","last":"2024-09-21","open":{"name":"Britton, John","assigned":"2025-12-06"},"age":752,"out":311},{"id":"M-2","last":"2023-08-30","open":{"name":"Kargakos, Pete","assigned":"2026-10-07"},"age":1140,"out":6},{"id":"M-3","last":"2026-04-11","open":null,"age":185,"out":null},{"id":"M-4","last":"2025-03-04","open":null,"age":588,"out":null},{"id":"M-5","last":"2026-03-17","open":null,"age":210,"out":null},{"id":"M-6","last":"2026-01-11","open":null,"age":275,"out":null},{"id":"M-7","last":"2026-07-12","open":null,"age":93,"out":null},{"id":"M-8","last":"2023-08-30","open":{"name":"Smith, Steve","assigned":"2026-10-07"},"age":1140,"out":6},{"id":"M-9","last":"2024-07-26","open":null,"age":809,"out":null},{"id":"MB-1","last":"2023-07-15","open":{"name":"Chamberlain, Wendy","assigned":"2026-04-19"},"age":1186,"out":177},{"id":"MB-2","last":null,"open":null,"age":null,"out":null},{"id":"MR-1","last":"2025-03-16","open":null,"age":576,"out":null},{"id":"MR-2","last":"2023-11-12","open":{"name":"Sheppard, William","assigned":"2026-07-13"},"age":1066,"out":92},{"id":"MR-3","last":"2023-03-20","open":{"name":"","assigned":"2026-04-17"},"age":1303,"out":179},{"id":"MR-4","last":"2023-10-28","open":{"name":"Smith, Steve","assigned":"2026-07-18"},"age":1081,"out":87},{"id":"MR-5","last":"2023-12-02","open":null,"age":1046,"out":null},{"id":"MR-6","last":"2023-10-08","open":null,"age":1101,"out":null},{"id":"MR-7","last":"2025-09-04","open":null,"age":404,"out":null},{"id":"SS-1","last":"2026-10-06","open":{"name":"Vasquez, Gabriel","assigned":"2026-10-06"},"age":7,"out":7},{"id":"SS-10","last":"2025-02-15","open":null,"age":605,"out":null},{"id":"SS-11","last":"2023-05-30","open":null,"age":1232,"out":null},{"id":"SS-12","last":"2026-06-06","open":null,"age":129,"out":null},{"id":"SS-13","last":"2025-02-01","open":{"name":"Taylor, Anthony","assigned":"2026-10-10"},"age":619,"out":3},{"id":"SS-2","last":"2025-11-29","open":null,"age":318,"out":null},{"id":"SS-3","last":"2024-02-05","open":{"name":"Davis, Dale","assigned":"2025-10-17"},"age":981,"out":361},{"id":"SS-4","last":"2024-03-30","open":{"name":"Sines, Johanna","assigned":"2025-11-23"},"age":927,"out":324},{"id":"SS-5","last":"2025-02-09","open":{"name":"Smith, Steve","assigned":"2026-06-07"},"age":611,"out":128},{"id":"SS-6","last":"2025-12-25","open":null,"age":292,"out":null},{"id":"SS-7","last":"2026-09-23","open":null,"age":20,"out":null},{"id":"SS-8","last":"2026-01-11","open":null,"age":275,"out":null},{"id":"SS-9","last":"2026-10-08","open":null,"age":5,"out":null},{"id":"SSB-1","last":"2022-06-30","open":null,"age":1566,"out":null},{"id":"SSB-2","last":"2022-06-30","open":null,"age":1566,"out":null},{"id":"SSR-1","last":"2025-01-16","open":null,"age":635,"out":null},{"id":"SSR-10","last":"2024-04-28","open":null,"age":898,"out":null},{"id":"SSR-11","last":"2025-02-09","open":null,"age":611,"out":null},{"id":"SSR-2","last":"2024-04-05","open":null,"age":921,"out":null},{"id":"SSR-3","last":"2026-03-17","open":null,"age":210,"out":null},{"id":"SSR-4","last":"2024-09-22","open":null,"age":751,"out":null},{"id":"SSR-5","last":"2023-01-24","open":null,"age":1358,"out":null},{"id":"SSR-6","last":"2023-10-30","open":{"name":"Kargakos, Pete","assigned":"2026-10-07"},"age":1079,"out":6},{"id":"SSR-7","last":"2023-08-30","open":{"name":"Edwards, Janai","assigned":"2026-09-17"},"age":1140,"out":26},{"id":"SSR-8","last":"2024-01-10","open":null,"age":1007,"out":null},{"id":"SSR-9","last":"2025-01-13","open":null,"age":638,"out":null}]}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+var DATA=JSON.parse(document.getElementById('data').textContent);
+try{var sv=JSON.parse(localStorage.getItem('rep_data')||'null');if(sv&&sv.asOf>DATA.asOf)DATA=sv}catch(e){}
+var EXCL=/^(777|C(BL|L|M|SS)-\d+)$/, $=function(i){return document.getElementById(i)};
+function dd(s){var p=s.split('/');return p[2]+'-'+p[0]+'-'+p[1]}
+function fmt(s){if(!s)return '—';var p=s.split('-');return p[1]+'/'+p[2]+'/'+p[0]}
+function days(a,b){return Math.round((new Date(b)-new Date(a))/864e5)}
+function nameOf(n){return (n&&n.trim())||'Name not recorded'}
+/* ---- PDF reading ---- */
+async function parsePdf(buf){
+ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ var pdf=await pdfjsLib.getDocument({data:buf}).promise,T={},DR=/^\d\d\/\d\d\/\d{4}$/,IDR=/^[A-Z]{1,3}-\d+$|^\d{2,4}$/;
+ var GX=[[150,255],[255,357],[357,458],[458,560]];
+ for(var n=1;n<=pdf.numPages;n++){
+  var pg=await pdf.getPage(n),H=pg.view[3],tc=await pg.getTextContent();
+  var it=tc.items.filter(function(x){return x.str.trim()}).map(function(x){return{s:x.str.trim(),x:x.transform[4],y:H-x.transform[5]}});
+  var foot=it.filter(function(x){return /^\*When/.test(x.s)}).map(function(x){return x.y}),fy=foot.length?Math.min.apply(0,foot)-2:9999;
+  var all=it.map(function(x){return x.s}).join(' '),m=all.match(/Service Year:\s*(\d{4})/);if(!m)continue;
+  it=it.filter(function(x){return x.y>108&&x.y<fy});
+  var ids=it.filter(function(x){return x.x<100&&IDR.test(x.s)}).sort(function(a,b){return a.y-b.y});
+  ids.forEach(function(a,i){
+   var top=a.y-14,bot=i+1<ids.length?ids[i+1].y-14:9999;
+   var rw=it.filter(function(x){return x.y>=top&&x.y<bot}),t=T[a.s]||(T[a.s]={id:a.s,done:[],open:[]});
+   rw.forEach(function(x){if(x.x>95&&x.x<150&&DR.test(x.s))t.done.push(dd(x.s))});
+   GX.forEach(function(g){
+    var q=rw.filter(function(x){return x.x>=g[0]&&x.x<g[1]}),ass=null,cmp=null;
+    q.filter(function(x){return DR.test(x.s)}).sort(function(a,b){return a.x-b.x}).forEach(function(x){if(x.x<g[0]+(g[1]-g[0])*.45)ass=dd(x.s);else cmp=dd(x.s)});
+    var nm=q.filter(function(x){return !DR.test(x.s)}).sort(function(a,b){return Math.round(a.y)-Math.round(b.y)||a.x-b.x}).map(function(x){return x.s}).join(' ');
+    if(cmp)t.done.push(cmp);
+    if(ass&&!cmp)t.open.push({name:nm,assigned:ass});
+    if(ass&&cmp)t.closed=(t.closed||[]).concat([ass+'|'+nm]);
+   });
+  });
+ }
+ var rows=[];Object.keys(T).forEach(function(id){
+  var t=T[id];if(EXCL.test(id))return;
+  var cl=(t.closed||[]).map(function(c){return c.split('|')[0]+'|'+c.split('|').slice(1).join('|')});
+  var op=t.open.filter(function(o,i,a){return a.findIndex(function(p){return p.assigned==o.assigned&&p.name==o.name})==i})
+        .filter(function(o){return cl.every(function(c){return c.split('|')[0]!=o.assigned||c.split('|')[1]!=o.name})});
+  op.sort(function(a,b){return a.assigned<b.assigned?1:-1});
+  rows.push({id:id,last:t.done.length?t.done.sort().pop():null,open:op[0]||null});
+ });
+ rows.sort(function(a,b){return a.id<b.id?-1:1});return rows;
+}
+/* ---- drawing ---- */
+var PAL=['#2f7ad9','#e8683a','#17a673','#f0a30a','#e377a8','#0a9a0a','#7c5cd6','#14a3b8','#9ca3af'];
+function donut(parts,total,lab){
+ var R=80,r=50,cx=105,cy=105,a=-Math.PI/2,s='<svg class="d" viewBox="0 0 210 210">';
+ parts.filter(function(p){return p.n>0}).forEach(function(p){
+  var f=p.n/total,b=a+f*2*Math.PI,lg=f>.5?1:0;if(f>=.9999)b-=.001;
+  var P=function(rr,t){return (cx+rr*Math.cos(t)).toFixed(2)+' '+(cy+rr*Math.sin(t)).toFixed(2)};
+  s+='<path d="M'+P(R,a)+' A'+R+' '+R+' 0 '+lg+' 1 '+P(R,b)+' L'+P(r,b)+' A'+r+' '+r+' 0 '+lg+' 0 '+P(r,a)+'Z" fill="'+p.c+'"/>';a=b});
+ return s+'<text x="105" y="108" text-anchor="middle" font-size="30" font-weight="700">'+total+'</text><text x="105" y="126" text-anchor="middle" font-size="12" fill="#6b7280">'+lab+'</text></svg>';
+}
+function card(t,sub,parts,total,lab){
+ return '<div class="c"><h3>'+t+'</h3><div class="sub">'+sub+'</div>'+donut(parts,total,lab)+parts.map(function(p){
+  return '<div class="lg"><i style="background:'+p.c+'"></i><span>'+p.l+'</span><b>'+p.n+'</b><em>'+(total?Math.round(p.n/total*100):0)+'%</em></div>'}).join('')+'</div>';
+}
+function render(){
+ var A=DATA.asOf,R=DATA.rows;$('asof').textContent=new Date(A+'T12:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+ $('sy').textContent=A.slice(0,4);
+ R.forEach(function(r){r.age=r.last?days(r.last,A):null;r.out=r.open?days(r.open.assigned,A):null});
+ var open=R.filter(function(r){return r.open}),over=open.filter(function(r){return r.out>122}),old=R.filter(function(r){return r.age!=null&&r.age>365}),oldShelf=old.filter(function(r){return !r.open});
+ var ic=function(p,c){return '<div class="ic" style="background:'+c+'"><svg viewBox="0 0 24 24">'+p+'</svg></div>'};
+ $('stats').innerHTML=[[ic('<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>','#1e5a8a'),R.length,'Territories tracked','on the sheet'],
+  [ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>','#17a673'),open.length,'Checked out right now',''],
+  [ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','#d13b3b'),over.length,'Out more than 4 months','need a follow-up'],
+  [ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>','#e8683a'),old.length,'Not worked in 12+ months',oldShelf.length+' of them are on the shelf']
+ ].map(function(x){return '<div class="st">'+x[0]+'<div><b>'+x[1]+'</b><span>'+x[2]+'</span><small>'+x[3]+'</small></div></div>'}).join('');
+ var b=[0,0,0,0,0],c6=182.6,c12=365,c24=730;
+ R.forEach(function(r){var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
+ var ppl={};open.forEach(function(r){var k=nameOf(r.open.name);ppl[k]=(ppl[k]||0)+1});
+ var pl=Object.keys(ppl).sort(function(a,b){return ppl[b]-ppl[a]||(a<b?-1:1)}).map(function(k,i){return{l:k,n:ppl[k],c:k=='Name not recorded'?'#9ca3af':PAL[i%8]}});
+ $('donuts').innerHTML=card('How long since each territory was worked','Based on the last completed date',
+  [{l:'Within 6 months',n:b[0],c:'#12a312'},{l:'6 to 12 months ago',n:b[1],c:'#f7b00e'},{l:'1 to 2 years ago',n:b[2],c:'#ec8459'},{l:'More than 2 years ago',n:b[3],c:'#d13b3b'},{l:'No date on record',n:b[4],c:'#aeb4bd'}],R.length,'territories')
+  +card('Where the territories are right now','Checked out or on the shelf',[{l:'On the shelf',n:R.length-open.length,c:'#2f7ad9'},{l:'Out under 4 months',n:open.length-over.length,c:'#17a673'},{l:'Out over 4 months',n:over.length,c:'#d13b3b'}],R.length,'territories')
+  +card('Who has the territories checked out','Number of territories per person',pl,open.length,'checked out');
+ var tb=function(h,rows){return '<tr>'+h.map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>'+(rows.join('')||'<tr><td colspan="9">None</td></tr>')};
+ var o=function(a){return a.slice().sort(function(x,y){return y.out-x.out})};
+ $('t1').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out'],o(over).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td><span class="tag r">'+r.out+' days</span></td></tr>'}));
+ $('t2').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out','Last completed'],o(open).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td>'+r.out+'</td><td>'+fmt(r.last)+'</td></tr>'}));
+ $('t3').innerHTML=tb(['Territory','Last completed','Years since','Status'],old.sort(function(x,y){return y.age-x.age}).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+fmt(r.last)+'</td><td>'+(r.age/365).toFixed(1)+'</td><td>'+(r.open?'<span class="tag y">Out: '+nameOf(r.open.name)+'</span>':'<span class="tag g">On the shelf</span>')+'</td></tr>'}));
+}
+$('up').onclick=function(){$('f').click()};
+$('f').onchange=async function(e){
+ var f=e.target.files[0];if(!f)return;$('msg').textContent='Reading PDF…';
+ try{var rows=await parsePdf(await f.arrayBuffer());if(rows.length<20)throw new Error('This does not look like the Hourglass Territory Assignment Record ('+rows.length+' territories found).');
+  var d=new Date(),as=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  DATA={asOf:as,rows:rows};try{localStorage.setItem('rep_data',JSON.stringify(DATA))}catch(x){}
+  render();$('dl').style.display='';$('msg').textContent='Updated from '+f.name+' ('+rows.length+' territories). To share this with everyone, click “Save updated report file” and upload it to GitHub.';
+ }catch(err){$('msg').textContent='Could not read that file: '+err.message}
+};
+$('dl').onclick=function(){
+ var h='<!doctype html>\n'+document.documentElement.outerHTML.replace(/(<script id="data" type="application\/json">)[\s\S]*?(<\/script>)/,function(m,a,b){return a+JSON.stringify(DATA)+b});
+ var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'text/html'}));a.download='Territory_Check-Out_Report.html';a.click();
+};
+render();
+</script></body></html>

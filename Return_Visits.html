@@ -25,10 +25,11 @@ label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0
 
 #PR{display:none}
 @media print{body>*:not(#PR){display:none!important}#PR{display:block!important;font:10.5pt Arial;color:#000}#PR h2{margin:0 0 2pt;font-size:15pt}#PR h3{margin:12pt 0 3pt;font-size:11.5pt;border-bottom:1.5pt solid #000;padding-bottom:2pt}#PR table{width:100%;border-collapse:collapse;margin-bottom:6pt}#PR td,#PR th{border:.6pt solid #666;padding:3pt 5pt;text-align:left;vertical-align:top;font-size:9.5pt}#PR th{background:#eee}#PR .pb{page-break-before:always}#PR .sm{font-size:9pt;color:#444;margin-bottom:6pt}}
+.fchip{border:1px solid #c5cee0;background:#fff;border-radius:16px;padding:6px 12px;font-size:13px;font-weight:700;color:#334}.fchip.on{background:#1c4fa8;color:#fff;border-color:#1c4fa8}
 .tinfo{background:#eaf2ff;border:1px solid #bcd3f7;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
 .sub{background:#fafbfe;padding:5px 12px 5px 22px;font-size:12.5px;font-weight:800;color:#1c4fa8;border-bottom:1px solid #edf0f6}
 </style></head><body><div class="wrap">
-<div class="hd"><small>Private to this device</small><h1>Return visits</h1></div>
+<div class="hd"><small id="bk">Private to this device</small><h1>Return visits</h1></div>
 <div class="priv">Saved only on this phone or computer. Nothing is sent to the group sheet. Use <b>Export backup</b> now and then.</div>
 <div class="tabs"><button id="t1" class="on" onclick="tab(1)">List</button><button id="t2" onclick="tab(2)">Add</button><button id="t3" onclick="tab(3)">Map</button><button id="t4" onclick="tab(4)">Backup</button></div>
 <div id="v1"></div>
@@ -42,7 +43,7 @@ label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0
 var KEY='rv_visits_v1',RV=[],ME=null,MAP=null,LAY=null,TL=null,MEMK=null,PLACING=false,DRAFT={lat:null,lng:null,acc:null},EDIT='';
 var TERR=[];
 var PAL=['#1c4fa8','#d9822b','#8a4fc7','#0f8f9c','#c2410c','#b8236b','#4d7c0f','#7c5e10'];
-var P=new URLSearchParams(location.search),T0=P.get('t')||'',TD={},TT=[],GROUP='near';
+var P=new URLSearchParams(location.search),T0=P.get('t')||'',TD={},TT=[],GROUP='near',ONLY=false;
 function nat(a,b){var x=a.split('-'),y=b.split('-');return x[0]==y[0]?(+x[1])-(+y[1]):x[0]<y[0]?-1:1}
 function loadT(){return fetch('rv_territories.json').then(function(r){return r.json()}).then(function(d){TD=d;TT=Object.keys(d).sort(nat);TERR=TT.slice();
  TT.forEach(function(k){var t=d[k];t.kx=111320*Math.cos(t.geo[1]*Math.PI/180);var b=[1e9,1e9,-1e9,-1e9];t.poly.forEach(function(p){b[0]=Math.min(b[0],p[0]);b[1]=Math.min(b[1],p[1]);b[2]=Math.max(b[2],p[0]);b[3]=Math.max(b[3],p[1])});t.bb=b;t.cen=toLL(t,(b[0]+b[2])/2,(b[1]+b[3])/2)});
@@ -74,9 +75,9 @@ function addrOf(v){return ((v.h?v.h+' ':'')+(v.st||'')).trim()||v.a||''}
 function card(v,showD){return '<div class="row" style="--c:'+col(v.t)+'"><span class="dot"></span><div class="t"><div class="nm">'+esc(v.n)+'</div><div class="ad">'+esc(addrOf(v))+'</div><div class="meta"><span class="chip">'+esc(v.t||'No territory')+'</span><span class="chip d">'+esc(v.s)+'</span>'+(v.fu?'<span class="chip f">Follow up '+esc(v.fu)+'</span>':'')+' Visited '+esc(v.dt)+'</div>'+(v.nt?'<div class="nt">'+esc(v.nt)+'</div>':'')+
   '<div><button class="mini" onclick="showOn(\''+v.id+'\')">Show on map</button><button class="mini" onclick="edit(\''+v.id+'\')">Edit</button>'+(v.lat!=null?'<a class="mini" style="text-decoration:none;display:inline-block" href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank">Directions</a>':'')+'</div></div>'+(showD&&v.d!=null?'<div class="dist">'+fmt(v.d)+'</div>':'')+'</div>'}
 function list(){var el=document.getElementById('v1'),h='';
- h+='<div class="bar"><b style="font-size:13px">Group by</b><select id="so" style="width:auto" onchange="GROUP=this.value;list()"><option value="near"'+(GROUP=='near'?' selected':'')+'>Nearest to me</option><option value="ts"'+(GROUP=='ts'?' selected':'')+'>Territory and street</option><option value="fu"'+(GROUP=='fu'?' selected':'')+'>Follow-up date</option></select><button class="btn" style="margin-left:auto" onclick="tab(2)">+ Add</button></div>';
+ h+='<div class="bar"><b style="font-size:13px">Group by</b><select id="so" style="width:auto" onchange="GROUP=this.value;list()"><option value="near"'+(GROUP=='near'?' selected':'')+'>Nearest to me</option><option value="ts"'+(GROUP=='ts'?' selected':'')+'>Territory and street</option><option value="fu"'+(GROUP=='fu'?' selected':'')+'>Follow-up date</option></select><button class="btn" style="margin-left:auto" onclick="tab(2)">+ Add</button></div>'+(T0?'<div class="bar" style="padding-top:0"><button class="fchip'+(ONLY?'':' on')+'" onclick="ONLY=false;list()">All my return visits ('+RV.length+')</button><button class="fchip'+(ONLY?' on':'')+'" onclick="ONLY=true;list()">Only '+esc(T0)+' ('+RV.filter(function(v){return v.t==T0}).length+')</button></div>':'');
  if(!RV.length){el.innerHTML=h+'<div class="note">No return visits yet. Tap <b>Add</b> when you leave a house, or <a href="#" onclick="demo();return false">load sample visits</a> to try it.</div>';return}
- var items=RV.map(function(v){return Object.assign({},v)});
+ var items=RV.filter(function(v){return !(ONLY&&T0)||v.t==T0}).map(function(v){return Object.assign({},v)});
  if(GROUP=='near'){
   if(!ME){h+='<div class="note" style="background:#fff7e0;color:#5c4400">Tap <b>Find me</b> so I can sort by what is closest to you right now. <button class="mini" onclick="where(function(){list()})">Find me</button></div>'}
   else{items.forEach(function(v){v.d=(v.lat==null)?null:dist(ME.lat,ME.lng,v.lat,v.lng)});items.sort(function(a,b){return (a.d==null)-(b.d==null)||a.d-b.d})}
@@ -155,5 +156,7 @@ function demo(){var tn=T0&&TD[T0]?T0:'SS-1',t=TD[tn];if(!t){toast('Territory dat
  for(var i=0;i<8;i++){var w=ws[i%ws.length],j=Math.min(w.p.length-2,i%3),u=.25+.2*(i%3),p=[w.p[j][0]+(w.p[j+1][0]-w.p[j][0])*u,w.p[j][1]+(w.p[j+1][1]-w.p[j][1])*u],ll=toLL(t,p[0]+6,p[1]+6);
   RV.push({id:'d'+i,n:N[i],h:String(100+i*37),st:w.n,a:(100+i*37)+' '+w.n,t:tn,s:S[i%4],dt:today(),fu:i%3==0?today():'',nt:i%2?'Asked about what happens after death. Left a tract.':'Wants to talk again about the Bible.',lat:ll[0],lng:ll[1],acc:10})}
  save();list()}
-load();list();loadT();
+load();
+if(/^[A-Z]+-\d+$/.test(T0)){var bk=document.getElementById('bk');bk.innerHTML='<a href="'+T0+'_card_site.html" style="color:#fff;font-weight:700">&larr; Back to territory card '+T0+'</a> &middot; private to this device'}
+list();loadT();
 </script></body></html>

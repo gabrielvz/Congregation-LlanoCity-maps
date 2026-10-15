@@ -1,0 +1,159 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Return Visits</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef1f6;color:#14213d}
+.wrap{max-width:520px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 24px rgba(0,0,0,.08)}
+.hd{background:#1c4fa8;color:#fff;padding:14px}.hd h1{margin:0;font-size:20px}.hd small{opacity:.9}
+.priv{background:#e3f4e9;color:#1f6b3f;font-size:12.5px;padding:8px 14px;border-bottom:1px solid #bfe3cc}
+.tabs{display:flex;border-bottom:1px solid #dfe5f0;position:sticky;top:0;background:#fff;z-index:20}.tabs button{flex:1;border:0;background:#fff;padding:12px 4px;font-size:14px;font-weight:700;color:#5b6577;border-bottom:3px solid transparent}.tabs button.on{color:#1c4fa8;border-color:#1c4fa8}
+.bar{padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #edf0f6}
+.btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:700;background:#1c4fa8;color:#fff}.btn.o{background:#fff;color:#1c4fa8;border:2px solid #1c4fa8}.btn.g{background:#2e8b57}.btn.r{background:#b42318}
+select,input[type=text],input[type=date],textarea{width:100%;padding:10px;border:1px solid #c5cee0;border-radius:10px;font:inherit;font-size:16px;background:#fff}
+label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0 3px}
+.grp{background:#f3f6fc;padding:7px 12px;font-size:12.5px;font-weight:800;color:#334;letter-spacing:.03em;text-transform:uppercase;border-bottom:1px solid #e3e8f1}
+.row{padding:12px;border-bottom:1px solid #edf0f6;display:flex;gap:10px;align-items:flex-start}
+.dot{flex:none;width:12px;height:12px;border-radius:50%;margin-top:5px;background:var(--c)}
+.row .t{flex:1;min-width:0}.nm{font-weight:800;font-size:16px}.ad{font-size:14px;color:#334}.meta{font-size:12.5px;color:#5b6577;margin-top:3px}.nt{font-size:13.5px;margin-top:4px}
+.chip{display:inline-block;border-radius:10px;padding:2px 8px;font-size:11.5px;font-weight:800;background:#e6defa;color:#4b2a8f;margin-right:4px}.chip.d{background:#e3f4e9;color:#1f6b3f}.chip.f{background:#ffe9c9;color:#7a4a00}
+.dist{font-weight:800;color:#1c4fa8;font-size:13px;white-space:nowrap}
+.mini{border:1px solid #c5cee0;background:#fff;border-radius:8px;padding:5px 9px;font-size:12px;font-weight:700;color:#1c4fa8;margin:6px 6px 0 0}
+#map{height:calc(100vh - 150px);min-height:380px}
+.pinrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pinst{font-size:13px;font-weight:700}
+.form{padding:4px 14px 18px}.note{padding:12px;font-size:13px;color:#5b6577;line-height:1.45}
+#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#14213d;color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;max-width:92vw}
+.leg{display:flex;gap:10px;flex-wrap:wrap;padding:8px 12px;font-size:12px;background:#fff}.leg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;background:var(--c)}
+
+#PR{display:none}
+@media print{body>*:not(#PR){display:none!important}#PR{display:block!important;font:10.5pt Arial;color:#000}#PR h2{margin:0 0 2pt;font-size:15pt}#PR h3{margin:12pt 0 3pt;font-size:11.5pt;border-bottom:1.5pt solid #000;padding-bottom:2pt}#PR table{width:100%;border-collapse:collapse;margin-bottom:6pt}#PR td,#PR th{border:.6pt solid #666;padding:3pt 5pt;text-align:left;vertical-align:top;font-size:9.5pt}#PR th{background:#eee}#PR .pb{page-break-before:always}#PR .sm{font-size:9pt;color:#444;margin-bottom:6pt}}
+.tinfo{background:#eaf2ff;border:1px solid #bcd3f7;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
+.sub{background:#fafbfe;padding:5px 12px 5px 22px;font-size:12.5px;font-weight:800;color:#1c4fa8;border-bottom:1px solid #edf0f6}
+</style></head><body><div class="wrap">
+<div class="hd"><small>Private to this device</small><h1>Return visits</h1></div>
+<div class="priv">Saved only on this phone or computer. Nothing is sent to the group sheet. Use <b>Export backup</b> now and then.</div>
+<div class="tabs"><button id="t1" class="on" onclick="tab(1)">List</button><button id="t2" onclick="tab(2)">Add</button><button id="t3" onclick="tab(3)">Map</button><button id="t4" onclick="tab(4)">Backup</button></div>
+<div id="v1"></div>
+<div id="v2" class="form" style="display:none"></div>
+<div id="v3" style="display:none"><div id="map"></div><div class="leg" id="leg"></div></div>
+<div id="v4" style="display:none"></div>
+</div><div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ---- data: kept in this browser only ---- */
+var KEY='rv_visits_v1',RV=[],ME=null,MAP=null,LAY=null,TL=null,MEMK=null,PLACING=false,DRAFT={lat:null,lng:null,acc:null},EDIT='';
+var TERR=[];
+var PAL=['#1c4fa8','#d9822b','#8a4fc7','#0f8f9c','#c2410c','#b8236b','#4d7c0f','#7c5e10'];
+var P=new URLSearchParams(location.search),T0=P.get('t')||'',TD={},TT=[],GROUP='near';
+function nat(a,b){var x=a.split('-'),y=b.split('-');return x[0]==y[0]?(+x[1])-(+y[1]):x[0]<y[0]?-1:1}
+function loadT(){return fetch('rv_territories.json').then(function(r){return r.json()}).then(function(d){TD=d;TT=Object.keys(d).sort(nat);TERR=TT.slice();
+ TT.forEach(function(k){var t=d[k];t.kx=111320*Math.cos(t.geo[1]*Math.PI/180);var b=[1e9,1e9,-1e9,-1e9];t.poly.forEach(function(p){b[0]=Math.min(b[0],p[0]);b[1]=Math.min(b[1],p[1]);b[2]=Math.max(b[2],p[0]);b[3]=Math.max(b[3],p[1])});t.bb=b;t.cen=toLL(t,(b[0]+b[2])/2,(b[1]+b[3])/2)});
+ var sel=document.getElementById('ft');if(sel&&document.getElementById('v2').style.display!='none')form(EDIT||undefined);list()}).catch(function(){toast('Territory outlines did not load. Pins still work.')})}
+function toLoc(t,lat,lng){return [(lng-t.geo[0])*t.kx,-(lat-t.geo[1])*110540]}
+function toLL(t,x,y){return [t.geo[1]-y/110540,t.geo[0]+x/t.kx]}
+function pip(pt,poly){var x=pt[0],y=pt[1],c=false;for(var i=0,j=poly.length-1;i<poly.length;j=i++){var a=poly[i],b=poly[j];if((a[1]>y)!=(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function findT(lat,lng){for(var i=0;i<TT.length;i++){var t=TD[TT[i]],p=toLoc(t,lat,lng);if(p[0]<t.bb[0]||p[0]>t.bb[2]||p[1]<t.bb[1]||p[1]>t.bb[3])continue;if(pip(p,t.poly))return t.n}return ''}
+function segd(p,a,b){var dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy,u=l?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l)):0,x=a[0]+u*dx-p[0],y=a[1]+u*dy-p[1];return Math.sqrt(x*x+y*y)}
+function nearSt(tn,lat,lng){var t=TD[tn];if(!t)return '';var p=toLoc(t,lat,lng),best='',bd=1e9;t.ways.forEach(function(w){for(var i=1;i<w.p.length;i++){var d=segd(p,w.p[i-1],w.p[i]);if(d<bd){bd=d;best=w.n}}});return bd<90?best:''}
+function streetsOf(tn){var t=TD[tn];if(!t)return [];var o={};t.streets.forEach(function(x){o[x]=1});t.ways.forEach(function(w){o[w.n]=1});return Object.keys(o).sort()}
+
+function load(){try{RV=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){RV=[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(RV))}catch(e){toast('Could not save on this device')}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m){var d=document.getElementById('toast');d.textContent=m;d.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(function(){d.style.display='none'},3500)}
+function col(t){var i=TERR.indexOf(t);return i<0?'#64748b':PAL[i%PAL.length]}
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function dist(a,b,c,d){var R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)*Math.sin(y/2);return 2*R*Math.asin(Math.sqrt(h))}
+function fmt(m){var f=m*3.28084;return m<300?Math.round(f/10)*10+' ft':(m/1609.34).toFixed(1)+' mi'}
+function tab(n){for(var i=1;i<=4;i++){document.getElementById('v'+i).style.display=i==n?'block':'none';document.getElementById('t'+i).className=i==n?'on':''}
+ if(n==1)list();if(n==2)form();if(n==3)drawMap();if(n==4)backup()}
+/* ---- location ---- */
+function where(cb,quiet){if(!navigator.geolocation){toast('This device cannot share its location');return}
+ navigator.geolocation.getCurrentPosition(function(p){ME={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy};cb(ME)},function(e){if(!quiet)toast('Location is off. Allow it for this site, or tap the map instead.')},{enableHighAccuracy:true,timeout:15000,maximumAge:20000})}
+/* ---- list ---- */
+function houseNo(v){var m=String(v.h||'').match(/\d+/);return m?+m[0]:0}
+function addrOf(v){return ((v.h?v.h+' ':'')+(v.st||'')).trim()||v.a||''}
+function card(v,showD){return '<div class="row" style="--c:'+col(v.t)+'"><span class="dot"></span><div class="t"><div class="nm">'+esc(v.n)+'</div><div class="ad">'+esc(addrOf(v))+'</div><div class="meta"><span class="chip">'+esc(v.t||'No territory')+'</span><span class="chip d">'+esc(v.s)+'</span>'+(v.fu?'<span class="chip f">Follow up '+esc(v.fu)+'</span>':'')+' Visited '+esc(v.dt)+'</div>'+(v.nt?'<div class="nt">'+esc(v.nt)+'</div>':'')+
+  '<div><button class="mini" onclick="showOn(\''+v.id+'\')">Show on map</button><button class="mini" onclick="edit(\''+v.id+'\')">Edit</button>'+(v.lat!=null?'<a class="mini" style="text-decoration:none;display:inline-block" href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank">Directions</a>':'')+'</div></div>'+(showD&&v.d!=null?'<div class="dist">'+fmt(v.d)+'</div>':'')+'</div>'}
+function list(){var el=document.getElementById('v1'),h='';
+ h+='<div class="bar"><b style="font-size:13px">Group by</b><select id="so" style="width:auto" onchange="GROUP=this.value;list()"><option value="near"'+(GROUP=='near'?' selected':'')+'>Nearest to me</option><option value="ts"'+(GROUP=='ts'?' selected':'')+'>Territory and street</option><option value="fu"'+(GROUP=='fu'?' selected':'')+'>Follow-up date</option></select><button class="btn" style="margin-left:auto" onclick="tab(2)">+ Add</button></div>';
+ if(!RV.length){el.innerHTML=h+'<div class="note">No return visits yet. Tap <b>Add</b> when you leave a house, or <a href="#" onclick="demo();return false">load sample visits</a> to try it.</div>';return}
+ var items=RV.map(function(v){return Object.assign({},v)});
+ if(GROUP=='near'){
+  if(!ME){h+='<div class="note" style="background:#fff7e0;color:#5c4400">Tap <b>Find me</b> so I can sort by what is closest to you right now. <button class="mini" onclick="where(function(){list()})">Find me</button></div>'}
+  else{items.forEach(function(v){v.d=(v.lat==null)?null:dist(ME.lat,ME.lng,v.lat,v.lng)});items.sort(function(a,b){return (a.d==null)-(b.d==null)||a.d-b.d})}
+  var last='';items.forEach(function(v){var g='';if(ME)g=v.d==null?'No pin yet':v.d<150?'Right here (under 500 ft)':v.d<800?'Close by (under half a mile)':v.d<3200?'Same part of town (under 2 miles)':'Farther away';if(g!=last){h+='<div class="grp">'+g+'</div>';last=g}h+=card(v,ME)})}
+ else if(GROUP=='fu'){items.sort(function(a,b){return (a.fu||'9999').localeCompare(b.fu||'9999')});items.forEach(function(v){h+=card(v,false)})}
+ else{var G=grouped(items);G.forEach(function(g){h+='<div class="grp">'+esc(g.t||'No territory')+(g.t&&TD[g.t]?' &middot; '+esc(TD[g.t].loc):'')+' &middot; '+g.n+'</div>';g.s.forEach(function(x){h+='<div class="sub">'+esc(x.st||'No street')+'</div>';x.v.forEach(function(v){h+=card(v,false)})})})}
+ el.innerHTML=h}
+function grouped(items){var T={};items.forEach(function(v){var t=v.t||'',s=v.st||'';(T[t]=T[t]||{})[s]=(T[t][s]||[]).concat([v])});
+ return Object.keys(T).sort(function(a,b){return a==''?1:b==''?-1:nat(a,b)}).map(function(t){var ss=Object.keys(T[t]).sort(function(a,b){return a==''?1:b==''?-1:a.localeCompare(b)}),n=0;return {t:t,s:ss.map(function(st){var v=T[t][st].sort(function(a,b){return houseNo(a)-houseNo(b)||String(a.h).localeCompare(String(b.h))});n+=v.length;return {st:st,v:v}}),n:n}})}
+/* ---- add / edit ---- */
+function form(id){var v=id?RV.filter(function(x){return x.id==id})[0]:null;EDIT=v?v.id:'';DRAFT=v?{lat:v.lat,lng:v.lng,acc:v.acc,t:v.t,st:v.st,sug:''}:{lat:null,lng:null,acc:null,t:T0,st:'',sug:''};
+ var el=document.getElementById('v2');
+ el.innerHTML='<label>Name</label><input type="text" id="fn" value="'+esc(v?v.n:'')+'" placeholder="Name or description">'+
+ '<label>Pin the location</label><div class="pinrow"><button class="btn g" onclick="pinHere()">Pin where I am now</button><button class="btn o" onclick="pinMap()">Tap on the map</button></div><div class="pinst" id="ps" style="margin-top:6px"></div><div class="tinfo" id="ti" style="display:none"></div>'+
+ '<label>Territory</label><select id="ft" onchange="DRAFT.t=this.value;DRAFT.st=\'\';fillSt()"></select>'+
+ '<div style="display:flex;gap:8px"><div style="width:90px"><label>House no.</label><input type="text" id="fh" inputmode="numeric" value="'+esc(v?v.h||'':'')+'"></div><div style="flex:1"><label>Street</label><select id="fst" onchange="stPick()"></select></div></div><input type="text" id="fsx" style="display:none;margin-top:6px" placeholder="Type the street name">'+
+ '<label>Status</label><select id="fs">'+['Return visit','Bible study','Left literature','Interested','Not home, try again'].map(function(x){return '<option'+(v&&v.s==x?' selected':'')+'>'+x+'</option>'}).join('')+'</select>'+
+ '<label>Visited</label><input type="date" id="fd" value="'+(v?v.dt:today())+'"><label>Follow up by (optional)</label><input type="date" id="ff" value="'+(v?v.fu||'':'')+'">'+
+ '<label>What are they interested in? What did you leave?</label><textarea id="fnt" rows="3">'+esc(v?v.nt:'')+'</textarea>'+
+ '<div style="display:flex;gap:8px;margin-top:14px"><button class="btn" style="flex:1" onclick="saveV()">Save</button>'+(v?'<button class="btn r" onclick="delV(\''+v.id+'\')">Delete</button>':'')+'</div>';fillT();pst()}
+function fillT(){var e=document.getElementById('ft');if(!e)return;e.innerHTML='<option value="">Outside the territories</option>'+TT.map(function(t){return '<option'+(DRAFT.t==t?' selected':'')+'>'+t+'</option>'}).join('');fillSt()}
+function fillSt(){var e=document.getElementById('fst');if(!e)return;var L=streetsOf(DRAFT.t);if(DRAFT.st&&L.indexOf(DRAFT.st)<0&&DRAFT.st!='_')L.push(DRAFT.st);
+ e.innerHTML='<option value="">Choose the street</option>'+L.map(function(x){return '<option'+(DRAFT.st==x?' selected':'')+'>'+esc(x)+'</option>'}).join('')+'<option value="_">Other (type it)</option>';document.getElementById('fsx').style.display=DRAFT.st=='_'?'block':'none'}
+function stPick(){var v=document.getElementById('fst').value;DRAFT.st=v;document.getElementById('fsx').style.display=v=='_'?'block':'none'}
+function edit(id){tab(2);form(id)}
+function applyPin(lat,lng,acc){DRAFT.lat=lat;DRAFT.lng=lng;DRAFT.acc=acc;
+ if(TT.length){var t=findT(lat,lng);DRAFT.t=t;DRAFT.sug=t?nearSt(t,lat,lng):'';DRAFT.st=DRAFT.sug||''}
+ fillT();pst()}
+function pst(){var e=document.getElementById('ps'),i=document.getElementById('ti');if(!e)return;
+ e.textContent=DRAFT.lat==null?'No pin yet. Pin it while you are at the house.':'Pinned'+(DRAFT.acc?' (accurate to about '+Math.round(DRAFT.acc*3.28)+' ft)':'')+'.';e.style.color=DRAFT.lat==null?'#b45309':'#1f6b3f';
+ if(i){if(DRAFT.lat==null||!TT.length){i.style.display='none'}else{i.style.display='block';i.innerHTML=DRAFT.t?'In territory <b>'+esc(DRAFT.t)+'</b> ('+esc(TD[DRAFT.t].loc)+').'+(DRAFT.sug?' Closest street: <b>'+esc(DRAFT.sug)+'</b>. Change it below if it is wrong.':' Pick the street below.'):'<b>This pin is outside all territories.</b> You can still save it, or choose a territory below.'}}}
+function pinHere(){toast('Finding your location...');where(function(m){applyPin(m.lat,m.lng,m.acc);toast('Pinned at your location')})}
+function pinMap(){keep();PLACING=true;tab(3);toast('Tap the map where the house is')}
+function keep(){var g=function(i){var e=document.getElementById(i);return e?e.value:''};window.KEEP={n:g('fn'),h:g('fh'),s:g('fs'),dt:g('fd'),fu:g('ff'),nt:g('fnt')}}
+function restore(){var k=window.KEEP||{},s=function(i,v){var e=document.getElementById(i);if(e&&v!=null)e.value=v};s('fn',k.n);s('fh',k.h);s('fs',k.s);s('fd',k.dt);s('ff',k.fu);s('fnt',k.nt)}
+function saveV(){var n=document.getElementById('fn').value.trim(),h=document.getElementById('fh').value.trim(),st=document.getElementById('fst').value;if(st=='_')st=document.getElementById('fsx').value.trim();
+ if(!n&&!h&&!st){toast('Enter a name or address first');return}
+ var o={n:n||'(no name)',h:h,st:st,t:document.getElementById('ft').value,s:document.getElementById('fs').value,dt:document.getElementById('fd').value||today(),fu:document.getElementById('ff').value,nt:document.getElementById('fnt').value.trim(),lat:DRAFT.lat,lng:DRAFT.lng,acc:DRAFT.acc};o.a=addrOf(o);
+ if(EDIT){RV.forEach(function(v){if(v.id==EDIT)for(var k in o)v[k]=o[k]})}else{o.id='r'+Date.now().toString(36)+Math.floor(Math.random()*1e3);RV.push(o)}
+ save();toast('Saved on this device'+(o.lat==null?' (no pin yet)':''));EDIT='';tab(1)}
+function delV(id){if(!confirm('Delete this return visit from this device?'))return;RV=RV.filter(function(v){return v.id!=id});save();tab(1)}
+/* ---- map ---- */
+function drawMap(){
+ if(typeof L=='undefined'){document.getElementById('map').innerHTML='<div class="note">The map needs an internet connection.</div>';return}
+ if(!MAP){MAP=L.map('map').setView([30.7591,-98.6753],13);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(MAP);TL=L.layerGroup().addTo(MAP);LAY=L.layerGroup().addTo(MAP);
+  MAP.on('click',function(e){if(!PLACING)return;PLACING=false;var wasEdit=EDIT;tab(2);form(wasEdit||undefined);restore();applyPin(e.latlng.lat,e.latlng.lng,null);toast('Pin placed. Save when ready.')})}
+ setTimeout(function(){MAP.invalidateSize()},50);TL.clearLayers();LAY.clearLayers();var pts=[],used={},foc=T0&&TD[T0]?T0:'';
+ TT.forEach(function(k){var t=TD[k],on=k==foc;L.polygon(t.poly.map(function(p){return toLL(t,p[0],p[1])}),{color:col(k),weight:on?3:1.5,fillOpacity:on?.08:.03,interactive:false}).addTo(TL);
+  L.marker(t.cen,{interactive:false,icon:L.divIcon({className:'',html:'<div style="font:800 11px system-ui;color:'+col(k)+';text-shadow:0 0 3px #fff,0 0 3px #fff;white-space:nowrap;transform:translate(-50%,-50%)">'+k+'</div>'})}).addTo(TL);
+  if(on)t.ways.forEach(function(w){L.polyline(w.p.map(function(p){return toLL(t,p[0],p[1])}),{color:'#6b7280',weight:2,opacity:.5}).addTo(TL).bindTooltip(w.n,{sticky:true})})});
+ RV.forEach(function(v){if(v.lat==null)return;used[v.t||'']=1;pts.push([v.lat,v.lng]);
+  L.circleMarker([v.lat,v.lng],{radius:10,color:'#fff',weight:2,fillColor:col(v.t),fillOpacity:1}).addTo(LAY).bindPopup('<b>'+esc(v.n)+'</b><br>'+esc(addrOf(v))+'<br>'+esc(v.t||'')+' &middot; '+esc(v.s)+(v.fu?'<br>Follow up '+esc(v.fu):'')+'<br><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'">Directions</a>')});
+ if(ME){L.circle([ME.lat,ME.lng],{radius:Math.max(ME.acc||15,10),color:'#2563eb',fillOpacity:.15}).addTo(LAY);L.circleMarker([ME.lat,ME.lng],{radius:6,color:'#fff',weight:2,fillColor:'#2563eb',fillOpacity:1}).addTo(LAY);pts.push([ME.lat,ME.lng])}
+ if(pts.length>1)MAP.fitBounds(pts,{padding:[40,40],maxZoom:17});else if(pts.length==1)MAP.setView(pts[0],16);else if(foc)MAP.setView(TD[foc].cen,15);
+ document.getElementById('leg').innerHTML=Object.keys(used).map(function(t){return '<span style="--c:'+col(t)+'">'+(t||'No territory')+'</span>'}).join('')+(ME?'<span style="--c:#2563eb">You</span>':'')+'<button class="mini" style="margin:0 0 0 auto" onclick="where(function(){drawMap()})">Find me</button>'}
+function showOn(id){var v=RV.filter(function(x){return x.id==id})[0];if(v.lat==null){toast('This visit has no pin yet. Tap Edit, then pin it.');return}tab(3);setTimeout(function(){MAP.setView([v.lat,v.lng],18)},120)}
+/* ---- backup, print, export ---- */
+function backup(){var have=Object.keys(RV.reduce(function(o,v){o[v.t||'']=1;return o},{})).sort(function(a,b){return a==''?1:b==''?-1:nat(a,b)});
+ document.getElementById('v4').innerHTML='<div class="note"><b>Your return visits live only in this browser.</b> If you clear the browser data or change phones, they are gone unless you export a backup.</div><div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px">'+
+ '<label style="margin:0">Print or export</label><select id="ps2"><option value="">All territories</option>'+have.map(function(t){return '<option>'+(t||'No territory')+'</option>'}).join('')+'</select><div style="font-size:12.5px;color:#5b6577">Grouped by territory, then street, then house number. A printed list has names on it, so keep it private.</div>'+
+ '<button class="btn" onclick="doPrint()">Print or save as PDF</button><button class="btn o" onclick="expC()">Export as spreadsheet (.csv)</button>'+
+ '<hr style="width:100%;border:0;border-top:1px solid #e3e8f1"><button class="btn" onclick="expJ()">Export backup file (.json)</button><label>Restore from a backup file</label><input type="file" id="imp" accept=".json,application/json" onchange="impF(this)"><div class="note" style="padding:0">Importing adds the visits from the file. Visits that are already here are not duplicated.</div><button class="btn r" onclick="wipe()">Delete everything on this device</button></div>'}
+function scoped(){var f=document.getElementById('ps2')?document.getElementById('ps2').value:'';return RV.filter(function(v){return !f||(f=='No territory'?!v.t:v.t==f)})}
+function doPrint(){var G=grouped(scoped()),h='';if(!G.length){toast('Nothing to print');return}
+ G.forEach(function(g,i){h+='<div class="'+(i?'pb':'')+'"><h2>Return visits &middot; '+esc(g.t||'No territory')+'</h2><div class="sm">'+(g.t&&TD[g.t]?esc(TD[g.t].loc)+' &middot; ':'')+g.n+' return visit'+(g.n==1?'':'s')+' &middot; printed '+new Date().toLocaleDateString()+' &middot; private, for my use only</div>';
+  g.s.forEach(function(x){h+='<h3>'+esc(x.st||'No street')+'</h3><table><tr><th style="width:11%">House</th><th style="width:22%">Name</th><th style="width:17%">Status</th><th style="width:13%">Visited</th><th style="width:13%">Follow up</th><th>Notes</th></tr>'+x.v.map(function(v){return '<tr><td>'+esc(v.h||'')+'</td><td>'+esc(v.n)+'</td><td>'+esc(v.s)+'</td><td>'+esc(v.dt)+'</td><td>'+esc(v.fu||'')+'</td><td>'+esc(v.nt||'')+'</td></tr>'}).join('')+'</table>'});h+='</div>'});
+ var p=document.getElementById('PR');if(!p){p=document.createElement('div');p.id='PR';document.body.appendChild(p)}p.innerHTML=h;window.print()}
+function dl(name,txt,type){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:type}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function expJ(){dl('return-visits-'+today()+'.json',JSON.stringify({app:'return-visits',v:2,saved:today(),visits:RV},null,1),'application/json');toast('Backup file downloaded')}
+function expC(){var q=function(s){return '"'+String(s==null?'':s).replace(/"/g,'""')+'"'},h=['Territory','Street','House','Name','Status','Visited','Follow up','Notes','Latitude','Longitude'],rows=[];
+ grouped(scoped()).forEach(function(g){g.s.forEach(function(x){x.v.forEach(function(v){rows.push([g.t,x.st,v.h,v.n,v.s,v.dt,v.fu,v.nt,v.lat,v.lng].map(q).join(','))})})});dl('return-visits-'+today()+'.csv',[h.join(',')].concat(rows).join('\n'),'text/csv')}
+function impF(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result),n=0;(d.visits||[]).forEach(function(v){if(v&&v.id&&!RV.some(function(x){return x.id==v.id})){RV.push(v);n++}});save();toast(n+' return visits restored');tab(1)}catch(e){toast('That file could not be read')}};r.readAsText(f)}
+function wipe(){if(!confirm('Delete ALL return visits on this device? Export a backup first.'))return;RV=[];save();tab(1)}
+function demo(){var tn=T0&&TD[T0]?T0:'SS-1',t=TD[tn];if(!t){toast('Territory data is still loading');return}
+ var N=['Pat Sample','Jordan Example','Riley Demo','Casey Sample','Morgan Example','Avery Demo','Quinn Sample','Drew Example'],S=['Return visit','Bible study','Interested','Left literature'],ws=t.ways.filter(function(w){return w.p.length>1&&t.streets.indexOf(w.n)>=0}).slice(0,4),k=0;
+ for(var i=0;i<8;i++){var w=ws[i%ws.length],j=Math.min(w.p.length-2,i%3),u=.25+.2*(i%3),p=[w.p[j][0]+(w.p[j+1][0]-w.p[j][0])*u,w.p[j][1]+(w.p[j+1][1]-w.p[j][1])*u],ll=toLL(t,p[0]+6,p[1]+6);
+  RV.push({id:'d'+i,n:N[i],h:String(100+i*37),st:w.n,a:(100+i*37)+' '+w.n,t:tn,s:S[i%4],dt:today(),fu:i%3==0?today():'',nt:i%2?'Asked about what happens after death. Left a tract.':'Wants to talk again about the Bible.',lat:ll[0],lng:ll[1],acc:10})}
+ save();list()}
+load();list();loadT();
+</script></body></html>

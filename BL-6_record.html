@@ -36,7 +36,7 @@ iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
 <section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
  <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
  <div class="fld"><span>STREET</span><select id="st" onchange="stChg()"></select></div>
- <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name" oninput="swRender()"></div>
+ <div class="fld hide" id="stxr"><span>NEW STREET</span><input id="stx" placeholder="type the street name" oninput="swRender();filterRows()"></div>
  <div id="sw" class="hide" style="border:1px solid #cdd7ea;background:#f4f8ff;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px"></div>
  <div id="swh" class="hide" style="background:#fff4d6;border:1px solid #ecd48a;border-radius:8px;padding:7px 10px;margin:6px 0;font-size:13px"></div>
  <div class="fld"><span>PUBLISHER’S NAME</span><input id="pn" placeholder="your name"></div>
@@ -76,7 +76,8 @@ $('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.class
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
-$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus();swRender()}
+$('#st').innerHTML=ST.map(s=>'<option>'+esc(s)+'</option>').join('')+'<option value="__other">Other (type the street name)</option>';function filterRows(){const n=curStreet();$('#tb').querySelectorAll('tr').forEach(tr=>{tr.style.display=(!tr.dataset.street||tr.dataset.street===n)?'':'none'})}
+function stChg(){const o=$('#st').value==='__other';$('#stxr').classList.toggle('hide',!o);if(o)$('#stx').focus();swRender();filterRows()}
 const today=()=>{const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()};
 let PK=null,QUEUE=[],FLUSHING=false,SEQ=0;
 const stamp=()=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a';h=h%12||12;return (d.getMonth()+1)+'/'+d.getDate()+' '+h+':'+(m<10?'0':'')+m+ap};
@@ -139,7 +140,7 @@ async function saveEdit(){if(!ED)return;const row={street:$('#es').value,house:$
  if(!row.house||!row.sym){$('#em').textContent='House number and symbol are needed.';return}
  try{const d=await api({action:'update',id:ED.id,row});if(!d.ok)throw 0;closeEdit();await load();status('✓ Entry updated.')}catch(e){$('#em').textContent='Could not save the change. Try again.'}}
 async function delEdit(){if(!ED)return;try{const d=await api({action:'delete',id:ED.id});if(!d.ok)throw 0;closeEdit();await load();status('Entry deleted.')}catch(e){$('#em').textContent='Could not delete. Try again.'}}
-function render(){syncForm();swRender();
+function render(){syncForm();swRender();filterRows();
  $('#oth').innerHTML=ROWS.slice().reverse().map(r=>'<div class="er" style="cursor:pointer" onclick="openEdit(\''+esc(r.id)+'\')"><b style="width:130px">'+esc(r.house+' '+r.street)+'</b><span style="width:38px;color:#666">'+esc(r.date)+'</span><span style="width:30px;font-weight:700">'+esc(r.sym)+'</span><span style="flex:1;color:#555">'+esc(r.note)+'</span><span style="color:#888;font-size:11px">'+esc(r.pub)+'</span></div>').join('')||'<div style="color:#888;font-size:13px;padding:6px 0">No records saved yet.</div>';
  const w=new Set(ROWS.map(key)).size,nh=ROWS.filter(r=>r.sym=='NH').length,ca=ROWS.filter(r=>r.sym=='CA').length;
  $('#s1').textContent=TOTAL?w+' / '+TOTAL:w;$('#s2').textContent=ROWS.length?Math.round(100*nh/ROWS.length)+'%':'–';$('#s3').textContent=ca;$('#s4').textContent=ROWS.length;

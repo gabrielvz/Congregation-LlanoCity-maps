@@ -33,6 +33,7 @@ svg.d path{cursor:pointer;transition:opacity .15s}svg.d path.dim{opacity:.22}
 .hint{color:var(--mut);font-size:13px;margin:-4px 0 10px}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.hero h1{font-size:28px}}
 @media print{.btns{display:none}body{background:#fff}}
+a.tl{color:#1a56b0;text-decoration:underline}
 </style></head><body><div class="w">
 <div class="hero"><div><small>LLANO, TX &middot; SERVICE YEAR <span id="sy"></span></small><h1>Territory Check-Out Report</h1>
 <p>Which territories are overdue for coverage, and who has the ones that have been out too long. Numbers as of <span id="asof"></span>.</p>
@@ -108,12 +109,13 @@ function card(t,sub,parts,total,lab){
 }
 var CUR={},SEL=null;
 function bucket(r){var a=r.age;return a==null?4:a<182.6?0:a<365?1:a<730?2:3}
+function lk(id){return /^(L|SS|M|BL)-\d+$/.test(id)?'<a class="tl" href="'+id+'_card_site.html" target="_blank"><b>'+id+'</b></a>':'<b>'+id+'</b>'}
 function showSel(){
  document.querySelectorAll('[data-sel]').forEach(function(e){var k=e.getAttribute('data-sel'),same=SEL&&k==SEL;
   if(e.tagName.toLowerCase()=='path'){var g=SEL?SEL.split(':')[0]:'';e.classList.toggle('dim',!!SEL&&k.split(':')[0]==g&&!same)}else e.classList.toggle('on',!!same)});
  var box=$('sel');if(!SEL){box.hidden=true;return}
  var R=CUR.R,sel=R.filter(CUR.pr[SEL]).sort(function(x,y){return (y.out||0)-(x.out||0)||(y.age||0)-(x.age||0)});
- var rows=sel.map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+(r.open?nameOf(r.open.name):'<span class="tag g">On the shelf</span>')+'</td><td>'+(r.open?fmt(r.open.assigned):'\u2014')+'</td><td>'+(r.open?(r.out>122?'<span class="tag r">'+r.out+' days</span>':r.out):'\u2014')+'</td><td>'+fmt(r.last)+'</td></tr>'}).join('');
+ var rows=sel.map(function(r){return '<tr><td>'+lk(r.id)+'</td><td>'+(r.open?nameOf(r.open.name):'<span class="tag g">On the shelf</span>')+'</td><td>'+(r.open?fmt(r.open.assigned):'\u2014')+'</td><td>'+(r.open?(r.out>122?'<span class="tag r">'+r.out+' days</span>':r.out):'\u2014')+'</td><td>'+fmt(r.last)+'</td></tr>'}).join('');
  box.innerHTML='<div class="hd"><b>'+CUR.lb[SEL]+' \u00b7 '+sel.length+(sel.length==1?' territory':' territories')+'</b><button class="clr" onclick="SEL=null;showSel()">Clear</button></div><table><tr><th>Territory</th><th>Checked out to</th><th>Date assigned</th><th>Days out</th><th>Last completed</th></tr>'+(rows||'<tr><td colspan="5">None</td></tr>')+'</table>';
  box.hidden=false;
 }
@@ -144,9 +146,9 @@ function render(){
  CUR={R:R,pr:pr,lb:lb};if(SEL&&!pr[SEL])SEL=null;
  var tb=function(h,rows){return '<tr>'+h.map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>'+(rows.join('')||'<tr><td colspan="9">None</td></tr>')};
  var o=function(a){return a.slice().sort(function(x,y){return y.out-x.out})};
- $('t1').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out'],o(over).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td><span class="tag r">'+r.out+' days</span></td></tr>'}));
- $('t2').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out','Last completed'],o(open).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td>'+r.out+'</td><td>'+fmt(r.last)+'</td></tr>'}));
- $('t3').innerHTML=tb(['Territory','Last completed','Years since','Status'],old.sort(function(x,y){return y.age-x.age}).map(function(r){return '<tr><td><b>'+r.id+'</b></td><td>'+fmt(r.last)+'</td><td>'+(r.age/365).toFixed(1)+'</td><td>'+(r.open?'<span class="tag y">Out: '+nameOf(r.open.name)+'</span>':'<span class="tag g">On the shelf</span>')+'</td></tr>'}));
+ $('t1').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out'],o(over).map(function(r){return '<tr><td>'+lk(r.id)+'</td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td><span class="tag r">'+r.out+' days</span></td></tr>'}));
+ $('t2').innerHTML=tb(['Territory','Checked out to','Date assigned','Days out','Last completed'],o(open).map(function(r){return '<tr><td>'+lk(r.id)+'</td><td>'+nameOf(r.open.name)+'</td><td>'+fmt(r.open.assigned)+'</td><td>'+r.out+'</td><td>'+fmt(r.last)+'</td></tr>'}));
+ $('t3').innerHTML=tb(['Territory','Last completed','Years since','Status'],old.sort(function(x,y){return y.age-x.age}).map(function(r){return '<tr><td>'+lk(r.id)+'</td><td>'+fmt(r.last)+'</td><td>'+(r.age/365).toFixed(1)+'</td><td>'+(r.open?'<span class="tag y">Out: '+nameOf(r.open.name)+'</span>':'<span class="tag g">On the shelf</span>')+'</td></tr>'}));
  showSel();
 }
 $('up').onclick=function(){$('f').click()};

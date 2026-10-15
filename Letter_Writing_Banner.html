@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Letter Writing</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:linear-gradient(160deg,#1c4fa8 0%,#163f87 100%);font-family:Helvetica,Arial,sans-serif;color:#fff;display:flex;align-items:stretch;container-type:inline-size}
+.c{flex:1;margin:4cqw;border:.5cqw solid rgba(255,255,255,.35);border-radius:4cqw;padding:5cqw 5.5cqw;position:relative;display:flex;flex-direction:column;min-height:calc(100vh - 8cqw)}
+.env{position:absolute;right:5cqw;top:4cqw;width:29cqw}
+h1{margin:0;font-size:12cqw;line-height:1;letter-spacing:-.2cqw}.sub{font-size:4.6cqw;margin-top:1.6cqw;opacity:.95}
+.pill{align-self:flex-start;background:#fff;color:#1c4fa8;font-weight:800;font-size:4.2cqw;border-radius:5cqw;padding:1.2cqw 3.4cqw;margin-top:2.6cqw}
+.steps{margin-top:auto;padding-top:5cqw}
+.s{display:flex;align-items:center;gap:2.6cqw;margin-top:2cqw;font-size:4.2cqw;font-weight:700;line-height:1.2}
+.n{flex:none;width:6.4cqw;height:6.4cqw;border-radius:50%;background:#ffcf4d;color:#14213d;font-size:4cqw;font-weight:900;display:flex;align-items:center;justify-content:center}
+.w{margin-top:3cqw;font-size:3cqw;opacity:.9;border-top:.25cqw solid rgba(255,255,255,.3);padding-top:2cqw;line-height:1.3}
+</style></head><body><div class="c">
+<svg class="env" viewBox="0 0 520 380"><rect x="10" y="30" width="500" height="330" rx="26" fill="#fff"/><path d="M10 56 L260 230 L510 56" fill="none" stroke="#1c4fa8" stroke-width="16" stroke-linejoin="round"/><path d="M10 350 L190 190 M510 350 L330 190" stroke="#c5cee0" stroke-width="10" stroke-linecap="round"/><rect x="390" y="0" width="110" height="90" rx="10" fill="#ffcf4d" transform="rotate(8 445 45)"/><circle cx="445" cy="46" r="20" fill="#d9822b" opacity=".6"/></svg>
+<h1>Letter<br>Writing</h1><div class="sub" id="city">Llano City</div><div class="pill" id="pill">Batch LW-L1</div>
+<div class="steps">
+<div class="s"><span class="n">1</span><span>Tap the link below and enter your name</span></div>
+<div class="s"><span class="n">2</span><span>Tap <u>Claim</u> on an address before you write it</span></div>
+<div class="s"><span class="n">3</span><span>Mark it Written, then Mailed</span></div>
+<div class="w">Working with others? Everyone sees changes live. Please do not share this link outside the congregation.</div></div></div>
+<script>
+// Use it like:  Letter_Writing_Banner.html?b=LW-L1&c=Llano%20City&n=51   (all three are optional)
+var p=new URLSearchParams(location.search),b=p.get('b'),c=p.get('c'),n=p.get('n');
+if(c)document.getElementById('city').textContent=c;
+if(b)document.getElementById('pill').textContent='Batch '+b+(n?' · '+n+' addresses':'');
+</script></body></html>

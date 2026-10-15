@@ -1,0 +1,151 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Letter Writing</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef1f6;color:#14213d}
+.bar{background:#14213d;color:#fff;padding:8px 12px;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.bar b{margin-right:4px}.bar button{background:#2c3e66;color:#fff;border:0;border-radius:18px;padding:7px 14px;font-size:13px;font-weight:600}.bar button.on{background:#fff;color:#14213d}
+.warn{background:#fff4d6;color:#6b4e00;font-size:12.5px;padding:8px 12px;border-bottom:1px solid #ecd48a}
+.wrap{max-width:520px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 24px rgba(0,0,0,.08)}
+.wide{max-width:900px}
+.hd{background:#1c4fa8;color:#fff;padding:14px 14px 12px}.hd h1{margin:0;font-size:20px}.hd small{opacity:.9}
+.pb{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#dbe3f2;margin:10px 0 4px}.pb i{display:block}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;opacity:.95}.legend span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;background:var(--c)}
+.tools{padding:10px 12px;border-bottom:1px solid #e3e8f1;display:flex;flex-direction:column;gap:8px}
+.tools input[type=text]{width:100%;padding:11px;border:1px solid #c5cee0;border-radius:10px;font-size:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid #c5cee0;background:#fff;border-radius:16px;padding:6px 11px;font-size:13px;font-weight:600;color:#334}.chip.on{background:#1c4fa8;color:#fff;border-color:#1c4fa8}
+.row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid #edf0f6}
+.row .t{flex:1;min-width:0}.row .a{font-weight:700;font-size:16px;line-height:1.25}.row .w{font-size:13px;color:#5b6577;margin-top:2px}.nm{display:flex;align-items:center;gap:10px;padding:5px 0;font-weight:700;font-size:16px;line-height:1.2}.nm input{width:22px;height:22px;flex:none;accent-color:#1c4fa8}.ph{display:flex;gap:8px;margin-top:10px}.ph button{flex:1;border:0;border-radius:10px;padding:10px 6px;font-size:14px;font-weight:700;background:#fff;color:#1c4fa8}.hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.sel{background:#fff7e0;border-bottom:1px solid #ecd48a;padding:10px 12px;font-size:13.5px;color:#5c4400}.sel b{color:#14213d}.grp{background:#f3f6fc;border-bottom:1px solid #dfe5f0;padding:10px 12px;font-size:13px}.liverow{display:flex;align-items:center;gap:10px}.live{background:#e3f4e9;color:#1f6b3f;font-weight:800;border-radius:12px;padding:3px 10px;font-size:12px;display:inline-flex;align-items:center;gap:6px}.live i{width:8px;height:8px;border-radius:50%;background:#2e8b57;animation:pl 1.2s infinite}@keyframes pl{50%{opacity:.25}}.sh{margin-left:auto;border:0;background:#1c4fa8;color:#fff;border-radius:16px;padding:7px 14px;font-weight:700;font-size:13px}.mem{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mc{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d3dbea;border-radius:14px;padding:3px 10px;font-size:12.5px;font-weight:600}.mc i{width:11px;height:11px;border-radius:50%;background:var(--mc)}.who{color:#5b6577;font-size:12px}.who input{font:inherit;font-weight:700;border:1px solid #c5cee0;border-radius:6px;padding:2px 6px;color:#14213d}
+.row.mk{border-left:7px solid var(--mc);background:color-mix(in srgb,var(--mc) 10%,#fff)}.row.flash{animation:fl 1.6s ease-out 3}@keyframes fl{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 0 3px #ffcf4d;background:#fff6cf}}
+#cm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;align-items:center;justify-content:center;padding:18px}#cm>div{background:#fff;border-radius:16px;padding:18px;max-width:460px;width:100%}#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#14213d;color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:60;max-width:92vw;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+#shm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:70;align-items:center;justify-content:center;padding:18px}#shm>div{background:#fff;border-radius:16px;padding:18px;max-width:440px;width:100%}#shu{word-break:break-all;background:#f3f6fc;border-radius:8px;padding:10px;font-size:13px;margin:10px 0}.claim{display:block;margin-top:6px;border:2px solid #1c4fa8;background:#fff;color:#1c4fa8;border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}.claim.mine{background:#1c4fa8;color:#fff}.claim.off{border-color:#c5cee0;color:#7a8498;background:#f1f3f8}.sc{background:#6f9be6}.multi{display:inline-block;background:#e6defa;color:#4b2a8f;font-size:11.5px;font-weight:700;border-radius:10px;padding:2px 8px;margin-bottom:3px}.cp{border:0;background:none;color:#1c4fa8;font-size:12.5px;font-weight:700;padding:4px 0;text-decoration:underline}.row .m{font-size:11.5px;color:#2e7d4f;margin-top:2px}
+.st{border:0;border-radius:18px;padding:9px 12px;font-size:13px;font-weight:700;min-width:96px;text-align:center;color:#fff;background:#9aa5b8}
+.s1{background:#e0a100}.s2{background:#2e8b57}.s3{background:#c0392b}.s4{background:#7a4fc7}.s5{background:#56606f}
+.row.done{background:#f3faf5}
+select.more{border:1px solid #c5cee0;border-radius:10px;padding:8px 4px;font-size:13px;background:#fff;max-width:68px}
+.foot{padding:14px 12px 40px;display:flex;flex-direction:column;gap:10px}.btn{border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;background:#1c4fa8;color:#fff}.btn.g{background:#2e8b57}.btn.o{background:#fff;color:#1c4fa8;border:2px solid #1c4fa8}
+.note{font-size:12.5px;color:#5b6577;padding:0 12px 6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;padding:14px}
+.tile{background:#f5f7fb;border-radius:12px;padding:12px}.tile b{font-size:24px;display:block}.tile span{font-size:12.5px;color:#5b6577}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;font-size:12px;color:#5b6577;padding:8px 10px;border-bottom:2px solid #dfe5f0}td{padding:9px 10px;border-bottom:1px solid #edf0f6;vertical-align:middle}
+tr.link{cursor:pointer}tr.link:hover{background:#f3f6fc}
+.mini{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#e3e8f1;min-width:110px}.tag{display:inline-block;border-radius:10px;padding:3px 9px;font-size:12px;font-weight:700}
+.tg{background:#e3f4e9;color:#1f6b3f}.ty{background:#fff1c9;color:#7a5a00}.tgr{background:#e8ebf1;color:#4a5568}
+.scroll{overflow-x:auto}.sec{padding:0 14px 20px}.sec h2{font-size:16px;margin:10px 0 6px}
+.pend{background:#f5f7fb;border:2px dashed #c5cee0;border-radius:12px;padding:12px;font-size:14px;color:#5b6577;margin:0 14px 18px}
+.hg{margin:12px 14px;background:#fffbe0;border:1px solid #e6d98a;border-radius:12px;padding:10px 12px;font-size:13.5px}
+#LBL{display:none}
+@media print{@page{size:letter;margin:0}body.pl-doc .sheet{display:none}.doc{padding:.6in}.pt{width:100%;border-collapse:collapse;font:10pt Arial}.pt th,.pt td{border:1px solid #888;padding:5px 7px;text-align:left;vertical-align:top}.pt tr{break-inside:avoid}body{background:#fff}.bar,.warn,#W,#A{display:none!important}#LBL{display:block}
+.sheet{height:11in;overflow:hidden;page-break-after:always;break-after:page;padding:.5in 0 0 .1875in;display:grid;grid-template-columns:repeat(3,2.625in);grid-auto-rows:1in;column-gap:.125in;row-gap:0}
+.lb{width:2.625in;height:1in;padding:.1in .12in;overflow:hidden;font:8.5pt/1.18 Arial,Helvetica,sans-serif;color:#000;display:flex;flex-direction:column;justify-content:center}.lb .sm{font-size:7.5pt;line-height:1.15}}
+
+.live.off{background:#ffe9e6;color:#b42318}.live.off i{background:#b42318}
+#nm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;align-items:center;justify-content:center;padding:18px}#nm>div{background:#fff;border-radius:16px;padding:20px;max-width:420px;width:100%}#nm input[type=text]{width:100%;padding:12px;font-size:17px;border:1px solid #c5cee0;border-radius:10px;margin:10px 0}#qr{display:flex;justify-content:center;margin:8px 0}
+</style></head><body>
+<div id="toast"></div>
+<div id="nm"><div><h3 style="margin:0">What is your name?</h3><div style="font-size:14px;color:#5b6577;margin-top:4px">It goes next to every letter you claim or mark, so your group can see who has what.</div><input type="text" id="nmi" placeholder="For example: Dale M."><button class="btn" style="width:100%" onclick="saveName()">Continue</button></div></div>
+<div id="shm"><div><h3 style="margin:0 0 6px">Share this batch</h3><div style="font-size:14px">Send this link to the others in your group. Anyone with the link sees the same list and every change within seconds. No sign-in.</div><div id="qr"></div><div id="shu"></div><div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="shareNative()">Share link</button><button class="btn o" style="flex:1" onclick="document.getElementById('shm').style.display='none'">Close</button></div></div></div>
+<div id="cm"><div><h3 style="margin:0 0 8px;color:#b42318">Complete this batch?</h3><div id="cmt" style="font-size:14.5px;line-height:1.45"></div><label style="display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:14px;font-weight:600"><input type="checkbox" id="cmk" style="width:22px;height:22px;flex:none"> I understand this wipes everything for this territory and cannot be undone.</label><div style="display:flex;gap:8px"><button class="btn o" style="flex:1" onclick="document.getElementById('cm').style.display='none'">Cancel</button><button class="btn" id="cmgo" style="flex:1;background:#b42318;opacity:.45" onclick="doDone()">Yes, complete</button></div></div></div>
+<div id="LBL"></div><div id="W" class="wrap"><div class="hd"><h1>Letter batch</h1></div><div style="padding:22px 16px">Loading...</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>var API='https://script.google.com/macros/s/AKfycbzqy4QeE-7NmIJTUbCFMJ8dcDGc2eh6yc-WoRPbv_0u4MawCgx1eS2YBGW6AUFLjZX3/exec';
+var P=new URLSearchParams(location.search),B=P.get('b')||'',K=P.get('k')||'';
+var ST=[['To write'],['Written'],['Mailed']];var MORE=['Returned','Moved','Do not mail'];var MCLASS={'Returned':'s3','Moved':'s4','Do not mail':'s5'};
+var PAL=['#1c4fa8','#d9822b','#8a4fc7','#0f8f9c','#c2410c','#b8236b','#4d7c0f','#7c5e10'];
+var CITY={'L':'Llano','SS':'San Saba','M':'Mason','BL':'Lake Buchanan','T':'Tow','C':'Cherokee'};
+var ITEMS=[],MEMB=[],DONE=null,ME=localStorage.getItem('lw_me')||'',FILT='all',Q='',LOADED=false,SEEN={},FLASH={},QUEUE=[];
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function cityOf(){var m=B.match(/^LW-([A-Z]+)-/);return m?(CITY[m[1]]||m[1]):''}
+function tnow(){var d=new Date();return (d.getMonth()+1)+'/'+d.getDate()+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}
+function mcol(n){var i=MEMB.indexOf(n);return i<0?'#64748b':PAL[i%PAL.length]}
+function chosen(it){return it.names.filter(function(n,j){return it.sel[j]})}
+function cnt(){var c={w:0,m:0,x:0,l:0,n:ITEMS.length};ITEMS.forEach(function(i){if(i.more)c.x++;else if(i.st==2)c.m++;else if(i.st==1)c.w++;else if(i.cl)c.l++});return c}
+function bar(c){var p=function(v){return (c.n?v/c.n*100:0)+'%'};return '<div class="pb"><i style="width:'+p(c.m)+';background:#5be08f"></i><i style="width:'+p(c.w)+';background:#ffcf4d"></i><i style="width:'+p(c.l)+';background:#9ec1ff"></i><i style="width:'+p(c.x)+';background:#ff8c82"></i></div>'}
+function progHTML(c){return bar(c)+'<div class="legend"><span style="--c:#5be08f">Mailed '+c.m+'</span><span style="--c:#ffcf4d">Written '+c.w+'</span><span style="--c:#9ec1ff">Claimed '+c.l+'</span><span style="--c:#ff8c82">Returned/moved/DNM '+c.x+'</span><span style="--c:#dbe3f2">Left '+(c.n-c.m-c.w-c.x-c.l)+'</span></div>'}
+function grpHTML(){var by={};ITEMS.forEach(function(it){if(it.st&&!it.more)by[it.by]=(by[it.by]||0)+1});
+return '<div class="liverow"><span class="live" id="lv"><i></i>Live</span><span style="font-size:12.5px">'+MEMB.length+' '+(MEMB.length==1?'person':'people')+' on this batch</span><button class="sh" onclick="shareM()">Share link</button></div><div class="mem">'+MEMB.map(function(n){return '<span class="mc" style="--mc:'+mcol(n)+'"><i></i>'+esc(n)+(by[n]?' &middot; '+by[n]:'')+(n==ME?' (you)':'')+'</span>'}).join('')+'</div><div class="who">You are <input id="me" value="'+esc(ME)+'" onchange="setMe(this.value)" size="10"> <span>Your name goes on every letter you mark. The color of a row shows who claimed or marked it.</span></div>'}
+function setMe(v){v=v.trim();if(!v)return;ME=v;localStorage.setItem('lw_me',ME);syncMembers();drawTop();list()}
+function syncMembers(){if(ME&&MEMB.indexOf(ME)<0)MEMB.push(ME)}
+function toast(m){var d=document.getElementById('toast');d.textContent=m;d.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(function(){d.style.display='none'},4500)}
+/* ---------- network ---------- */
+function get(){return fetch(API+'?b='+encodeURIComponent(B)+'&k='+encodeURIComponent(K)).then(function(r){return r.json()})}
+function post(o){o.b=B;o.k=K;return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)}).then(function(r){return r.json()})}
+function send(o,after){QUEUE.push({o:o,after:after});localStorage.setItem('lw_q_'+B,JSON.stringify(QUEUE.map(function(q){return q.o})));flush()}
+var FLUSHING=false;
+function flush(){if(FLUSHING||!QUEUE.length)return;FLUSHING=true;var q=QUEUE[0];post(q.o).then(function(r){FLUSHING=false;QUEUE.shift();localStorage.setItem('lw_q_'+B,JSON.stringify(QUEUE.map(function(x){return x.o})));if(r&&r.conflict){toast('Someone changed that address first. Showing the latest.');if(r.item)merge([r.item])}else if(!r||!r.ok){toast('Could not save: '+(r&&r.error||'error'))}if(QUEUE.length)flush();else refresh()}).catch(function(){FLUSHING=false;setLive(false);setTimeout(flush,8000)})}
+function setLive(ok){var l=document.getElementById('lv');if(l){l.className='live'+(ok?'':' off');l.innerHTML='<i></i>'+(ok?'Live':'Offline: will save when back')}}
+function merge(arr){arr.forEach(function(n){for(var i=0;i<ITEMS.length;i++)if(ITEMS[i].id==n.id){ITEMS[i]=n;break}});}
+function refresh(){return get().then(function(r){setLive(true);if(!r.ok){showErr(r.error);return}apply(r)}).catch(function(){setLive(false)})}
+function apply(r){
+ if(r.done){DONE=r.done;ITEMS=[];drawW();return}
+ var old={};ITEMS.forEach(function(i){old[i.id]=i});var msgs=[];
+ if(!QUEUE.length){
+  r.items.forEach(function(n){var o=old[n.id];if(!LOADED||!o||n.ts<=o.ts)return;if(n.st==o.st&&n.cl==o.cl&&n.more==o.more)return;var who=n.st?n.by:n.cl;if(!who||who==ME)return;FLASH[n.id]=Date.now();msgs.push(who+' '+(n.st?'marked':'claimed')+' '+n.a+(n.st?' as '+ST[n.st][0]:''))});
+  ITEMS=r.items;
+ }
+ MEMB=(r.members||[]).slice();syncMembers();
+ var first=!LOADED;LOADED=true;
+ if(first){drawW()}else{drawTop();list()}
+ if(msgs.length)toast(msgs.length>1?msgs.length+' changes from your group. Latest: '+msgs[msgs.length-1]:msgs[0]);
+}
+function showErr(e){document.getElementById('W').innerHTML='<div class="hd"><h1>Letter batch</h1></div><div style="padding:22px 16px;font-size:15px;line-height:1.5">'+(e=='bad key'?'This link is not right. Ask for the batch link again.':'Something went wrong: '+esc(e||''))+'</div>'}
+/* ---------- actions ---------- */
+function find(id){for(var i=0;i<ITEMS.length;i++)if(ITEMS[i].id==id)return ITEMS[i]}
+function setF(it,f,expect){for(var k in f)it[k]=f[k];it.ts=Date.now();send({action:'set',id:it.id,f:f,expect:expect},null);drawTop();list()}
+function claim(id){var it=find(id);if(it.cl&&it.cl!=ME){toast(it.cl+' already claimed this address.');return}
+ if(it.cl)setF(it,{cl:''},{st:0,cl:ME});else setF(it,{cl:ME,dt:tnow()},{st:0,cl:''})}
+function step(id){var it=find(id);
+ if(it.more){setF(it,{more:'',st:0,cl:'',by:'',dt:''});return}
+ if(it.st==0&&it.cl&&it.cl!=ME&&!confirm(it.cl+' has claimed this address. Take it over?'))return;
+ var n=(it.st+1)%3;
+ if(n==0)setF(it,{st:0,cl:'',by:'',dt:''});else setF(it,{st:n,cl:'',by:ME,dt:tnow()});
+ FLASH[id]=Date.now()}
+function setMore(id,v){var it=find(id);if(v=='_')setF(it,{more:'',st:0,cl:'',by:'',dt:''});else if(v)setF(it,{more:v,by:ME,dt:tnow()})}
+function tog(id,j,v){var it=find(id);it.sel[j]=v;it.ts=Date.now();send({action:'set',id:id,f:{sel:it.sel}},null);drawTop()}
+function selAll(){ITEMS.forEach(function(it){it.sel=it.names.map(function(){return true});send({action:'set',id:it.id,f:{sel:it.sel}},null)});drawW()}
+function selNone(){ITEMS.forEach(function(it){it.sel=it.names.map(function(){return false});send({action:'set',id:it.id,f:{sel:it.sel}},null)});drawW()}
+function allMailed(){var ids=[];ITEMS.forEach(function(it){if(it.st==1&&!it.more){it.st=2;it.by=ME;it.dt=tnow();ids.push(it.id)}});if(!ids.length){toast('No written letters to mark.');return}send({action:'bulk',ids:ids,f:{st:2,by:ME,dt:tnow()}},null);drawTop();list()}
+/* ---------- screens ---------- */
+function drawTop(){var c=cnt(),p=document.getElementById('prog'),g=document.getElementById('grp'),s=document.getElementById('selbar');if(p)p.innerHTML=progHTML(c);if(g&&document.activeElement.id!='me')g.innerHTML=grpHTML();if(s)s.innerHTML=selHTML();var l=document.getElementById('lblbtn');if(l)l.textContent='Print labels for chosen names ('+ITEMS.reduce(function(a,it){return a+chosen(it).length},0)+')'}
+function selHTML(){var rd=0,need=0;ITEMS.forEach(function(it){if(chosen(it).length)rd++;else need++});return '<b>Choose who to mail to.</b> Check the names for each address. Check as many as you like. <b>'+rd+'</b> of '+ITEMS.length+' addresses ready'+(need?', <b>'+need+'</b> still need a name':'')+'. <a href="#" onclick="selAll();return false">Select every name</a> &middot; <a href="#" onclick="selNone();return false">Clear</a>'}
+function drawW(){
+ if(DONE){document.getElementById('W').innerHTML='<div class="hd"><small>'+cityOf()+' &middot; letter writing</small><h1>Batch '+esc(B)+'</h1></div><div style="padding:22px 16px"><div style="background:#e3f4e9;border-radius:14px;padding:18px"><div style="font-size:20px;font-weight:800;color:#1f6b3f">Completed</div><p style="font-size:15px;line-height:1.5">'+esc(DONE.by)+' completed this batch on '+esc(DONE.on)+'. '+DONE.m+' of '+DONE.n+' letters were marked Mailed.<br><br>All names, addresses, claims and marks have been wiped. Return the territory in Hourglass.</p></div></div>';return}
+ if(!ITEMS.length){document.getElementById('W').innerHTML='<div class="hd"><small>'+cityOf()+' &middot; letter writing</small><h1>Batch '+esc(B)+'</h1></div><div style="padding:22px 16px;font-size:15px">This batch has no addresses yet.</div>';return}
+ var c=cnt();
+ var h='<div class="hd"><div class="hdr"><div><small>'+cityOf()+' &middot; letter writing</small><h1>Batch '+esc(B)+'</h1></div><div style="display:flex;gap:6px"><button class="chip" style="background:#fff;color:#1c4fa8" onclick="doPrint()">Print all</button><button class="chip" style="background:#fff;color:#1c4fa8" onclick="doWord()">Word</button></div></div><div style="font-size:12px;opacity:.95;margin-top:6px;text-align:right">Print all / Word = paper copy of every address with all names, for anyone not using the phone</div><small>'+c.n+' addresses</small><div id="prog">'+progHTML(c)+'</div></div><div class="grp" id="grp">'+grpHTML()+'</div>';
+ h+='<div class="sel" id="selbar">'+selHTML()+'</div><div class="tools"><input type="text" id="q" placeholder="Search name or address" value="'+esc(Q)+'" oninput="Q=this.value;list()"><div class="chips" id="chips"></div></div><div id="list"></div>';
+ h+='<div class="note" style="padding-top:12px">Tap Claim so nobody else writes the same letter. Then tap the colored button to move it along: To write &rarr; Written &rarr; Mailed. Use the small menu for Returned, Moved or Do not mail. Everything saves for the whole group.</div><div class="foot"><button class="btn g" onclick="allMailed()">Mark every written letter as mailed</button><button class="btn" id="lblbtn" onclick="printLabels()">Print labels for chosen names</button><button class="btn" style="background:#b42318" onclick="askDone()">Completed: finish this batch</button><div class="note" style="padding:0">Use this when the whole batch is done. It clears everything for this territory, so check with your group first.</div></div>';
+ document.getElementById('W').innerHTML=h;chips();list();drawTop()}
+function chips(){var o=[['all','All'],['0','To write'],['1','Written'],['c','Claimed'],['2','Mailed'],['x','Returned/other'],['m','Multiple names']];document.getElementById('chips').innerHTML=o.map(function(x){return '<button class="chip'+(FILT==x[0]?' on':'')+'" onclick="FILT=\''+x[0]+'\';chips();list()">'+x[1]+'</button>'}).join('')}
+function list(){var out=[],el=document.getElementById('list');if(!el)return;
+ ITEMS.forEach(function(it){var q=Q.toLowerCase();if(q&&(it.names.join(' ')+' '+it.a+' '+it.csz).toLowerCase().indexOf(q)<0)return;
+  var cd=!it.more&&it.st==0&&it.cl;var k=it.more?'x':(cd?'c':String(it.st));if(FILT=='m'){if(it.names.length<2)return}else if(FILT!='all'&&FILT!=k)return;
+  var nm=it.more?it.more:(cd?'Claimed':ST[it.st][0]);var cl=it.more?MCLASS[it.more]:(it.st?'s'+it.st:(it.cl?'sc':''));
+  var mk=!it.more&&(it.st||cd),mc=mk?mcol(it.st?it.by:it.cl):'',oth=it.st&&!it.more&&it.by&&it.by!=ME,fl=FLASH[it.id]&&Date.now()-FLASH[it.id]<4500,id=esc(it.id);
+  out.push('<div class="row'+(mk?' mk':'')+(fl?' flash':'')+'" style="'+(mc?'--mc:'+mc+';':'')+'"><div class="t">'+(it.names.length>1?'<span class="multi">'+it.names.length+' names at this address</span>':'')+it.names.map(function(n,j){return '<label class="nm"><input type="checkbox" '+(it.sel[j]?'checked ':'')+'onchange="tog(\''+id+'\','+j+',this.checked)"><span>'+esc(n)+'</span></label>'}).join('')+'<div class="w" style="color:#14213d;font-size:14.5px;line-height:1.35;margin-top:3px">'+esc(it.a)+'<br>'+esc(it.csz)+'</div><button class="cp" onclick="cp(\''+id+'\',this)">Copy address</button>'+
+  (it.st==0&&!it.more?(cd?'<div class="m" style="color:'+mc+'">Claimed by '+esc(it.cl)+(it.cl==ME?' (you)':'')+(it.dt?' &middot; '+esc(it.dt):'')+'</div>':'')+'<button class="claim'+(cd&&it.cl==ME?' mine':'')+(cd&&it.cl!=ME?' off':'')+'" onclick="claim(\''+id+'\')">'+(!cd?'Claim this address':(it.cl==ME?'Release my claim':'Taken by '+esc(it.cl)))+'</button>':'')+
+  (it.st&&!it.more?'<div class="m" style="color:'+mc+'">'+ST[it.st][0]+(it.by?' by '+esc(it.by):'')+(it.dt?' &middot; '+esc(it.dt):'')+(oth?' (not you)':'')+'</div>':'')+(it.more?'<div class="m" style="color:#56606f">'+esc(it.more)+(it.by?' &middot; '+esc(it.by):'')+'</div>':'')+
+  '</div><button class="st '+cl+'" onclick="step(\''+id+'\')">'+nm+'</button><select class="more" onchange="setMore(\''+id+'\',this.value);this.value=\'\'"><option value="">&#8943;</option>'+MORE.map(function(m){return '<option>'+m+'</option>'}).join('')+'<option value="_">Clear</option></select></div>')});
+ el.innerHTML=out.join('')||'<div class="note" style="padding:20px 12px">Nothing here.</div>'}
+function cp(id,btn){var it=find(id),c=chosen(it),tx=(c.length?c:it.names).join('\n')+'\n'+it.a+'\n'+it.csz;try{navigator.clipboard.writeText(tx).catch(function(){})}catch(e){}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy address'},1200)}
+/* ---------- print, word, labels ---------- */
+function paperRows(){var h='';ITEMS.forEach(function(it,i){h+='<tr><td>'+(i+1)+'</td><td>'+it.names.map(function(n){return '&#9744; '+esc(n)}).join('<br>')+'</td><td>'+esc(it.a)+'<br>'+esc(it.csz)+'</td><td>&#9744; Written<br>&#9744; Mailed<br>Date: ______</td></tr>'});return h}
+function doPrint(){var h='<h2 style="font:700 16pt Arial">Letter batch '+esc(B)+' &middot; '+cityOf()+'</h2><div style="font:10pt Arial;margin-bottom:8px">'+ITEMS.length+' addresses &middot; all names listed &middot; check the names you write to &middot; printed '+new Date().toLocaleDateString()+'</div><table class="pt"><tr><th>#</th><th>Names at this address</th><th>Mailing address</th><th>Done</th></tr>'+paperRows()+'</table>';document.getElementById('LBL').innerHTML='<div class="doc">'+h+'</div>';document.body.className='pl-doc';window.print();setTimeout(function(){document.body.className=''},500)}
+function doWord(){var h='<h2>Letter batch '+esc(B)+' - '+cityOf()+'</h2><p>'+ITEMS.length+' addresses. All names listed. Check the names you write to.</p><table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:Arial;font-size:11pt"><tr><th>#</th><th>Names at this address</th><th>Mailing address</th><th>Done</th></tr>'+paperRows()+'</table>';var blob=new Blob(['<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body>'+h+'</body></html>'],{type:'application/msword'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Letters_'+B+'_all_addresses.doc';document.body.appendChild(a);a.click();a.remove()}
+function printLabels(){var its=ITEMS.filter(function(it){return chosen(it).length}),h='';if(!its.length){toast('Choose at least one name first.');return}
+ its.forEach(function(it,ix){var nm=chosen(it).map(esc);if(ix%30==0)h+=(ix?'</div>':'')+'<div class="sheet">';var big=nm.length>3;h+='<div class="lb"><div class="'+(big?'sm':'')+'">'+(big?nm.join(', '):nm.join('<br>'))+'</div><div>'+esc(it.a)+'</div><div>'+esc(it.csz)+'</div></div>'});
+ document.getElementById('LBL').innerHTML=h+'</div>';document.body.className='pl-lab';window.print();setTimeout(function(){document.body.className=''},500)}
+/* ---------- share + completed ---------- */
+function shareM(){var u=location.href.split('#')[0];document.getElementById('shu').textContent=u;document.getElementById('shm').style.display='flex';var q=document.getElementById('qr');q.innerHTML='';try{new QRCode(q,{text:u,width:150,height:150})}catch(e){}}
+function shareNative(){var u=location.href.split('#')[0];if(navigator.share){navigator.share({title:'Letter batch '+B,text:'Letter writing batch '+B,url:u}).catch(function(){})}else{try{navigator.clipboard.writeText(u).catch(function(){})}catch(e){}toast('Link copied. Paste it into WhatsApp or a text.')}}
+function askDone(){var c=cnt(),left=c.n-c.m-c.x;document.getElementById('cmt').innerHTML='<b>Once you tap Yes, all names, addresses, claims and marks for '+esc(B)+' are wiped for everyone in the group.</b><br><br>'+c.m+' of '+c.n+' letters are marked Mailed'+(left>0?'. <b style="color:#b42318">'+left+' addresses are not mailed yet</b> ('+c.w+' written, '+c.l+' claimed, '+(left-c.w-c.l)+' not started)':'')+'.<br>'+MEMB.length+' '+(MEMB.length==1?'person is':'people are')+' on this batch, and everyone will see it as completed. Remember to return the territory in Hourglass.';var k=document.getElementById('cmk');k.checked=false;k.onchange=function(){document.getElementById('cmgo').style.opacity=k.checked?1:.45};document.getElementById('cm').style.display='flex'}
+function doDone(){if(!document.getElementById('cmk').checked){toast('Tick the box first.');return}document.getElementById('cm').style.display='none';post({action:'done',by:ME}).then(function(r){if(r.ok){DONE=r.done;ITEMS=[];drawW()}else toast('Could not complete: '+(r.error||'error'))}).catch(function(){toast('No connection. Try again.')})}
+/* ---------- start ---------- */
+function start(){
+ if(!B||!K){showErr('bad key');return}
+ if(!ME){document.getElementById('nm').style.display='flex'}
+ try{QUEUE=(JSON.parse(localStorage.getItem('lw_q_'+B)||'[]')).map(function(o){return {o:o}})}catch(e){QUEUE=[]}
+ get().then(function(r){if(!r.ok){showErr(r.error);return}apply(r);flush()}).catch(function(){document.getElementById('W').innerHTML='<div class="hd"><h1>Letter batch '+esc(B)+'</h1></div><div style="padding:22px 16px">No connection. Try again in a moment.</div>'});
+ setInterval(function(){if(!document.hidden&&!QUEUE.length)refresh()},8000);
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)refresh()})}
+function saveName(){var v=document.getElementById('nmi').value.trim();if(!v)return;ME=v;localStorage.setItem('lw_me',ME);document.getElementById('nm').style.display='none';syncMembers();if(LOADED){drawTop();list()}}
+start();
+</script></body></html>

@@ -1,0 +1,181 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Territory Tools</title><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1c4fa8"><meta name="apple-mobile-web-app-title" content="Territory Tools">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef1f6;color:#1d2327}
+.wrap{max-width:520px;margin:0 auto;background:#fff;min-height:100vh}
+.hd{background:#1c4fa8;color:#fff;padding:14px}.hd h1{margin:0;font-size:20px}.hd small{opacity:.9}
+.priv{background:#e3f4e9;color:#1f6b3f;font-size:12.5px;padding:8px 14px;border-bottom:1px solid #bfe3cc}
+.tabs{display:flex;border-bottom:1px solid #dfe5f0;position:sticky;top:0;background:#fff;z-index:20}.tabs button,.tabs a{flex:1;border:0;background:#fff;padding:12px 2px;font:inherit;font-size:13px;font-weight:700;color:#5b6577;border-bottom:3px solid transparent;text-align:center;text-decoration:none}.tabs .on{color:#1c4fa8;border-color:#1c4fa8}
+section{padding:12px 14px 90px}.hide{display:none!important}
+label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0 3px}
+input,select{width:100%;padding:10px;border:1px solid #c5cee0;border-radius:10px;font:inherit;font-size:16px;background:#fff;color:#1c4fa8}
+.btn{display:block;width:100%;border:0;border-radius:10px;padding:13px;font:inherit;font-size:15px;font-weight:700;background:#1c4fa8;color:#fff;margin-top:10px;text-align:center}.btn.o{background:#fff;color:#1c4fa8;border:2px solid #1c4fa8}.btn.g{background:#2e7d4f}.btn.r{background:#c62828}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.box{border:1px solid #cdd7ea;background:#f4f8ff;border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px}
+.chipx{display:inline-block;margin:2px 4px 2px 0;padding:2px 7px;border-radius:99px;background:#fff;border:1px solid #bcc9e3}
+.warn{background:#fff4d6;border:1px solid #ecd48a;border-radius:8px;padding:7px 10px;margin:8px 0;font-size:13px}
+table.f{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed}table.f th{font-size:11px;border:1px solid #333;padding:4px;background:#fafafa}table.f td{border:1px solid #333;padding:0;height:38px}table.f td input{border:0;border-radius:0;padding:4px;height:36px;font-size:14px;background:transparent}table.f tr.ok td{background:#e8f6ec}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:8px}.k{border:1px solid #dfe5f0;border-radius:10px;padding:10px}.k .n{font-size:26px;font-weight:800;color:#1c4fa8}.k .l{font-size:12px;color:#666}
+.sb{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#eee;margin:6px 0}.sb i{display:block}.lg{font-size:12px;display:flex;gap:10px;flex-wrap:wrap}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:3px}
+h3{margin:16px 0 6px;font-size:15px}
+#pk{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #1c4fa8;padding:10px 12px 14px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.25)}#pk.on{display:block}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pg3 button{border:1px solid #c5cee0;background:#fff;border-radius:10px;padding:8px 2px;font:inherit;font-size:12px}.pg3 b{display:block;font-size:18px;color:#1c4fa8}
+.clr{display:block;width:100%;margin-top:6px;padding:9px;border:0;background:#f1f3f8;border-radius:8px;font:inherit}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:#14213d;color:#fff;padding:9px 14px;border-radius:99px;font-size:13px;font-weight:700;display:none;z-index:40}
+.mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;padding:16px}.mod.on{display:flex}.mc{background:#fff;border-radius:14px;padding:16px;max-width:420px;width:100%;max-height:90vh;overflow:auto}
+#pa{display:none}
+@media print{body>*:not(#pa){display:none!important}#pa{display:block!important;padding:10px}#pa table{width:100%;border-collapse:collapse;margin-bottom:12px}#pa td,#pa th{border:1px solid #000;padding:5px;font-size:12px;text-align:left}.blk{break-inside:avoid}}
+.rad{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid #c5cee0;border-radius:10px;margin:6px 0;font-size:14px}.rad input{width:auto;margin-top:3px}pre#sp{white-space:pre-wrap;background:#f4f8ff;border:1px solid #cdd7ea;border-radius:8px;padding:8px;font:13px/1.4 system-ui;max-height:200px;overflow:auto;margin:8px 0;color:#1d2327}
+</style></head><body>
+<div class="wrap">
+<div class="hd"><h1>Not-at-home record</h1><small>Territory Tools · typed by hand, saved on this phone</small></div>
+<div class="priv">Saved only on this phone or computer. Nothing is sent unless you tap <b>Send to owner</b>. Use <b>Export backup</b> now and then.</div>
+<div class="tabs"><button id="b1" class="on" onclick="tab(1)">Record</button><button id="b2" onclick="tab(2)">Statistics</button><button id="b3" onclick="tab(3)">Backup</button><a id="brv" href="returns.html">Return visits</a></div>
+<section id="p1">
+ <label>Territory</label><select id="tsel" onchange="tSel()"></select>
+ <div id="tnr" class="hide"><label>New territory number</label><input id="tnx" placeholder="for example SS-1 or 12" onchange="newT()"></div>
+ <label>City or area</label><input id="tc" placeholder="for example San Saba" oninput="meta()">
+ <label>Street</label><select id="st" onchange="stChg()"></select>
+ <div id="stxr" class="hide"><label>New street name</label><input id="stx" placeholder="type the street name" oninput="draw()"></div>
+ <div id="sw" class="box hide"></div><div id="swh" class="warn hide"></div>
+ <label>Publisher’s name</label><input id="pn" placeholder="your name" oninput="meta()">
+ <div style="font-size:12px;color:#666;margin:8px 0 2px">Type the house number. Tap the <b>Date</b> box to stamp the date and time, and the <b>Symbol</b> box to pick CA, B, M, NH, C or W. A row saves by itself when it has a house and a symbol.</div>
+ <table class="f"><colgroup><col style="width:19%"><col style="width:25%"><col style="width:13%"><col></colgroup><thead><tr><th>House or Apt. No.</th><th>Date</th><th>Symbol</th><th>Name, Placement, and Remarks</th></tr></thead><tbody id="tb"></tbody></table>
+ <button class="btn o" onclick="addRow(true)">Add row</button>
+ <div class="g2"><button class="btn o" onclick="printAll()">Print all records</button><button class="btn" id="sendb" onclick="sendOpen()">Send to owner</button></div>
+ <button class="btn g" onclick="askDone()">Completed</button>
+ <div id="dn" class="box hide" style="border:2px solid #2e7d4f;background:#fff"><b>Mark this territory as completed?</b><div style="margin:6px 0">This <b>removes this territory’s records from this phone</b> so you can start a new one clean. Your other territories and your return visits are not touched. Print, send or export a copy first.</div><div class="g2" style="grid-template-columns:1fr 1fr 1fr"><button class="btn o" style="margin:0;font-size:13px" onclick="printAll()">Print first</button><button class="btn o" style="margin:0;font-size:13px" onclick="$('#dn').classList.add('hide')">Cancel</button><button class="btn r" style="margin:0;font-size:13px" onclick="finish()">Yes, clear</button></div></div>
+ <div id="msg" style="font-size:13px;font-weight:700;margin-top:8px"></div>
+ <h3>All my entries in this territory</h3><div style="font-size:12px;color:#666">Tap one to fix or delete it</div><div id="oth"></div>
+</section>
+<section id="p2" class="hide"><b id="stt"></b>
+ <div class="kp" style="margin-top:8px"><div class="k"><div class="n" id="s1"></div><div class="l">houses worked</div></div><div class="k"><div class="n" id="s2"></div><div class="l">Not Home (NH) rate</div></div><div class="k"><div class="n" id="s3"></div><div class="l">Call Again to follow up</div></div><div class="k"><div class="n" id="s4"></div><div class="l">total entries</div></div></div>
+ <h3>Results by symbol</h3><div class="sb" id="sb"></div><div class="lg" id="lg"></div>
+ <h3>Progress by street</h3><table style="width:100%;font-size:13px;border-collapse:collapse"><thead><tr style="text-align:left;color:#666"><th>Street</th><th>Houses</th><th></th><th>NH</th><th>CA</th></tr></thead><tbody id="ts"></tbody></table>
+ <h3>Still to do</h3><div id="att" style="font-size:13px"></div>
+</section>
+<section id="p3" class="hide">
+ <h3 style="margin-top:0">Print, send or export</h3>
+ <button class="btn" onclick="printAll()">Print or save as PDF (this territory)</button><button class="btn" onclick="sendOpen()">Send to the territory owner</button><button class="btn o" onclick="expC()">Export as spreadsheet (.csv, all territories)</button>
+ <h3>Backup</h3><div style="font-size:13px;color:#555">Your records live only in this app on this phone. If you clear the browser data or change phones, they are gone unless you export a backup. The backup holds every territory.</div>
+ <button class="btn" onclick="expJ()">Export backup file (.json)</button>
+ <label>Restore from a backup file</label><input type="file" id="imp" accept=".json,application/json" onchange="impF(this)" style="color:#000">
+ <div style="font-size:12px;color:#666;margin-top:4px">Restoring adds the entries from the file. Entries already here are not duplicated.</div>
+ <h3>Open it faster</h3><button class="btn g" onclick="hsOpen()">Put this on my home screen</button>
+ <button class="btn r" onclick="wipe()">Delete everything on this device</button>
+</section>
+</div>
+<div id="pk"><div style="font-size:12px;color:#666;margin-bottom:6px;text-align:center">Choose a symbol</div><div class="pg3"><button onclick="pick('NH')"><b>NH</b>Not Home</button><button onclick="pick('CA')"><b>CA</b>Call Again</button><button onclick="pick('B')"><b>B</b>Busy</button><button onclick="pick('M')"><b>M</b>Man</button><button onclick="pick('W')"><b>W</b>Woman</button><button onclick="pick('C')"><b>C</b>Child</button></div><button class="clr" onclick="pick('')">Clear this row</button><button class="clr" onclick="$('#pk').classList.remove('on');PK=null">Cancel</button></div>
+<div id="ed" class="mod"><div class="mc"><b>Fix this entry</b><label>Street</label><input id="es"><label>House or Apt. No.</label><input id="eh"><label>Date and time</label><input id="ee"><label>Symbol</label><select id="ey"><option>NH</option><option>CA</option><option>B</option><option>M</option><option>W</option><option>C</option></select><label>Name, Placement, and Remarks</label><input id="en"><button class="btn" onclick="saveEdit()">Save changes</button><div class="g2"><button class="btn o" onclick="$('#ed').classList.remove('on')">Cancel</button><button class="btn o" style="color:#c62828;border-color:#c62828" onclick="delEdit()">Delete</button></div></div></div>
+<div id="sm" class="mod"><div class="mc"><b style="font-size:17px">Send not-at-homes to the owner</b>
+ <div id="smw"><label>Which territory?</label><div id="smt"></div></div>
+ <label class="rad" style="font-weight:600;color:#1d2327;margin-top:8px"><input type="checkbox" id="smn" onchange="smPrev()"><span>Only entries new since my last send</span></label>
+ <label>Owner’s phone number (optional)</label><input id="smp" type="tel" inputmode="tel" placeholder="for example 325 555 0123" oninput="smPrev()">
+ <pre id="sp"></pre>
+ <button class="btn" id="smsh" onclick="smShare()">Send…</button>
+ <div class="g2"><button class="btn g" onclick="smGo('sms')">Text message</button><button class="btn g" onclick="smGo('wa')">WhatsApp</button></div>
+ <button class="btn o" onclick="smCopy()">Copy the text</button><button class="btn o" onclick="$('#sm').classList.remove('on')">Close</button></div></div>
+<div id="hs" class="mod"><div class="mc"><b style="font-size:17px">Put this on your home screen</b>
+ <div style="display:flex;gap:6px;margin:10px 0"><button class="btn o" style="margin:0;padding:8px" id="ht1" onclick="hsTab(1)">iPhone</button><button class="btn o" style="margin:0;padding:8px" id="ht2" onclick="hsTab(2)">Android</button><button class="btn o" style="margin:0;padding:8px" id="ht3" onclick="hsTab(3)">Computer</button></div>
+ <ol id="hsl" style="padding-left:20px;font-size:14px;line-height:1.5"></ol>
+ <div class="box" style="background:#e3f4e9;border-color:#bfe3cc">Install it first, then use only that icon. Your record is saved inside the app on this phone, so a different browser would show an empty record. Use Export backup to move it.</div>
+ <button class="btn" onclick="$('#hs').classList.remove('on')">Done</button></div></div>
+<div id="toast"></div><div id="pa"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='nh_local_v1',SYMC={NH:'#c77700',CA:'#7a3fa0',B:'#557',M:'#1f5f8b',W:'#2e7d4f',C:'#b0457b'};
+let S={v:2,pn:'',curT:'',terrs:{}},PK=null,ED=null;
+const nat=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true});
+function newTerr(id,city){return {id:id,city:city||'',owner:'',cur:'',streets:[],rows:[],sent:0}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){
+ if(d.terrs){S=Object.assign(S,d)}
+ else if(d.rows||d.tn){ // older single-territory data
+  const id=(d.tn||'My territory').trim()||'My territory';const t=newTerr(id,d.tc);t.rows=d.rows||[];t.streets=d.streets||[];t.cur=d.cur||'';S={v:2,pn:d.pn||'',curT:id,terrs:{[id]:t}}}
+ else S.pn=d.pn||''}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Could not save. Is private browsing on?')}}
+const T=()=>S.terrs[S.curT]||null;
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',2200)}
+function tab(n){for(let i=1;i<=3;i++){$('#p'+i).classList.toggle('hide',i!=n);$('#b'+i).classList.toggle('on',i==n)}window.scrollTo(0,0);if(n==2)stats()}
+function meta(){S.pn=$('#pn').value.trim();const t=T();if(t)t.city=$('#tc').value.trim();save()}
+const stamp=()=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a';h=h%12||12;return (d.getMonth()+1)+'/'+d.getDate()+' '+h+':'+(m<10?'0':'')+m+ap};
+const hk=h=>String(h||'').trim().toLowerCase().replace(/\s+/g,'');
+const hn=h=>{const m=String(h||'').match(/\d+/);return m?+m[0]:0};
+/* ---- territories ---- */
+function tOpts(){const ids=Object.keys(S.terrs).sort(nat);$('#tsel').innerHTML=ids.map(i=>'<option value="'+esc(i)+'"'+(i===S.curT?' selected':'')+'>Territory '+esc(i)+(S.terrs[i].city?' · '+esc(S.terrs[i].city):'')+'</option>').join('')+'<option value="__new"'+(!ids.length?' selected':'')+'>New territory (type the number)</option>';$('#tnr').classList.toggle('hide',$('#tsel').value!=='__new')}
+function tSel(){const v=$('#tsel').value;if(v==='__new'){$('#tnr').classList.remove('hide');$('#tnx').focus();return}S.curT=v;save();init()}
+function newT(){const id=$('#tnx').value.trim();if(!id)return;if(!S.terrs[id])S.terrs[id]=newTerr(id,'');S.curT=id;save();$('#tnx').value='';init();toast('Territory '+id+' started')}
+/* ---- streets ---- */
+function curStreet(){if($('#st').value==='__new'){const x=$('#stx').value.trim();return x?x.replace(/\b\w/g,c=>c.toUpperCase()):''}return $('#st').value}
+function opts(){const t=T();if(!t){$('#st').innerHTML='<option value="__new" selected>Start a territory first</option>';$('#stxr').classList.add('hide');return}
+ const all=[...new Set(t.streets.concat(t.rows.map(r=>r.street)))].filter(Boolean);t.streets=all;$('#st').innerHTML=all.map(s=>'<option'+(s===t.cur?' selected':'')+'>'+esc(s)+'</option>').join('')+'<option value="__new"'+(!all.length?' selected':'')+'>New street (type the name)</option>';$('#stxr').classList.toggle('hide',$('#st').value!=='__new')}
+function stChg(){const t=T();$('#stxr').classList.toggle('hide',$('#st').value!=='__new');if(t&&$('#st').value!=='__new'){t.cur=$('#st').value;save()}draw()}
+/* ---- rows ---- */
+function mkRow(){const tr=document.createElement('tr');tr.innerHTML='<td><input></td><td><input readonly style="font-size:12px"></td><td><input readonly></td><td><input></td>';const i=tr.querySelectorAll('input');
+ i[0].oninput=()=>{dup(tr);try1(tr)};i[3].oninput=()=>try1(tr);i[3].onblur=()=>try1(tr);
+ i[1].onclick=()=>{if(tr.dataset.done)return;if(!i[1].value)i[1].value=stamp();try1(tr)};
+ i[2].onclick=()=>{if(tr.dataset.done)return;PK=tr;$('#pk').classList.add('on')};return tr}
+function addRow(f){$('#tb').appendChild(mkRow());if(f!==false)$('#tb').lastChild.querySelector('input').focus()}
+function dup(tr){const t=T();const i=tr.querySelectorAll('input'),st=curStreet(),h=hk(i[0].value),b=$('#swh');if(!t||!h||!st){b.classList.add('hide');return}const m=t.rows.filter(r=>r.street===st&&hk(r.house)===h);if(m.length){const r=m[m.length-1];b.textContent='Already recorded: '+r.house+' '+st+' — '+r.sym+', '+r.date+'. Saving adds another visit.';b.classList.remove('hide')}else b.classList.add('hide')}
+function pick(sym){$('#pk').classList.remove('on');if(!PK)return;const i=PK.querySelectorAll('input');i[2].value=sym;if(sym&&!i[1].value)i[1].value=stamp();try1(PK);PK=null}
+function try1(tr){if(tr.dataset.done)return;const t=T();if(!t){toast('Type a territory number first');return}const i=[...tr.querySelectorAll('input')],v=i.map(x=>x.value.trim());if(!(v[0]&&v[2]))return;const st=curStreet();if(!st){toast('Type the street name first');return}
+ clearTimeout(tr._t);tr._t=setTimeout(()=>{if(tr.dataset.done)return;const w=[...tr.querySelectorAll('input')].map(x=>x.value.trim());if(!(w[0]&&w[2]))return;
+  t.rows.push({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),street:st,house:w[0],date:w[1]||stamp(),sym:w[2].toUpperCase(),note:w[3],pub:S.pn||''});if(t.streets.indexOf(st)<0)t.streets.push(st);t.cur=st;save();
+  tr.dataset.done='1';tr.dataset.st=st;tr.classList.add('ok');i.forEach(x=>x.readOnly=true);$('#swh').classList.add('hide');toast('Saved on this phone');opts();draw();if(![...$('#tb').children].some(r=>!r.dataset.done))addRow(false)},700)}
+function draw(){const t=T(),st=curStreet(),sw=$('#sw');
+ if(!t||!st){sw.classList.add('hide')}else{const rs=t.rows.filter(r=>r.street===st),done=new Set(rs.map(r=>hk(r.house)));
+  sw.classList.remove('hide');sw.innerHTML='<b>'+esc(st)+'</b> · '+done.size+(done.size==1?' house':' houses')+' worked'+(rs.length?'<div style="margin-top:5px">'+rs.map(r=>'<span class="chipx" onclick="openEdit(\''+r.id+'\')"><b>'+esc(r.house)+'</b> '+esc(r.sym)+' <span style="color:#777">'+esc(String(r.date).split(' ')[0])+'</span></span>').join('')+'</div>':'<div style="color:#666;margin-top:3px">Nothing recorded on this street yet.</div>')}
+ $('#oth').innerHTML=t&&t.rows.length?t.rows.slice().reverse().map(r=>'<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #eee;font-size:13px" onclick="openEdit(\''+r.id+'\')"><b style="width:120px">'+esc(r.house+' '+r.street)+'</b><span style="width:56px;color:#666">'+esc(r.date)+'</span><span style="width:28px;font-weight:700">'+esc(r.sym)+'</span><span style="flex:1;color:#555">'+esc(r.note)+'</span></div>').join(''):'<div style="color:#888;font-size:13px;padding:8px 0">No entries yet.</div>';
+ [...$('#tb').children].forEach(tr=>{tr.style.display=(tr.dataset.done&&tr.dataset.st&&tr.dataset.st!==st)?'none':''})}
+function openEdit(id){const t=T();const r=t&&t.rows.find(x=>x.id===id);if(!r)return;ED=r;$('#es').value=r.street;$('#eh').value=r.house;$('#ee').value=r.date;$('#ey').value=r.sym;$('#en').value=r.note;$('#ed').classList.add('on')}
+function saveEdit(){if(!ED)return;ED.street=$('#es').value.trim()||ED.street;ED.house=$('#eh').value.trim();ED.date=$('#ee').value.trim();ED.sym=$('#ey').value;ED.note=$('#en').value.trim();save();$('#ed').classList.remove('on');opts();draw();toast('Entry updated')}
+function delEdit(){const t=T();if(!ED||!t)return;t.rows=t.rows.filter(r=>r!==ED);save();$('#ed').classList.remove('on');opts();draw();toast('Entry deleted')}
+function stats(){const t=T(),R=t?t.rows:[],w=new Set(R.map(r=>r.street+'|'+hk(r.house))).size,nh=R.filter(r=>r.sym=='NH').length,ca=R.filter(r=>r.sym=='CA').length;
+ $('#stt').textContent=t?'Territory '+t.id+' statistics':'No territory yet';$('#s1').textContent=w;$('#s2').textContent=R.length?Math.round(100*nh/R.length)+'%':'–';$('#s3').textContent=ca;$('#s4').textContent=R.length;
+ const sm={};R.forEach(r=>sm[r.sym]=(sm[r.sym]||0)+1);const ks=Object.keys(SYMC).filter(k=>sm[k]);
+ $('#sb').innerHTML=ks.map(k=>'<i style="width:'+100*sm[k]/R.length+'%;background:'+SYMC[k]+'"></i>').join('');$('#lg').innerHTML=ks.map(k=>'<span><i style="background:'+SYMC[k]+'"></i>'+k+' '+sm[k]+'</span>').join('');
+ const sts=[...new Set(R.map(r=>r.street))],cnt=s=>new Set(R.filter(r=>r.street==s).map(r=>hk(r.house))).size,mx=Math.max(1,...sts.map(cnt));
+ $('#ts').innerHTML=sts.map(s=>{const rs=R.filter(r=>r.street==s),n=cnt(s);return '<tr><td><b>'+esc(s)+'</b></td><td style="width:28%"><div style="height:8px;background:#e5e9f2;border-radius:4px"><i style="display:block;height:8px;border-radius:4px;background:#1c4fa8;width:'+100*n/mx+'%"></i></div></td><td>'+n+'</td><td>'+rs.filter(r=>r.sym=='NH').length+'</td><td>'+rs.filter(r=>r.sym=='CA').length+'</td></tr>'}).join('');
+ const c=R.filter(r=>r.sym=='CA');$('#att').innerHTML=c.length?'<b>Call Again to revisit:</b><br>'+c.map(r=>esc(r.house+' '+r.street)+(r.note?' — '+esc(r.note):'')).join('<br>'):'No Call Agains yet.'}
+/* ---- print ---- */
+function printAll(){const t=T();if(!t){toast('Nothing to print yet');return}const g={};t.rows.forEach(r=>(g[r.street]=g[r.street]||[]).push(r));
+ let h='<h2 style="text-align:center;font-family:Georgia,serif;margin:0 0 4px">HOUSE-TO-HOUSE RECORD</h2><p style="margin:0 0 10px;font-size:13px"><b>TERRITORY</b> '+esc(t.id)+' '+esc(t.city)+'</p>';
+ Object.keys(g).sort(nat).forEach(s=>{h+='<div class="blk"><b>STREET</b> '+esc(s)+'<table><tr><th style="width:17%">House or Apt. No.</th><th style="width:20%">Date</th><th style="width:10%">Symbol</th><th>Name, Placement, and Remarks</th></tr>'+g[s].sort((a,b)=>hn(a.house)-hn(b.house)).map(r=>'<tr><td>'+esc(r.house)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.sym)+'</td><td>'+esc(r.note)+'</td></tr>').join('')+'</table></div>'});
+ $('#pa').innerHTML=Object.keys(g).length?h:'<p>No records.</p>';window.print()}
+/* ---- send to owner ---- */
+let SM={id:''};
+function lastTs(r){const n=parseInt(String(r.id).split('-')[0],10);return isNaN(n)?0:n}
+function buildMsg(id,onlyNew){const t=S.terrs[id];if(!t)return '';let R=t.rows;if(onlyNew)R=R.filter(r=>lastTs(r)>(t.sent||0));
+ if(!R.length)return 'No new not-at-homes since the last send.';
+ const g={};R.forEach(r=>(g[r.street]=g[r.street]||[]).push(r));const d=new Date();
+ let m='Not-at-home report\nTerritory '+t.id+(t.city?' · '+t.city:'')+'\n'+(S.pn?'From: '+S.pn+'\n':'')+(d.getMonth()+1)+'/'+d.getDate()+'\n';
+ Object.keys(g).sort(nat).forEach(s=>{m+='\n'+s+'\n';g[s].sort((a,b)=>hn(a.house)-hn(b.house)||String(a.house).localeCompare(String(b.house))).forEach(r=>{m+=r.house+' – '+r.sym+(r.note?' ('+r.note+')':'')+'\n'})});
+ m+='\nNH not home · CA call again · B busy · M man · W woman · C child';return m}
+function sendOpen(){const ids=Object.keys(S.terrs).sort(nat);if(!ids.length){toast('Nothing to send yet');return}
+ SM.id=S.curT&&S.terrs[S.curT]?S.curT:ids[0];
+ $('#smw').classList.toggle('hide',ids.length<2);
+ $('#smt').innerHTML=ids.map(i=>'<label class="rad" style="font-weight:600;color:#1d2327;margin:6px 0"><input type="radio" name="smr" value="'+esc(i)+'"'+(i===SM.id?' checked':'')+' onchange="smPick(this.value)"><span>Territory '+esc(i)+(S.terrs[i].city?' · '+esc(S.terrs[i].city):'')+'<br><span style="font-weight:400;color:#666;font-size:12px">'+S.terrs[i].rows.length+' entries</span></span></label>').join('');
+ $('#smn').checked=false;$('#smp').value=S.terrs[SM.id].owner||'';$('#smsh').style.display=navigator.share?'block':'none';$('#sm').classList.add('on');smPrev()}
+function smPick(id){SM.id=id;$('#smp').value=S.terrs[id].owner||'';smPrev()}
+function smPrev(){$('#sp').textContent=buildMsg(SM.id,$('#smn').checked)}
+function smDone(){const t=S.terrs[SM.id];t.owner=$('#smp').value.trim();t.sent=Date.now();save()}
+function digits(){let n=$('#smp').value.replace(/\D/g,'');if(n.length==10)n='1'+n;return n}
+function smShare(){const m=$('#sp').textContent;navigator.share({title:'Not-at-home report',text:m}).then(smDone).catch(()=>{})}
+function smGo(k){const m=encodeURIComponent($('#sp').textContent),n=digits();smDone();location.href=k=='sms'?'sms:'+(n?'+'+n:'')+'?&body='+m:'https://wa.me/'+n+'?text='+m}
+function smCopy(){const m=$('#sp').textContent;(navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>toast('Copied. Paste it into any message.')).catch(()=>{const r=document.createRange();r.selectNode($('#sp'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Selected. Tap Copy.')})}
+/* ---- backup ---- */
+function dl(name,type,txt){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function expC(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',L=['Territory,City,Street,House,Date,Symbol,Remarks'];Object.keys(S.terrs).sort(nat).forEach(i=>{const t=S.terrs[i];t.rows.slice().sort((a,b)=>nat(a.street,b.street)||hn(a.house)-hn(b.house)).forEach(r=>L.push([t.id,t.city,r.street,r.house,r.date,r.sym,r.note].map(q).join(',')))});dl('not-at-home-all-territories.csv','text/csv',L.join('\n'));toast('Spreadsheet downloaded')}
+function expJ(){dl('my-record-backup-'+new Date().toISOString().slice(0,10)+'.json','application/json',JSON.stringify({app:'nh_local',v:2,data:S}));toast('Backup file downloaded')}
+function impF(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result).data;let n=0;
+ const add=(id,city,rows,streets)=>{if(!id)id='My territory';if(!S.terrs[id])S.terrs[id]=newTerr(id,city);const t=S.terrs[id];if(!t.city)t.city=city||'';(rows||[]).forEach(x=>{if(!t.rows.some(y=>y.id===x.id)){t.rows.push(x);n++}});(streets||[]).forEach(s=>{if(t.streets.indexOf(s)<0)t.streets.push(s)})};
+ if(d.terrs)Object.keys(d.terrs).forEach(i=>{const t=d.terrs[i];add(t.id||i,t.city,t.rows,t.streets);if(t.owner&&!S.terrs[t.id||i].owner)S.terrs[t.id||i].owner=t.owner});else add((d.tn||'').trim(),d.tc,d.rows,d.streets);
+ if(!S.curT||!S.terrs[S.curT])S.curT=Object.keys(S.terrs).sort(nat)[0]||'';save();init();toast(n+' entries restored')}catch(e){toast('That is not a backup file')}};r.readAsText(f)}
+function askDone(){if(!T()){toast('Nothing to complete yet');return}$('#dn').classList.remove('hide');$('#dn').scrollIntoView({behavior:'smooth',block:'center'})}
+function finish(){const t=T();if(!t)return;const n=t.rows.length,id=t.id;delete S.terrs[id];S.curT=Object.keys(S.terrs).sort(nat)[0]||'';save();$('#dn').classList.add('hide');init();const m=$('#msg');m.style.color='#2e7d4f';m.textContent='Territory '+id+' completed: '+n+' records cleared. '+(S.curT?'Now showing territory '+S.curT+'.':'Ready for a new territory.')+' Your return visits are untouched.'}
+function wipe(){if(confirm('Delete every not-at-home entry in every territory on this device? Export a backup first.')){S={v:2,pn:S.pn,curT:'',terrs:{}};save();init();toast('Everything deleted')}}
+const HS={1:['Open this page in <b>Safari</b>.','Tap the <b>Share</b> button (square with an arrow).','Tap <b>Add to Home Screen</b>, then <b>Add</b>.','Open the new <b>Territory Tools</b> icon. It works with no signal.'],2:['Open this page in <b>Chrome</b>.','Tap the <b>three dots</b> at the top right.','Tap <b>Install app</b> (or <b>Add to Home screen</b>).','Tap <b>Install</b>. The icon appears on your home screen and works with no signal.'],3:['Press <b>Ctrl + D</b> (Cmd + D on a Mac) to bookmark this page.','Or drag the address from the address bar to your desktop.']};
+function hsTab(n){for(let i=1;i<=3;i++)$('#ht'+i).style.background=i==n?'#1c4fa8':'#fff',$('#ht'+i).style.color=i==n?'#fff':'#1c4fa8';$('#hsl').innerHTML=HS[n].map(x=>'<li>'+x+'</li>').join('')}
+var DP=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();DP=e});
+function hsOpen(){if(DP){DP.prompt();DP=null;return}const u=navigator.userAgent;hsTab(/iPhone|iPad|iPod/.test(u)?1:/Android/.test(u)?2:3);$('#hs').classList.add('on')}
+function init(){$('#stx').value='';tOpts();const t=T();$('#tc').value=t?t.city:'';$('#pn').value=S.pn;opts();$('#tb').innerHTML='';addRow(false);draw();$('#stt').textContent=t?'Territory '+t.id+' statistics':''}
+load();if(!S.curT||!S.terrs[S.curT])S.curT=Object.keys(S.terrs).sort(nat)[0]||'';init();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+</script></body></html>

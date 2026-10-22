@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Return Visits</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Return Visits</title><link rel="apple-touch-icon" href="rv_icon.png"><link rel="icon" href="rv_icon.png"><meta name="theme-color" content="#1c4fa8"><meta name="apple-mobile-web-app-title" content="Return Visits">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef1f6;color:#14213d}
@@ -28,6 +28,10 @@ label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0
 .fchip{border:1px solid #c5cee0;background:#fff;border-radius:16px;padding:6px 12px;font-size:13px;font-weight:700;color:#334}.fchip.on{background:#1c4fa8;color:#fff;border-color:#1c4fa8}
 .tinfo{background:#eaf2ff;border:1px solid #bcd3f7;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
 .sub{background:#fafbfe;padding:5px 12px 5px 22px;font-size:12.5px;font-weight:800;color:#1c4fa8;border-bottom:1px solid #edf0f6}
+.hsb{display:flex;gap:8px;align-items:center;background:#fff7e0;border-bottom:1px solid #ecd48a;padding:9px 12px;font-size:13px;color:#5c4400}.hsb .btn{padding:7px 12px;font-size:13px;white-space:nowrap}.hsb a{margin-left:auto;font-size:12px;color:#7a6a3a}
+#hs{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;padding:16px}#hs>div{background:#fff;border-radius:16px;padding:16px;max-width:440px;width:100%;max-height:90vh;overflow:auto}
+.hst{display:flex;gap:6px;margin:10px 0}.hst button{flex:1;border:1px solid #c5cee0;background:#fff;border-radius:12px;padding:8px 4px;font-weight:700;font-size:13px;color:#334}.hst button.on{background:#1c4fa8;color:#fff;border-color:#1c4fa8}
+#hs ol{padding-left:20px;margin:6px 0;font-size:14.5px;line-height:1.5}#hs li{margin-bottom:6px}.hsn{background:#e3f4e9;color:#1f6b3f;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
 </style></head><body><div class="wrap">
 <div class="hd"><small id="bk">Private to this device</small><h1>Return visits</h1></div>
 <div class="priv">Saved only on this phone or computer. Nothing is sent to the group sheet. Use <b>Export backup</b> now and then.</div>
@@ -36,7 +40,8 @@ label{display:block;font-size:12.5px;font-weight:700;color:#5b6577;margin:10px 0
 <div id="v2" class="form" style="display:none"></div>
 <div id="v3" style="display:none"><div id="map"></div><div class="leg" id="leg"></div></div>
 <div id="v4" style="display:none"></div>
-</div><div id="toast"></div>
+</div><div id="hs"><div><h3 style="margin:0 0 4px">Put Return Visits on your home screen</h3><div style="font-size:13px;color:#5b6577">So you can open the same list every time. Pick your device:</div><div class="hst"><button id="hs1" onclick="hsTab(1)">iPhone</button><button id="hs2" onclick="hsTab(2)">Android</button><button id="hs3" onclick="hsTab(3)">Computer</button></div><div id="hsb"></div><div class="hsn">Always open your list from that shortcut, or from the same browser. Your visits are saved in that browser, so a different browser would show an empty list.</div><button class="btn" style="width:100%;margin-top:12px" onclick="hsClose()">Done</button></div></div>
+<div id="toast"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* ---- data: kept in this browser only ---- */
@@ -74,7 +79,7 @@ function houseNo(v){var m=String(v.h||'').match(/\d+/);return m?+m[0]:0}
 function addrOf(v){return ((v.h?v.h+' ':'')+(v.st||'')).trim()||v.a||''}
 function card(v,showD){return '<div class="row" style="--c:'+col(v.t)+'"><span class="dot"></span><div class="t"><div class="nm">'+esc(v.n)+'</div><div class="ad">'+esc(addrOf(v))+'</div><div class="meta"><span class="chip">'+esc(v.t||'No territory')+'</span><span class="chip d">'+esc(v.s)+'</span>'+(v.fu?'<span class="chip f">Follow up '+esc(v.fu)+'</span>':'')+' Visited '+esc(v.dt)+'</div>'+(v.nt?'<div class="nt">'+esc(v.nt)+'</div>':'')+
   '<div><button class="mini" onclick="showOn(\''+v.id+'\')">Show on map</button><button class="mini" onclick="edit(\''+v.id+'\')">Edit</button>'+(v.lat!=null?'<a class="mini" style="text-decoration:none;display:inline-block" href="https://www.google.com/maps/dir/?api=1&destination='+v.lat+','+v.lng+'" target="_blank">Directions</a>':'')+'</div></div>'+(showD&&v.d!=null?'<div class="dist">'+fmt(v.d)+'</div>':'')+'</div>'}
-function list(){var el=document.getElementById('v1'),h='';
+function list(){var el=document.getElementById('v1'),h=hsBar();
  h+='<div class="bar"><b style="font-size:13px">Group by</b><select id="so" style="width:auto" onchange="GROUP=this.value;list()"><option value="near"'+(GROUP=='near'?' selected':'')+'>Nearest to me</option><option value="ts"'+(GROUP=='ts'?' selected':'')+'>Territory and street</option><option value="fu"'+(GROUP=='fu'?' selected':'')+'>Follow-up date</option></select><button class="btn" style="margin-left:auto" onclick="tab(2)">+ Add</button></div>'+(T0?'<div class="bar" style="padding-top:0"><button class="fchip'+(ONLY?'':' on')+'" onclick="ONLY=false;list()">All my return visits ('+RV.length+')</button><button class="fchip'+(ONLY?' on':'')+'" onclick="ONLY=true;list()">Only '+esc(T0)+' ('+RV.filter(function(v){return v.t==T0}).length+')</button></div>':'');
  if(!RV.length){el.innerHTML=h+'<div class="note">No return visits yet. Tap <b>Add</b> when you leave a house, or <a href="#" onclick="demo();return false">load sample visits</a> to try it.</div>';return}
  var items=RV.filter(function(v){return !(ONLY&&T0)||v.t==T0}).map(function(v){return Object.assign({},v)});
@@ -139,7 +144,7 @@ function backup(){var have=Object.keys(RV.reduce(function(o,v){o[v.t||'']=1;retu
  document.getElementById('v4').innerHTML='<div class="note"><b>Your return visits live only in this browser.</b> If you clear the browser data or change phones, they are gone unless you export a backup.</div><div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px">'+
  '<label style="margin:0">Print or export</label><select id="ps2"><option value="">All territories</option>'+have.map(function(t){return '<option>'+(t||'No territory')+'</option>'}).join('')+'</select><div style="font-size:12.5px;color:#5b6577">Grouped by territory, then street, then house number. A printed list has names on it, so keep it private.</div>'+
  '<button class="btn" onclick="doPrint()">Print or save as PDF</button><button class="btn o" onclick="expC()">Export as spreadsheet (.csv)</button>'+
- '<hr style="width:100%;border:0;border-top:1px solid #e3e8f1"><button class="btn" onclick="expJ()">Export backup file (.json)</button><label>Restore from a backup file</label><input type="file" id="imp" accept=".json,application/json" onchange="impF(this)"><div class="note" style="padding:0">Importing adds the visits from the file. Visits that are already here are not duplicated.</div><button class="btn r" onclick="wipe()">Delete everything on this device</button></div>'}
+ '<hr style="width:100%;border:0;border-top:1px solid #e3e8f1"><button class="btn g" onclick="hsOpen()">Put this on my home screen</button><button class="btn" onclick="expJ()">Export backup file (.json)</button><label>Restore from a backup file</label><input type="file" id="imp" accept=".json,application/json" onchange="impF(this)"><div class="note" style="padding:0">Importing adds the visits from the file. Visits that are already here are not duplicated.</div><button class="btn r" onclick="wipe()">Delete everything on this device</button></div>'}
 function scoped(){var f=document.getElementById('ps2')?document.getElementById('ps2').value:'';return RV.filter(function(v){return !f||(f=='No territory'?!v.t:v.t==f)})}
 function doPrint(){var G=grouped(scoped()),h='';if(!G.length){toast('Nothing to print');return}
  G.forEach(function(g,i){h+='<div class="'+(i?'pb':'')+'"><h2>Return visits &middot; '+esc(g.t||'No territory')+'</h2><div class="sm">'+(g.t&&TD[g.t]?esc(TD[g.t].loc)+' &middot; ':'')+g.n+' return visit'+(g.n==1?'':'s')+' &middot; printed '+new Date().toLocaleDateString()+' &middot; private, for my use only</div>';
@@ -156,7 +161,17 @@ function demo(){var tn=T0&&TD[T0]?T0:'SS-1',t=TD[tn];if(!t){toast('Territory dat
  for(var i=0;i<8;i++){var w=ws[i%ws.length],j=Math.min(w.p.length-2,i%3),u=.25+.2*(i%3),p=[w.p[j][0]+(w.p[j+1][0]-w.p[j][0])*u,w.p[j][1]+(w.p[j+1][1]-w.p[j][1])*u],ll=toLL(t,p[0]+6,p[1]+6);
   RV.push({id:'d'+i,n:N[i],h:String(100+i*37),st:w.n,a:(100+i*37)+' '+w.n,t:tn,s:S[i%4],dt:today(),fu:i%3==0?today():'',nt:i%2?'Asked about what happens after death. Left a tract.':'Wants to talk again about the Bible.',lat:ll[0],lng:ll[1],acc:10})}
  save();list()}
+
+/* ---- home screen help ---- */
+var HSS={1:'<ol><li>Open this page in <b>Safari</b> (or Chrome).</li><li>Tap the <b>Share</b> button, the square with an arrow pointing up. It is at the bottom of the screen.</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>If you see <b>Open as Web App</b>, turn it <b>off</b>. Then tap <b>Add</b>.</li></ol>',
+2:'<ol><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>three dots</b> at the top right.</li><li>Tap <b>Add to Home screen</b>.</li><li>Tap <b>Add</b>. The icon appears on your home screen.</li></ol>',
+3:'<ol><li>Open this page in your browser.</li><li>Press <b>Ctrl + D</b> (on a Mac, <b>Cmd + D</b>) to bookmark it.</li><li>Pick the bookmarks bar so it is always one click away.</li></ol>'};
+function hsTab(n){for(var i=1;i<=3;i++)document.getElementById('hs'+i).className=i==n?'on':'';document.getElementById('hsb').innerHTML=HSS[n]}
+function hsOpen(){var u=navigator.userAgent||'',n=/iPhone|iPad|iPod/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1)?1:/Android/.test(u)?2:3;document.getElementById('hs').style.display='flex';hsTab(n)}
+function hsClose(){document.getElementById('hs').style.display='none'}
+function hsHide(){try{localStorage.setItem('rv_hint','1')}catch(e){}list()}
+function hsBar(){var h=0;try{h=localStorage.getItem('rv_hint')}catch(e){}return h?'':'<div class="hsb"><span>Open this list faster: put it on your home screen.</span><button class="btn" onclick="hsOpen()">Show me how</button><a href="#" onclick="hsHide();return false">Hide</a></div>'}
 load();
-if(/^[A-Z]+-\d+$/.test(T0)){var bk=document.getElementById('bk');bk.innerHTML='<a href="'+T0+'_card_site.html" style="color:#fff;font-weight:700">&larr; Back to territory card '+T0+'</a> &middot; private to this device'}
+if(P.get('back')==='mine'){var bk=document.getElementById('bk');bk.innerHTML='<a href="My_Territory_Record.html" style="color:#fff;font-weight:700">&larr; Back to my not-at-home record</a> &middot; private to this device'}else if(/^[A-Z]+-\d+$/.test(T0)){var bk=document.getElementById('bk');bk.innerHTML='<a href="'+T0+'_card_site.html" style="color:#fff;font-weight:700">&larr; Back to territory card '+T0+'</a> &middot; private to this device'}
 list();loadT();
 </script></body></html>

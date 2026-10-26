@@ -132,16 +132,16 @@ function render(){
   [ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>','#e8683a'),oldShelf.length,'Not worked in 12+ months','on the shelf (not checked out)','st:old']
  ].map(function(x){return '<div class="st" data-sel="'+x[4]+'">'+x[0]+'<div><b>'+x[1]+'</b><span>'+x[2]+'</span><small>'+x[3]+'</small></div></div>'}).join('');
  var b=[0,0,0,0,0],c6=182.6,c12=365,c24=730;
- R.forEach(function(r){var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
+ R.forEach(function(r){if(r.open)return;var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
  var ppl={};open.forEach(function(r){var k=nameOf(r.open.name);ppl[k]=(ppl[k]||0)+1});
  var pl=Object.keys(ppl).sort(function(a,b){return ppl[b]-ppl[a]||(a<b?-1:1)}).map(function(k,i){return{l:k,n:ppl[k],c:k=='Name not recorded'?'#9ca3af':PAL[i%8],k:'who:'+i}});
- $('donuts').innerHTML=card('How long since each territory was worked','Based on the last completed date',
-  [{l:'Within 6 months',n:b[0],c:'#12a312',k:'age:0'},{l:'6 to 12 months ago',n:b[1],c:'#f7b00e',k:'age:1'},{l:'1 to 2 years ago',n:b[2],c:'#ec8459',k:'age:2'},{l:'More than 2 years ago',n:b[3],c:'#d13b3b',k:'age:3'},{l:'No date on record',n:b[4],c:'#aeb4bd',k:'age:4'}],R.length,'territories')
+ $('donuts').innerHTML=card('How long since each territory was worked','Only territories on the shelf (not checked out)',
+  [{l:'Within 6 months',n:b[0],c:'#12a312',k:'age:0'},{l:'6 to 12 months ago',n:b[1],c:'#f7b00e',k:'age:1'},{l:'1 to 2 years ago',n:b[2],c:'#ec8459',k:'age:2'},{l:'More than 2 years ago',n:b[3],c:'#d13b3b',k:'age:3'},{l:'No date on record',n:b[4],c:'#aeb4bd',k:'age:4'}],R.length-open.length,'on the shelf')
   +card('Where the territories are right now','Checked out or on the shelf',[{l:'On the shelf',n:R.length-open.length,c:'#2f7ad9',k:'wh:shelf'},{l:'Out under 4 months',n:open.length-over.length,c:'#17a673',k:'wh:u4'},{l:'Out over 4 months',n:over.length,c:'#d13b3b',k:'wh:o4'}],R.length,'territories')
   +card('Who has the territories checked out','Number of territories per person',pl,open.length,'checked out');
  var pr={'st:all':function(){return true},'st:out':function(r){return !!r.open},'st:over':function(r){return r.open&&r.out>122},'st:old':function(r){return r.age!=null&&r.age>365&&!r.open},
   'wh:shelf':function(r){return !r.open},'wh:u4':function(r){return r.open&&r.out<=122},'wh:o4':function(r){return r.open&&r.out>122}},lb={'st:all':'All territories','st:out':'Checked out right now','st:over':'Out more than 4 months','st:old':'Not worked in 12+ months, on the shelf','wh:shelf':'On the shelf','wh:u4':'Out under 4 months','wh:o4':'Out over 4 months'};
- ['Within 6 months','6 to 12 months ago','1 to 2 years ago','More than 2 years ago','No date on record'].forEach(function(n,i){pr['age:'+i]=function(r){return bucket(r)==i};lb['age:'+i]=n});
+ ['Within 6 months','6 to 12 months ago','1 to 2 years ago','More than 2 years ago','No date on record'].forEach(function(n,i){pr['age:'+i]=function(r){return !r.open&&bucket(r)==i};lb['age:'+i]=n});
  pl.forEach(function(p,i){pr['who:'+i]=function(r){return r.open&&nameOf(r.open.name)==p.l};lb['who:'+i]=p.l});
  CUR={R:R,pr:pr,lb:lb};if(SEL&&!pr[SEL])SEL=null;
  var tb=function(h,rows){return '<tr>'+h.map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>'+(rows.join('')||'<tr><td colspan="9">None</td></tr>')};

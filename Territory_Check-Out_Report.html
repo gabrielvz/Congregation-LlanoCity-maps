@@ -34,12 +34,20 @@ svg.d path{cursor:pointer;transition:opacity .15s}svg.d path.dim{opacity:.22}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.hero h1{font-size:28px}}
 @media print{.btns{display:none}body{background:#fff}}
 a.tl{color:#1a56b0;text-decoration:underline}
+.gl .gh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}.gl h3{margin:0;font-size:20px}.gl .gc{color:var(--mut);font-size:13.5px}
+.gl .tn{margin:12px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:6px;margin:4px 6px 4px 0;padding:8px 11px;border-radius:10px;border:2px solid var(--cc);background:var(--cb);color:#111;font:700 15px/1 system-ui,sans-serif;text-decoration:none}
+a.chip{color:#1a56b0;text-decoration:underline}a.chip:hover{filter:brightness(.96)}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--cc);display:inline-block}
+.chip.s0{--cc:#2f7ad9;--cb:#eef4fd}.chip.s1{--cc:#17a673;--cb:#e8f7f1}.chip.s2{--cc:#d13b3b;--cb:#fdeeee}
+.glg{display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;color:#444;margin:0 0 10px}.glg span{display:inline-flex;align-items:center;gap:6px}.glg i{width:12px;height:12px;border-radius:50%;display:inline-block}
 </style></head><body><div class="w">
 <div class="hero"><div><small>LLANO, TX &middot; SERVICE YEAR <span id="sy"></span></small><h1>Territory Check-Out Report</h1>
 <p>Which territories are overdue for coverage, and who has the ones that have been out too long. Numbers as of <span id="asof"></span>.</p>
 <div class="btns"><button class="btn p" id="up">Upload new Hourglass PDF</button><button class="btn" id="dl" style="display:none">Save updated report file</button>
 <a class="btn" href="Overview.html?a=20747b654642ea8dc519534b">Not-at-home overview &rarr;</a><input type="file" id="f" accept="application/pdf" hidden></div><div id="msg"></div></div></div>
 <div class="stats" id="stats"></div>
+<h2>All territories at a glance</h2><div class="hint">Every territory by type and town. Tap a city territory to open its card.</div><div class="glg"><span><i style="background:#2f7ad9"></i>On the shelf</span><span><i style="background:#17a673"></i>Checked out, under 4 months</span><span><i style="background:#d13b3b"></i>Checked out, over 4 months</span></div><div id="glance"></div>
 <h2>The big picture</h2><div class="hint">Tap a color, a name, or a total to see exactly which territories it is.</div><div class="g3" id="donuts"></div>
 <div class="c tw" id="sel" hidden></div>
 <h2>Needs a follow-up <small style="font-size:14px;color:var(--mut);font-weight:400">checked out more than 4 months</small></h2>
@@ -109,7 +117,7 @@ function card(t,sub,parts,total,lab){
 }
 var CUR={},SEL=null;
 function bucket(r){var a=r.age;return a==null?4:a<182.6?0:a<365?1:a<730?2:3}
-function lk(id){return /^(L|SS|M|BL)-\d+$/.test(id)?'<a class="tl" href="'+id+'_card_site.html" target="_blank"><b>'+id+'</b></a>':'<b>'+id+'</b>'}
+function lk(id){return /^(L|SS|M|BL|C)-\d+$/.test(id)?'<a class="tl" href="'+id+'_card_site.html" target="_blank"><b>'+id+'</b></a>':'<b>'+id+'</b>'}
 function showSel(){
  document.querySelectorAll('[data-sel]').forEach(function(e){var k=e.getAttribute('data-sel'),same=SEL&&k==SEL;
   if(e.tagName.toLowerCase()=='path'){var g=SEL?SEL.split(':')[0]:'';e.classList.toggle('dim',!!SEL&&k.split(':')[0]==g&&!same)}else e.classList.toggle('on',!!same)});
@@ -131,6 +139,14 @@ function render(){
   [ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','#d13b3b'),over.length,'Out more than 4 months','need a follow-up','st:over'],
   [ic('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>','#e8683a'),oldShelf.length,'Not worked in 12+ months','on the shelf (not checked out)','st:old']
  ].map(function(x){return '<div class="st" data-sel="'+x[4]+'">'+x[0]+'<div><b>'+x[1]+'</b><span>'+x[2]+'</span><small>'+x[3]+'</small></div></div>'}).join('');
+
+ var GR=[['Business',[['Llano','LB'],['Mason','MB'],['San Saba','SSB']]],['Rural',[['Llano','LR'],['Mason','MR'],['San Saba','SSR']]],['City',[['Mason','M'],['San Saba','SS'],['Llano','L'],['Cherokee','C'],['Lake Buchanan','BL']]]],used={};
+ var pre=function(id){var m=/^([A-Z]+)-(\d+)$/.exec(id);return m?[m[1],+m[2]]:[id,0]};
+ var chip=function(r){var st=r.open?(r.out>122?2:1):0,tip=r.open?('Out: '+nameOf(r.open.name)+' since '+fmt(r.open.assigned)):'On the shelf'+(r.last?(' - last completed '+fmt(r.last)):''),inner='<i></i>'+r.id;return /^(L|SS|M|BL|C)-\d+$/.test(r.id)?'<a class="chip s'+st+'" title="'+tip+'" href="'+r.id+'_card_site.html" target="_blank">'+inner+'</a>':'<span class="chip s'+st+'" title="'+tip+'">'+inner+'</span>'};
+ var gsec=function(title,towns){var tot=0,sh=0,h='';towns.forEach(function(t){var L=R.filter(function(r){return pre(r.id)[0]==t[1]}).sort(function(a,b){return pre(a.id)[1]-pre(b.id)[1]});L.forEach(function(r){used[r.id]=1});if(!L.length)return;tot+=L.length;sh+=L.filter(function(r){return !r.open}).length;h+='<div class="tn">'+t[0]+' <span style="font-weight:400;text-transform:none;letter-spacing:0">('+t[1]+') - '+L.length+'</span></div><div>'+L.map(chip).join('')+'</div>'});return '<div class="c gl" style="margin-bottom:12px"><div class="gh"><h3>'+title+'</h3><span class="gc">'+tot+' territories - '+sh+' on the shelf, '+(tot-sh)+' checked out</span></div>'+h+'</div>'};
+ var oth=R.filter(function(r){return true}),gh='';GR.forEach(function(g){gh+=gsec(g[0],g[1])});
+ var rest=R.filter(function(r){return !used[r.id]});if(rest.length)gh+='<div class="c gl"><div class="gh"><h3>Other</h3><span class="gc">'+rest.length+' territories</span></div><div>'+rest.map(chip).join('')+'</div></div>';
+ $('glance').innerHTML=gh;
  var b=[0,0,0,0,0],c6=182.6,c12=365,c24=730;
  R.forEach(function(r){if(r.open)return;var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
  var ppl={};open.forEach(function(r){var k=nameOf(r.open.name);ppl[k]=(ppl[k]||0)+1});

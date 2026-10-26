@@ -35,6 +35,7 @@ svg.d path{cursor:pointer;transition:opacity .15s}svg.d path.dim{opacity:.22}
 @media print{.btns{display:none}body{background:#fff}}
 a.tl{color:#1a56b0;text-decoration:underline}
 .gl .gh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}.gl h3{margin:0;font-size:20px}.gl .gc{color:var(--mut);font-size:13.5px}
+.gtabs{display:flex;gap:6px;margin:0 0 10px;border-bottom:2px solid #e3e7ee}.gtab{flex:1;border:0;background:transparent;padding:11px 6px 9px;font:700 16px/1.1 system-ui,sans-serif;color:#555;border-bottom:4px solid transparent;margin-bottom:-2px;cursor:pointer}.gtab small{display:block;font-weight:400;font-size:12px;color:#888;margin-top:3px}.gtab.on{color:#1a56b0;border-bottom-color:#1a56b0}.gtab.on small{color:#1a56b0}
 .gl .tn{margin:12px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700}
 .chip{display:inline-flex;align-items:center;gap:6px;margin:4px 6px 4px 0;padding:8px 11px;border-radius:10px;border:2px solid var(--cc);background:var(--cb);color:#111;font:700 15px/1 system-ui,sans-serif;text-decoration:none}
 a.chip{color:#1a56b0;text-decoration:underline}a.chip:hover{filter:brightness(.96)}
@@ -143,10 +144,13 @@ function render(){
  var GR=[['Business',[['Llano','LB'],['Mason','MB'],['San Saba','SSB']]],['Rural',[['Llano','LR'],['Mason','MR'],['San Saba','SSR']]],['City',[['Mason','M'],['San Saba','SS'],['Llano','L'],['Cherokee','C'],['Lake Buchanan','BL']]]],used={};
  var pre=function(id){var m=/^([A-Z]+)-(\d+)$/.exec(id);return m?[m[1],+m[2]]:[id,0]};
  var chip=function(r){var st=r.open?(r.out>122?2:1):0,tip=r.open?('Out: '+nameOf(r.open.name)+' since '+fmt(r.open.assigned)):'On the shelf'+(r.last?(' - last completed '+fmt(r.last)):''),inner='<i></i>'+r.id;return /^(L|SS|M|BL|C)-\d+$/.test(r.id)?'<a class="chip s'+st+'" title="'+tip+'" href="'+r.id+'_card_site.html" target="_blank">'+inner+'</a>':'<span class="chip s'+st+'" title="'+tip+'">'+inner+'</span>'};
- var gsec=function(title,towns){var tot=0,sh=0,h='';towns.forEach(function(t){var L=R.filter(function(r){return pre(r.id)[0]==t[1]}).sort(function(a,b){return pre(a.id)[1]-pre(b.id)[1]});L.forEach(function(r){used[r.id]=1});if(!L.length)return;tot+=L.length;sh+=L.filter(function(r){return !r.open}).length;h+='<div class="tn">'+t[0]+' <span style="font-weight:400;text-transform:none;letter-spacing:0">('+t[1]+') - '+L.length+'</span></div><div>'+L.map(chip).join('')+'</div>'});return '<div class="c gl" style="margin-bottom:12px"><div class="gh"><h3>'+title+'</h3><span class="gc">'+tot+' territories - '+sh+' on the shelf, '+(tot-sh)+' checked out</span></div>'+h+'</div>'};
- var oth=R.filter(function(r){return true}),gh='';GR.forEach(function(g){gh+=gsec(g[0],g[1])});
- var rest=R.filter(function(r){return !used[r.id]});if(rest.length)gh+='<div class="c gl"><div class="gh"><h3>Other</h3><span class="gc">'+rest.length+' territories</span></div><div>'+rest.map(chip).join('')+'</div></div>';
- $('glance').innerHTML=gh;
+ var gsec=function(title,towns){var tot=0,sh=0,h='';towns.forEach(function(t){var L=R.filter(function(r){return pre(r.id)[0]==t[1]}).sort(function(a,b){return pre(a.id)[1]-pre(b.id)[1]});L.forEach(function(r){used[r.id]=1});if(!L.length)return;tot+=L.length;sh+=L.filter(function(r){return !r.open}).length;h+='<div class="tn">'+t[0]+' <span style="font-weight:400;text-transform:none;letter-spacing:0">('+t[1]+') - '+L.length+'</span></div><div>'+L.map(chip).join('')+'</div>'});return {t:title,n:tot,sh:sh,h:h}};
+ var GS=GR.map(function(g){return gsec(g[0],g[1])});
+ var rest=R.filter(function(r){return !used[r.id]});if(rest.length)GS.push({t:'Other',n:rest.length,sh:rest.filter(function(r){return !r.open}).length,h:'<div>'+rest.map(chip).join('')+'</div>'});
+ var cur=0;try{var sv=localStorage.getItem('gl_tab');cur=Math.max(0,GS.map(function(g){return g.t}).indexOf(sv))}catch(e){}
+ var drawG=function(){$('glance').innerHTML='<div class="c gl"><div class="gtabs" role="tablist">'+GS.map(function(g,i){return '<button type="button" role="tab" class="gtab'+(i==cur?' on':'')+'" data-i="'+i+'">'+g.t+'<small>'+g.n+'</small></button>'}).join('')+'</div><div class="gh"><span class="gc">'+GS[cur].n+' territories - '+GS[cur].sh+' on the shelf, '+(GS[cur].n-GS[cur].sh)+' checked out</span></div>'+GS[cur].h+'</div>';
+  $('glance').querySelectorAll('.gtab').forEach(function(bt){bt.onclick=function(){cur=+bt.getAttribute('data-i');try{localStorage.setItem('gl_tab',GS[cur].t)}catch(e){}drawG()}})};
+ drawG();
  var b=[0,0,0,0,0],c6=182.6,c12=365,c24=730;
  R.forEach(function(r){if(r.open)return;var a=r.age;b[a==null?4:a<c6?0:a<c12?1:a<c24?2:3]++});
  var ppl={};open.forEach(function(r){var k=nameOf(r.open.name);ppl[k]=(ppl[k]||0)+1});

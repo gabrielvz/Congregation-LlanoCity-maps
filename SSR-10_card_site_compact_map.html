@@ -73,7 +73,7 @@ var gU=function(){};
 var B=[-1052.4,-796.9,1052.4,796.9],svg=document.getElementById('s'),host=document.getElementById('m');
 var st={cx:(B[0]+B[2])/2,cy:(B[1]+B[3])/2,k:1};
 function dims(){return {w:host.clientWidth||320,h:host.clientHeight||260};}
-function base(){var z=dims(),bw=B[2]-B[0],bh=B[3]-B[1],pd=0.04*Math.max(bw,bh);return Math.min(z.w/(bw+2*pd),z.h/(bh+2*pd));}
+function base(){var z=dims(),bw=B[2]-B[0],bh=B[3]-B[1],pd=0.08*Math.max(bw,bh);return Math.min(z.w/(bw+2*pd),z.h/(bh+2*pd));}
 function apply(){var z=dims(),s=base()*st.k;svg.setAttribute('viewBox',(st.cx-z.w/(2*s))+' '+(st.cy-z.h/(2*s))+' '+(z.w/s)+' '+(z.h/s));
   var S0=0.1638,lv=svg.querySelectorAll('.lvl'),LL=Math.max(0,Math.min(lv.length-1,Math.round(2*Math.log(s/S0)/Math.LN2)));for(var li=0;li<lv.length;li++)lv[li].style.display=(li===LL)?'':'none';var mk=svg.querySelectorAll('.mk');for(var q=0;q<mk.length;q++){var m=mk[q],off=(9+7.5*s)/s,px=parseFloat(m.getAttribute('data-x'))+parseFloat(m.getAttribute('data-ux'))*off,py=parseFloat(m.getAttribute('data-y'))+parseFloat(m.getAttribute('data-uy'))*off;m.setAttribute('transform','translate('+px+' '+py+') scale('+(6/s)+')');}
   gU();
@@ -81,7 +81,7 @@ function apply(){var z=dims(),s=base()*st.k;svg.setAttribute('viewBox',(st.cx-z.
   document.getElementById('sbt').textContent=pick+' ft';document.getElementById('sbi').style.width=(pick*0.3048*s)+'px';}
 function zoomAt(f,px,py){var z=dims(),s=base()*st.k,nk=Math.max(.8,Math.min(16,st.k*f)),ns=base()*nk;
   var wx=st.cx+(px-z.w/2)/s,wy=st.cy+(py-z.h/2)/s;st.k=nk;st.cx=wx-(px-z.w/2)/ns;st.cy=wy-(py-z.h/2)/ns;apply();}
-apply();window.addEventListener('resize',apply);
+apply();window.addEventListener('resize',apply);window.addEventListener('load',function(){st.k=1;st.cx=(B[0]+B[2])/2;st.cy=(B[1]+B[3])/2;apply();});if(window.ResizeObserver){var _ro=new ResizeObserver(function(){apply();});_ro.observe(host);}[100,400,1000].forEach(function(t){setTimeout(function(){if(st.k===1){apply();}},t);});
 gU=mkGps(svg,host,[-98.696538, 31.199821],document.getElementById('gb'),function(){return base()*st.k;},function(x,y){st.cx=x;st.cy=y;apply();},B);
 
 /* two fingers move and zoom the map; one finger is left alone so the page behind can scroll */

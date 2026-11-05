@@ -24,14 +24,19 @@ table.s{width:100%;border-collapse:collapse;font-size:13px}table.s th{font-size:
 iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
 #qr{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;align-items:center;justify-content:center;padding:20px;display:none}#qr.on{display:flex}
 #pk{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #1c4fa8;padding:10px 12px 14px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.25)}#pk.on{display:block}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg3 button{padding:14px 4px;border:1px solid #aaa;border-radius:10px;background:#f7f9fd;font:inherit;font-size:12px;color:#555}.pg3 b{display:block;font-size:20px;color:#000}#pk .clr{margin-top:8px;margin-right:8px;padding:9px 14px;border:1px solid #bbb;border-radius:8px;background:#fff;font:inherit}#ed2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;align-items:flex-end;justify-content:center}#ed2.on{display:flex}.edc{background:#fff;border-radius:14px 14px 0 0;padding:16px;width:100%;max-width:560px;max-height:90vh;overflow:auto}.edc label{display:block;font-size:12px;color:#666;margin:8px 0 2px}.edc input,.edc select{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit}#pa{display:none}@media print{body{background:#fff}.top,main,#qr{display:none!important}#pa{display:block!important;padding:14px}#pa .blk{margin-bottom:14px;break-inside:avoid}#pa .bh{font-size:13px;border-bottom:2px solid #000;padding:2px 0;margin-bottom:3px}#pa table{width:100%;border-collapse:collapse}#pa tr{break-inside:avoid}#pa th,#pa td{border:1px solid #000;padding:3px 5px;font-size:11.5px;text-align:left}#pa th{font-weight:400;font-size:11px}}
+#ss{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:41;align-items:flex-end;justify-content:center}#ss.on{display:flex}
+.ssc{background:#fff;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:16px 16px 20px}
+.sb3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.sb3 button{padding:13px 4px;border-radius:10px;font:inherit;font-weight:700;font-size:15px;border:2px solid #999;background:#fff;color:#222}
+.sb3 .d{background:#2e9e5b;border-color:#2e9e5b;color:#fff}.sb3 .p{background:#f0b429;border-color:#f0b429}
+.chip{display:inline-flex;align-items:center;gap:6px;margin:3px 5px 3px 0;padding:7px 11px;border-radius:99px;border:1.5px solid #9aa3ad;background:#fff;font:inherit;font-size:13px;color:#222}
+.chip i{width:10px;height:10px;border-radius:50%;background:#fff;border:1.5px solid #999;display:inline-block}.chip.done{background:#e3f4ea;border-color:#2e9e5b}.chip.done i{background:#2e9e5b;border-color:#2e9e5b}.chip.part{background:#fff3d1;border-color:#f0b429}.chip.part i{background:#f0b429;border-color:#f0b429}
 </style></head><body>
 <div class="top"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h1 id="ttl" style="min-width:0"></h1><div style="display:flex;gap:6px;flex:none"><button class="tb" onclick="share()" aria-label="Share link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Share</button><button class="tb" onclick="showQR()" aria-label="Show QR code"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3M20 17v4"/></svg>QR</button></div></div><div id="shm" style="font-size:12px;color:#2e7d4f;font-weight:700"></div>
 <div class="tabs"><button id="bc" onclick="location.href=C.tid+'_card_site.html'">&lsaquo; Card</button><button id="b1" class="on" onclick="tab(1)">Map</button><button id="b2" onclick="tab(2)">House-to-House</button><button id="b3" onclick="tab(3)">Statistics</button></div></div>
 <main>
 <div id="err" class="hide sheet" style="border-color:#c62828;color:#8c0000"></div>
-<section id="p1"><div style="margin:-4px -4px 10px"><iframe id="fr" allow="geolocation" title="Territory map"></iframe></div>
- <div class="sheet"><b style="font-size:13px">STREETS TO WORK</b><ul id="sl" style="columns:2;font-size:13px;margin:6px 0 0;padding-left:16px"></ul></div>
- <div id="dncb" class="sheet" style="border:1.5px solid #c62828;background:#fff4f2;border-radius:8px"></div>
+<section id="p1"><div id="dncb" class="sheet" style="margin-bottom:8px;border:1.5px solid #c62828;background:#fff4f2;border-radius:8px"></div><div style="margin:-4px -4px 10px"><iframe id="fr" allow="geolocation" title="Territory map"></iframe></div>
+ <div class="sheet"><b style="font-size:13px">STREETS TO WORK</b> <span style="font-size:12px;color:#666">· tap a street to mark it</span><div id="chips" style="margin-top:6px"></div></div><div class="hide"><ul id="sl"></ul></div>
 </section>
 <section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
  <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
@@ -54,7 +59,8 @@ iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
  <div class="k2"><h3>Still to do</h3><div id="att" style="font-size:13px"></div></div></section>
 </main>
 <div id="qr" onclick="this.classList.remove('on')"><div style="background:#fff;border-radius:14px;padding:18px;max-width:320px;width:100%;text-align:center" onclick="event.stopPropagation()"><b id="qt" style="font-size:17px"></b><div style="font-size:12.5px;color:#555;margin:2px 0 10px">Scan with the phone camera to open this territory</div><div id="qc" style="display:inline-block;padding:6px;border:1px solid #ccc"></div><button class="btn" onclick="$('#qr').classList.remove('on')">Close</button></div></div>
-<div id="pk"><div style="font-size:12px;color:#666;margin-bottom:6px;text-align:center">Choose a symbol</div><div class="pg3"><button onclick="pick('NH')"><b>NH</b>Not Home</button><button onclick="pick('CA')"><b>CA</b>Call Again</button><button onclick="pick('B')"><b>B</b>Busy</button><button onclick="pick('M')"><b>M</b>Man</button><button onclick="pick('W')"><b>W</b>Woman</button><button onclick="pick('C')"><b>C</b>Child</button></div><button class="clr" onclick="pick('')">Clear this row</button><button class="clr" onclick="$('#pk').classList.remove('on');PK=null">Cancel</button></div><div id="ed2"><div class="edc"><b>Fix this entry</b> <span id="ep" style="font-size:12px;color:#777"></span>
+<div id="pk"><div style="font-size:12px;color:#666;margin-bottom:6px;text-align:center">Choose a symbol</div><div class="pg3"><button onclick="pick('NH')"><b>NH</b>Not Home</button><button onclick="pick('CA')"><b>CA</b>Call Again</button><button onclick="pick('B')"><b>B</b>Busy</button><button onclick="pick('M')"><b>M</b>Man</button><button onclick="pick('W')"><b>W</b>Woman</button><button onclick="pick('C')"><b>C</b>Child</button></div><button class="clr" onclick="pick('')">Clear this row</button><button class="clr" onclick="$('#pk').classList.remove('on');PK=null">Cancel</button></div><div id="ss" onclick="if(event.target===this)closeSt()"><div class="ssc"><b id="sst" style="font-size:17px"></b><div id="ssi" style="font-size:13px;color:#666;margin:3px 0 0"></div><div class="sb3"><button class="d" onclick="setSt('done')">Worked</button><button class="p" onclick="setSt('part')">Partly</button><button onclick="setSt('')">Clear</button></div><div id="ssm" style="font-size:13px;margin-top:8px;min-height:18px"></div><button class="btn alt" onclick="closeSt()">Close</button></div></div>
+<div id="ed2"><div class="edc"><b>Fix this entry</b> <span id="ep" style="font-size:12px;color:#777"></span>
  <label>Street</label><select id="es"></select><label>House or Apt. No.</label><input id="eh"><label>Date and time</label><input id="ed"><label>Symbol</label><select id="ey"><option>NH</option><option>CA</option><option>B</option><option>M</option><option>W</option><option>C</option></select><label>Name, Placement, and Remarks</label><input id="en">
  <div id="em" style="color:#a00;font-size:13px;margin-top:6px"></div>
  <button class="btn" onclick="saveEdit()">Save changes</button>
@@ -72,7 +78,7 @@ function tab(n){for(let i=1;i<=3;i++){$('#p'+i).classList.toggle('hide',i!=n);$(
 function err(t){const e=$('#err');e.textContent=t;e.classList.toggle('hide',!t)}
 $('#ttl').innerHTML='Territory '+C.tid+' <small>· '+esc(C.loc)+'</small>';document.title='Territory '+C.tid+' record';
 $('#tr').value=C.tid;$('#cty').textContent=C.city;$('#stt').textContent='Territory '+C.tid+' statistics';
-$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#dncb').classList.add('hide');$('#fr').style.height='calc(100vh - 170px)'}
+$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#fr').style.height='max(430px,calc(100vh - 270px))'}
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
@@ -113,11 +119,29 @@ window.addEventListener('online',()=>{load().then(flush)});
 window.addEventListener('beforeunload',e=>{if(QUEUE.length){e.preventDefault();e.returnValue=''}});
 try{const q=JSON.parse(localStorage.getItem(QK)||'[]');if(q.length){QUEUE=q;setTimeout(flush,1500)}}catch(e){}
 async function api(body){const r=await fetch(C.api,{method:'POST',body:JSON.stringify(Object.assign({t:C.tid,k:KEY},body))});return r.json()}
+
+let STAT={},STN='';
+function stOf(n){return STAT[n]&&STAT[n].s||''}
+function paintStreets(){const n=ST.length,d=ST.filter(x=>stOf(x)==='done').length,p=ST.filter(x=>stOf(x)==='part').length;
+  if($('#prog'))$('#prog').innerHTML='<div style="display:flex;justify-content:space-between;font-size:13px"><b>Streets worked: '+d+' of '+n+'</b><span style="color:#666">'+(p?p+' partly':'')+'</span></div><div style="height:9px;background:#dde1e6;border-radius:5px;margin-top:6px;overflow:hidden;display:flex"><div style="width:'+(n?100*d/n:0)+'%;background:#2e9e5b"></div><div style="width:'+(n?100*p/n:0)+'%;background:#f0b429"></div></div>'+(d+p<n?'<div style="font-size:12px;color:#555;margin-top:6px">Still to do: '+ST.filter(x=>!stOf(x)).map(esc).join(', ')+'</div>':'<div style="font-size:12px;color:#2e7d4f;margin-top:6px;font-weight:700">Every street has been worked.</div>');
+ $('#chips').innerHTML=ST.map(x=>'<button class="chip '+stOf(x)+'" onclick="openSt(this.dataset.s)" data-s="'+esc(x)+'"><i></i>'+esc(x)+'</button>').join('');
+ const f=$('#fr');try{f.contentWindow.postMessage({type:'streetStatus',map:STAT},'*')}catch(e){}}
+function openSt(n){if(!ST.includes(n)){status('That street is not on this territory\'s list.',true);return}STN=n;$('#sst').textContent=n;const a=STAT[n];
+ $('#ssi').textContent=a?(a.s==='done'?'Worked':'Partly worked')+' · '+a.date+(a.by?' · '+a.by:''):'Not worked yet';$('#ssm').textContent='';$('#ss').classList.add('on')}
+function closeSt(){$('#ss').classList.remove('on')}
+async function setSt(v){if(!STN)return;if(!OK){$('#ssm').style.color='#a00';$('#ssm').textContent='Not connected. Open this page from your territory link.';return}
+ $('#ssm').style.color='#555';$('#ssm').textContent='Saving…';
+ try{const d=await api({action:'setstreet',street:STN,status:v,pub:($('#pn')&&$('#pn').value.trim())||''});if(!d.ok)throw 0;
+  if(v)STAT[STN]={s:v,date:today(),by:($('#pn')&&$('#pn').value.trim())||''};else delete STAT[STN];paintStreets();closeSt();await load()}
+ catch(e){$('#ssm').style.color='#a00';$('#ssm').textContent='Could not save. Check your connection and try again.'}}
+window.addEventListener('message',e=>{const d=e.data;if(!d)return;if(d.type==='streetTap')openSt(d.street);if(d.type==='mapReady')paintStreets()});
+$('#fr').addEventListener('load',paintStreets);paintStreets();
+
 async function load(){
  if(!KEY){err('Open this page from your territory link. The link carries the key for this territory.');return}
  try{const r=await fetch(C.api+'?t='+encodeURIComponent(C.tid)+'&k='+encodeURIComponent(KEY));const d=await r.json();
   if(!d.ok){err('This link is no longer active. If the territory was completed, ask the servant for the new link.');OK=false;return}
-  OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
+  OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';STAT=d.streets||{};paintStreets();render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
 function key(r){return r.house+' '+r.street}
 function houseKey(h){return String(h).trim().toLowerCase()}
 function swRender(){const st=$('#st').value,box=$('#sw');if(!st||st==='__other'){const t=curStreet();if(!t){box.classList.add('hide');return}}

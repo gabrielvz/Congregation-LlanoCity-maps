@@ -24,6 +24,7 @@ table.s{width:100%;border-collapse:collapse;font-size:13px}table.s th{font-size:
 iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
 #qr{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;align-items:center;justify-content:center;padding:20px;display:none}#qr.on{display:flex}
 #pk{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #1c4fa8;padding:10px 12px 14px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.25)}#pk.on{display:block}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg3 button{padding:14px 4px;border:1px solid #aaa;border-radius:10px;background:#f7f9fd;font:inherit;font-size:12px;color:#555}.pg3 b{display:block;font-size:20px;color:#000}#pk .clr{margin-top:8px;margin-right:8px;padding:9px 14px;border:1px solid #bbb;border-radius:8px;background:#fff;font:inherit}#ed2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;align-items:flex-end;justify-content:center}#ed2.on{display:flex}.edc{background:#fff;border-radius:14px 14px 0 0;padding:16px;width:100%;max-width:560px;max-height:90vh;overflow:auto}.edc label{display:block;font-size:12px;color:#666;margin:8px 0 2px}.edc input,.edc select{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit}#pa{display:none}@media print{body{background:#fff}.top,main,#qr{display:none!important}#pa{display:block!important;padding:14px}#pa .blk{margin-bottom:14px;break-inside:avoid}#pa .bh{font-size:13px;border-bottom:2px solid #000;padding:2px 0;margin-bottom:3px}#pa table{width:100%;border-collapse:collapse}#pa tr{break-inside:avoid}#pa th,#pa td{border:1px solid #000;padding:3px 5px;font-size:11.5px;text-align:left}#pa th{font-weight:400;font-size:11px}}
+#dncb.sheet{padding:7px 10px;margin-bottom:6px!important}
 #ss{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:41;align-items:flex-end;justify-content:center}#ss.on{display:flex}
 .ssc{background:#fff;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:16px 16px 20px}
 .sb3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.sb3 button{padding:13px 4px;border-radius:10px;font:inherit;font-weight:700;font-size:15px;border:2px solid #999;background:#fff;color:#222}
@@ -78,7 +79,7 @@ function tab(n){for(let i=1;i<=3;i++){$('#p'+i).classList.toggle('hide',i!=n);$(
 function err(t){const e=$('#err');e.textContent=t;e.classList.toggle('hide',!t)}
 $('#ttl').innerHTML='Territory '+C.tid+' <small>· '+esc(C.loc)+'</small>';document.title='Territory '+C.tid+' record';
 $('#tr').value=C.tid;$('#cty').textContent=C.city;$('#stt').textContent='Territory '+C.tid+' statistics';
-$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#fr').style.height='max(430px,calc(100vh - 270px))'}
+$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#fr').style.height='max(320px,calc(100vh - 300px))'}
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
@@ -120,21 +121,23 @@ window.addEventListener('beforeunload',e=>{if(QUEUE.length){e.preventDefault();e
 try{const q=JSON.parse(localStorage.getItem(QK)||'[]');if(q.length){QUEUE=q;setTimeout(flush,1500)}}catch(e){}
 async function api(body){const r=await fetch(C.api,{method:'POST',body:JSON.stringify(Object.assign({t:C.tid,k:KEY},body))});return r.json()}
 
-let STAT={},STN='';
+let STAT={},STN='',MAP_ASP=0;
+function fitMap(){if(!MAP_ASP)return;const f=$('#fr'),w=f.clientWidth||innerWidth;f.style.height=Math.round(Math.max(300,Math.min(w*MAP_ASP*1.1+50,innerHeight-190)))+'px'}
+window.addEventListener('resize',fitMap);
 function stOf(n){return STAT[n]&&STAT[n].s||''}
 function paintStreets(){const n=ST.length,d=ST.filter(x=>stOf(x)==='done').length,p=ST.filter(x=>stOf(x)==='part').length;
   if($('#prog'))$('#prog').innerHTML='<div style="display:flex;justify-content:space-between;font-size:13px"><b>Streets worked: '+d+' of '+n+'</b><span style="color:#666">'+(p?p+' partly':'')+'</span></div><div style="height:9px;background:#dde1e6;border-radius:5px;margin-top:6px;overflow:hidden;display:flex"><div style="width:'+(n?100*d/n:0)+'%;background:#2e9e5b"></div><div style="width:'+(n?100*p/n:0)+'%;background:#f0b429"></div></div>'+(d+p<n?'<div style="font-size:12px;color:#555;margin-top:6px">Still to do: '+ST.filter(x=>!stOf(x)).map(esc).join(', ')+'</div>':'<div style="font-size:12px;color:#2e7d4f;margin-top:6px;font-weight:700">Every street has been worked.</div>');
  $('#chips').innerHTML=ST.map(x=>'<button class="chip '+stOf(x)+'" onclick="openSt(this.dataset.s)" data-s="'+esc(x)+'"><i></i>'+esc(x)+'</button>').join('');
  const f=$('#fr');try{f.contentWindow.postMessage({type:'streetStatus',map:STAT},'*')}catch(e){}}
 function openSt(n){if(!ST.includes(n)){status('That street is not on this territory\'s list.',true);return}STN=n;$('#sst').textContent=n;const a=STAT[n];
- $('#ssi').textContent=a?(a.s==='done'?'Worked':'Partly worked')+' · '+a.date+(a.by?' · '+a.by:''):'Not worked yet';$('#ssm').textContent='';$('#ss').classList.add('on')}
+ $('#ssi').textContent=a?(a.s==='done'?'Worked':'Partly worked')+' · '+a.date+(a.by?' · '+a.by:''):'Not worked yet';$('#ssm').style.color='#666';$('#ssm').textContent=a?'Tap the same button again, or Clear, to undo.':'';$('#ss').classList.add('on')}
 function closeSt(){$('#ss').classList.remove('on')}
-async function setSt(v){if(!STN)return;if(!OK){$('#ssm').style.color='#a00';$('#ssm').textContent='Not connected. Open this page from your territory link.';return}
+async function setSt(v){if(!STN)return;if(v&&stOf(STN)===v)v='';if(!OK){$('#ssm').style.color='#a00';$('#ssm').textContent='Not connected. Open this page from your territory link.';return}
  $('#ssm').style.color='#555';$('#ssm').textContent='Saving…';
  try{const d=await api({action:'setstreet',street:STN,status:v,pub:($('#pn')&&$('#pn').value.trim())||''});if(!d.ok)throw 0;
   if(v)STAT[STN]={s:v,date:today(),by:($('#pn')&&$('#pn').value.trim())||''};else delete STAT[STN];paintStreets();closeSt();await load()}
  catch(e){$('#ssm').style.color='#a00';$('#ssm').textContent='Could not save. Check your connection and try again.'}}
-window.addEventListener('message',e=>{const d=e.data;if(!d)return;if(d.type==='streetTap')openSt(d.street);if(d.type==='mapReady')paintStreets()});
+window.addEventListener('message',e=>{const d=e.data;if(!d)return;if(d.type==='streetTap')openSt(d.street);if(d.type==='mapReady'){if(d.aspect){MAP_ASP=d.aspect;fitMap()}paintStreets()}});
 $('#fr').addEventListener('load',paintStreets);paintStreets();
 
 async function load(){

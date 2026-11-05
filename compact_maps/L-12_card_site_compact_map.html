@@ -133,7 +133,7 @@ var STAT={};
 function paint(){inner.forEach(function(p,i){var s=STAT[NM[i]],c=s&&COL[s.s];p.setAttribute('stroke',c||ORIG[i]);p.setAttribute('stroke-width',c?'13':'10');casing[i]&&casing[i].setAttribute('stroke',c?'#4a4a4a':'#9d9d9d')})}
 window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='streetStatus'){STAT=d.map||{};paint()}});
 window.__streetNames=function(){var o={};NM.forEach(function(n){if(n)o[n]=1});return Object.keys(o)};
-if(window.parent&&window.parent!==window)window.parent.postMessage({type:'mapReady'},'*');
+var pb=(svg.querySelector('path[fill="none"][stroke="#000"]')||svg).getBBox(),asp=pb.height/pb.width;if(window.parent&&window.parent!==window)window.parent.postMessage({type:'mapReady',aspect:asp},'*');
 var lg=document.createElement('div');lg.id='sgl';lg.style.cssText='position:absolute;left:8px;bottom:34px;z-index:2;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 8px;font:600 11px/1.6 Helvetica,Arial,sans-serif;color:#111;display:none';
 lg.innerHTML='<span style="display:inline-block;width:20px;height:6px;background:#2e9e5b;border-radius:3px;margin-right:5px;vertical-align:middle"></span>Worked<br><span style="display:inline-block;width:20px;height:6px;background:#f0b429;border-radius:3px;margin-right:5px;vertical-align:middle"></span>Partly worked';
 (host.parentNode||document.body).appendChild(lg);if(svg.querySelector('.mk'))lg.innerHTML+='<br><span style="display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #d00000;color:#d00000;font-size:10px;line-height:10px;text-align:center;margin-right:7px;vertical-align:middle;background:#fff">&#215;</span>Do Not Call';

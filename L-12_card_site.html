@@ -177,11 +177,12 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 
 .stl{cursor:pointer;display:flex;align-items:center;gap:6px}.stl .sd{flex:none;width:10px;height:10px;border-radius:50%;border:1.5px solid #9aa3ad;background:#fff;display:inline-block}
 .stl.done .sd{background:#2e9e5b;border-color:#2e9e5b}.stl.part .sd{background:#f0b429;border-color:#f0b429}.stl.done{font-weight:700}
-#sms{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;align-items:flex-end;justify-content:center;font-family:Arial,Helvetica,sans-serif}#sms.on{display:flex}
-#sms .c{background:#fff;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:16px 16px 20px;color:#111}
-#sms .b3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}#sms .b3 button{padding:13px 4px;border-radius:10px;font:inherit;font-weight:700;font-size:15px;border:2px solid #999;background:#fff;color:#222}
+#sms{display:none;margin:14px 0 0;font-family:Arial,Helvetica,sans-serif}#sms.on{display:block}
+#sms .c{background:#fff;border:3px solid #1c4fa8;border-radius:18px;padding:18px 16px 20px;color:#111}
+#sms #smt{font-size:26px!important}#sms #smi{font-size:17px!important}#sms #smm{font-size:15px!important}
+#sms .b3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px}#sms .b3 button{padding:22px 4px;border-radius:14px;font:inherit;font-weight:700;font-size:22px;border:2px solid #999;background:#fff;color:#222}
 #sms .b3 .d{background:#2e9e5b;border-color:#2e9e5b;color:#fff}#sms .b3 .p{background:#f0b429;border-color:#f0b429}
-#sms .x{display:block;width:100%;margin-top:10px;padding:12px;border-radius:10px;border:2px solid #1c4fa8;background:#fff;color:#1c4fa8;font:inherit;font-weight:700;font-size:15px}
+#sms .x{display:block;width:100%;margin-top:14px;padding:18px;border-radius:12px;border:2px solid #1c4fa8;background:#fff;color:#1c4fa8;font:inherit;font-weight:700;font-size:20px}
 </style>
 <style id="nhcss">.top{flex-wrap:wrap}.nhtabs{display:flex;gap:6px;flex:0 0 100%;order:9;padding:4px 0 0}.nhtabs a{flex:1;text-align:center;padding:8px 4px;border:1.5px solid #6b7280;border-radius:10px;font:700 .9rem system-ui,sans-serif;color:#111;text-decoration:none;background:#fff}.nhtabs a.on{background:#1c4fa8;border-color:#1c4fa8;color:#fff}@media print{.nhtabs{display:none!important}}</style><style id="ttsq">#ttqr{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;align-items:center;justify-content:center;padding:20px;display:none}#ttqr.on{display:flex}#ttqr .bx{background:#fff;color:#111;border-radius:14px;padding:18px;max-width:320px;width:100%;text-align:center;font-family:system-ui,sans-serif}#ttqr .bx button{margin-top:12px;padding:10px 22px;border:0;border-radius:10px;background:#1c4fa8;color:#fff;font:inherit;font-weight:700}#ttqc{display:inline-block;padding:6px;border:1px solid #ccc;background:#fff}#ttmsg{position:fixed;left:10px;right:10px;bottom:14px;z-index:99;background:#111;color:#fff;border-radius:10px;padding:10px 14px;text-align:center;display:none;font:600 14px system-ui,sans-serif}@media print{#bShare,#bQR,#ttqr,#ttmsg{display:none!important}}.single #bShare,.single #bQR{display:inline-flex}</style></head>
 <body>
@@ -457,22 +458,23 @@ function mkGps(svg,host,GEO,btn,getS,center,BB){
   return upd;
 }
 
-var SM=(function(){var a=document.querySelector('.nhtabs a[href*="?k="]'),m=a&&/[?]k=([0-9a-f]+)/.exec(a.getAttribute('href'));return m?{api:'https://script.google.com/macros/s/AKfycbzqy4QeE-7NmIJTUbCFMJ8dcDGc2eh6yc-WoRPbv_0u4MawCgx1eS2YBGW6AUFLjZX3/exec',key:m[1],tid:'L-12'}:null})(),STAT={},STN='';
+var HL='';var SM=(function(){var a=document.querySelector('.nhtabs a[href*="?k="]'),m=a&&/[?]k=([0-9a-f]+)/.exec(a.getAttribute('href'));return m?{api:'https://script.google.com/macros/s/AKfycbzqy4QeE-7NmIJTUbCFMJ8dcDGc2eh6yc-WoRPbv_0u4MawCgx1eS2YBGW6AUFLjZX3/exec',key:m[1],tid:'L-12'}:null})(),STAT={},STN='';
 function abbr(n){return String(n).replace(/\([^)]*\)/g,'').trim().replace(/^(East|West|North|South) /,function(m,d){return{East:'E',West:'W',North:'N',South:'S'}[d]+' '}).replace(/ (Street|Avenue|Drive|Road|Lane|Court|Circle|Boulevard)$/,function(m,x){return ' '+{Street:'St',Avenue:'Ave',Drive:'Dr',Road:'Rd',Lane:'Ln',Court:'Ct',Circle:'Cir',Boulevard:'Blvd'}[x]})}
 function stOf(n){var a=STAT[abbr(n)];return a&&a.s||''}
 function paintStreets(){var L=window.__ip||[];window.__ip=L=L.filter(function(r){return r.el.isConnected});
- L.forEach(function(r){var s=stOf(r.n),c=s==='done'?'#2e9e5b':s==='part'?'#f0b429':null;r.el.setAttribute('stroke',c||(r.prim?'#ffd98c':'#ffffff'));r.el.setAttribute('stroke-width',c?13:(r.prim?13:10));r.cas.setAttribute('stroke',c?'#4a4a4a':'#9d9d9d')});
+ L.forEach(function(r){var s=stOf(r.n),c=s==='done'?'#2e9e5b':s==='part'?'#f0b429':null;var h=HL&&abbr(r.n)===HL;r.el.setAttribute('stroke',h?'#1c4fa8':(c||(r.prim?'#ffd98c':'#ffffff')));r.el.setAttribute('stroke-width',h?16:(c?13:(r.prim?13:10)));r.cas.setAttribute('stroke',h?'#1c4fa8':(c?'#4a4a4a':'#9d9d9d'))});
  document.querySelectorAll('.stl').forEach(function(li){li.classList.remove('done','part');var s=stOf(li.dataset.s);if(s)li.classList.add(s)})}
 function smLoad(){if(!SM)return;fetch(SM.api+'?t='+encodeURIComponent(SM.tid)+'&k='+encodeURIComponent(SM.key)).then(function(r){return r.json()}).then(function(d){if(d&&d.ok){STAT=d.streets||{};paintStreets()}}).catch(function(){})}
-function smSheet(){var e=document.getElementById('sms');if(e)return e;e=document.createElement('div');e.id='sms';e.innerHTML='<div class="c"><b id="smt" style="font-size:17px"></b><div id="smi" style="font-size:13px;color:#666;margin-top:3px"></div><div class="b3"><button class="d" data-v="done">Worked</button><button class="p" data-v="part">Partly</button><button data-v="">Clear</button></div><div id="smm" style="font-size:13px;margin-top:8px;min-height:18px"></div><button class="x" id="smx">Close</button></div>';document.body.appendChild(e);
- e.addEventListener('click',function(ev){if(ev.target===e)e.classList.remove('on')});document.getElementById('smx').onclick=function(){e.classList.remove('on')};
+function smClose(){var e=document.getElementById('sms');if(e)e.classList.remove('on');HL='';paintStreets()}
+function smSheet(){var e=document.getElementById('sms');if(!e){e=document.createElement('div');e.id='sms';buildSms(e)}var cd=document.querySelector('.card');if(cd&&cd.nextElementSibling!==e)cd.insertAdjacentElement('afterend',e);return e}
+function buildSms(e){e.innerHTML='<div class="c"><b id="smt" style="font-size:17px"></b><div id="smi" style="font-size:13px;color:#666;margin-top:3px"></div><div class="b3"><button class="d" data-v="done">Worked</button><button class="p" data-v="part">Partly</button><button data-v="">Clear</button></div><div id="smm" style="font-size:13px;margin-top:8px;min-height:18px"></div><button class="x" id="smx">Close</button></div>';e.addEventListener('click',function(){});e.querySelector('#smx').onclick=smClose;
  e.querySelectorAll('.b3 button').forEach(function(b){b.onclick=function(){smSet(b.dataset.v)}});return e}
 function openSt(n){if(!SM)return;STN=abbr(n);var e=smSheet(),a=STAT[STN];document.getElementById('smt').textContent=STN;
  document.getElementById('smi').textContent=a?(a.s==='done'?'Worked':'Partly worked')+' \u00b7 '+a.date+(a.by?' \u00b7 '+a.by:''):'Not worked yet';
- var m=document.getElementById('smm');m.style.color='#666';m.textContent=a?'Tap the same button again, or Clear, to undo.':'';e.classList.add('on')}
+ var m=document.getElementById('smm');m.style.color='#666';m.textContent=a?'Tap the same button again, or Clear, to undo.':'';e.classList.add('on');HL=STN;paintStreets();setTimeout(function(){e.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}
 function smSet(v){if(!STN||!SM)return;if(v&&stOf(STN)===v)v='';var m=document.getElementById('smm');m.style.color='#555';m.textContent='Saving\u2026';
  fetch(SM.api,{method:'POST',body:JSON.stringify({t:SM.tid,k:SM.key,action:'setstreet',street:STN,status:v,pub:''})}).then(function(r){return r.json()}).then(function(d){if(!d.ok)throw 0;
-  if(v)STAT[STN]={s:v,date:(new Date().getMonth()+1)+'/'+new Date().getDate(),by:''};else delete STAT[STN];paintStreets();document.getElementById('sms').classList.remove('on');smLoad()}).catch(function(){m.style.color='#a00';m.textContent='Could not save. Check your connection and try again.'})}
+  if(v)STAT[STN]={s:v,date:(new Date().getMonth()+1)+'/'+new Date().getDate(),by:''};else delete STAT[STN];smClose();smLoad()}).catch(function(){m.style.color='#a00';m.textContent='Could not save. Check your connection and try again.'})}
 document.addEventListener('click',function(e){var li=e.target.closest&&e.target.closest('.stl');if(li)openSt(li.dataset.s)});
 document.addEventListener('visibilitychange',function(){if(!document.hidden)smLoad()});setTimeout(smLoad,300);
 function makeMap(host,t,opt){

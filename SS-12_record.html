@@ -24,14 +24,23 @@ table.s{width:100%;border-collapse:collapse;font-size:13px}table.s th{font-size:
 iframe{width:100%;height:68vh;border:0;background:#fff;display:block}
 #qr{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;align-items:center;justify-content:center;padding:20px;display:none}#qr.on{display:flex}
 #pk{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #1c4fa8;padding:10px 12px 14px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.25)}#pk.on{display:block}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg3 button{padding:14px 4px;border:1px solid #aaa;border-radius:10px;background:#f7f9fd;font:inherit;font-size:12px;color:#555}.pg3 b{display:block;font-size:20px;color:#000}#pk .clr{margin-top:8px;margin-right:8px;padding:9px 14px;border:1px solid #bbb;border-radius:8px;background:#fff;font:inherit}#ed2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;align-items:flex-end;justify-content:center}#ed2.on{display:flex}.edc{background:#fff;border-radius:14px 14px 0 0;padding:16px;width:100%;max-width:560px;max-height:90vh;overflow:auto}.edc label{display:block;font-size:12px;color:#666;margin:8px 0 2px}.edc input,.edc select{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit}#pa{display:none}@media print{body{background:#fff}.top,main,#qr{display:none!important}#pa{display:block!important;padding:14px}#pa .blk{margin-bottom:14px;break-inside:avoid}#pa .bh{font-size:13px;border-bottom:2px solid #000;padding:2px 0;margin-bottom:3px}#pa table{width:100%;border-collapse:collapse}#pa tr{break-inside:avoid}#pa th,#pa td{border:1px solid #000;padding:3px 5px;font-size:11.5px;text-align:left}#pa th{font-weight:400;font-size:11px}}
+#dncb.sheet{padding:7px 10px;margin-bottom:6px!important}
+#ss{display:none;margin:0 0 10px}#ss.on{display:block}
+.ssc{background:#fff;border:3px solid #1c4fa8;border-radius:18px;padding:18px 16px 20px}
+#sst{font-size:26px}#ssi{font-size:17px!important}
+.sb3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px}.sb3 button{padding:22px 4px;border-radius:14px;font:inherit;font-weight:700;font-size:22px;border:2px solid #999;background:#fff;color:#222}
+.sb3 .d{background:#2e9e5b;border-color:#2e9e5b;color:#fff}.sb3 .p{background:#f0b429;border-color:#f0b429}
+.chip{display:inline-flex;align-items:center;gap:6px;margin:3px 5px 3px 0;padding:7px 11px;border-radius:99px;border:1.5px solid #9aa3ad;background:#fff;font:inherit;font-size:13px;color:#222}
+.chip i{width:10px;height:10px;border-radius:50%;background:#fff;border:1.5px solid #999;display:inline-block}.chip.done{background:#e3f4ea;border-color:#2e9e5b}.chip.done i{background:#2e9e5b;border-color:#2e9e5b}.chip.part{background:#fff3d1;border-color:#f0b429}.chip.part i{background:#f0b429;border-color:#f0b429}
 </style></head><body>
 <div class="top"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h1 id="ttl" style="min-width:0"></h1><div style="display:flex;gap:6px;flex:none"><button class="tb" onclick="share()" aria-label="Share link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Share</button><button class="tb" onclick="showQR()" aria-label="Show QR code"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3M20 17v4"/></svg>QR</button></div></div><div id="shm" style="font-size:12px;color:#2e7d4f;font-weight:700"></div>
 <div class="tabs"><button id="bc" onclick="location.href=C.tid+'_card_site.html'">&lsaquo; Card</button><button id="b1" class="on" onclick="tab(1)">Map</button><button id="b2" onclick="tab(2)">House-to-House</button><button id="b3" onclick="tab(3)">Statistics</button></div></div>
 <main>
 <div id="err" class="hide sheet" style="border-color:#c62828;color:#8c0000"></div>
-<section id="p1"><div style="margin:-4px -4px 10px"><iframe id="fr" allow="geolocation" title="Territory map"></iframe></div>
- <div class="sheet"><b style="font-size:13px">STREETS TO WORK</b><ul id="sl" style="columns:2;font-size:13px;margin:6px 0 0;padding-left:16px"></ul></div>
- <div id="dncb" class="sheet" style="border:1.5px solid #c62828;background:#fff4f2;border-radius:8px"></div>
+<section id="p1"><div id="dncb" class="sheet" style="margin-bottom:8px;border:1.5px solid #c62828;background:#fff4f2;border-radius:8px"></div><div style="margin:-4px -4px 10px"><iframe id="fr" allow="geolocation" title="Territory map"></iframe></div>
+<div id="ss"><div class="ssc"><b id="sst"></b><div id="ssi" style="font-size:13px;color:#666;margin:3px 0 0"></div><div class="sb3"><button class="d" onclick="setSt('done')">Worked</button><button class="p" onclick="setSt('part')">Partly</button><button onclick="setSt('')">Clear</button></div><div id="ssm" style="font-size:15px;margin-top:10px;min-height:20px"></div><button class="btn alt" style="padding:18px;font-size:20px;margin-top:14px" onclick="closeSt()">Close</button></div></div>
+
+ <div class="sheet"><b style="font-size:13px">STREETS TO WORK</b> <span style="font-size:12px;color:#666">· tap a street to mark it</span><div id="chips" style="margin-top:6px"></div></div><div class="hide"><ul id="sl"></ul></div>
 </section>
 <section id="p2" class="hide"><div class="sheet"><h2 class="f">HOUSE-TO-HOUSE RECORD</h2>
  <div class="fld"><span>TERRITORY</span><input id="tr" readonly><span id="cty" style="color:#1c4fa8;font-weight:700"></span></div>
@@ -72,7 +81,7 @@ function tab(n){for(let i=1;i<=3;i++){$('#p'+i).classList.toggle('hide',i!=n);$(
 function err(t){const e=$('#err');e.textContent=t;e.classList.toggle('hide',!t)}
 $('#ttl').innerHTML='Territory '+C.tid+' <small>· '+esc(C.loc)+'</small>';document.title='Territory '+C.tid+' record';
 $('#tr').value=C.tid;$('#cty').textContent=C.city;$('#stt').textContent='Territory '+C.tid+' statistics';
-$('#fr').src=C.map;if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#dncb').classList.add('hide');$('#fr').style.height='calc(100vh - 170px)'}
+$('#fr').src=C.map+(C.map.indexOf('?')<0?'?v=6':'');if(/card_site|testmap/.test(C.map)){$('#sl').parentNode.classList.add('hide');$('#fr').style.height='min(max(320px,calc(100vh - 300px)),calc(100vw * 1.05))'}
 $('#sl').innerHTML=C.streets.map(s=>'<li>'+esc(s)+'</li>').join('');
 $('#dncb').innerHTML=C.dnc.length?'<b style="color:#8c0000;font-size:13px">&#9746; DO NOT CALLS ('+C.dnc.length+')</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:13px;margin-top:4px">'+C.dnc.map(d=>'<span>'+esc(d[0])+(d[1]?' ('+esc(d[1])+')':'')+'</span>').join('')+'</div>':'<b style="font-size:13px">No Do Not Calls on this territory</b>';
 if(!C.dnc.length)$('#dncb').style.cssText='border:1px solid #ccc';
@@ -113,11 +122,37 @@ window.addEventListener('online',()=>{load().then(flush)});
 window.addEventListener('beforeunload',e=>{if(QUEUE.length){e.preventDefault();e.returnValue=''}});
 try{const q=JSON.parse(localStorage.getItem(QK)||'[]');if(q.length){QUEUE=q;setTimeout(flush,1500)}}catch(e){}
 async function api(body){const r=await fetch(C.api,{method:'POST',body:JSON.stringify(Object.assign({t:C.tid,k:KEY},body))});return r.json()}
+
+const STW=C.streets.map(s=>String(s).replace(/\s*\([^)]*\)\s*$/,'').trim());
+let STAT={},STN='',MAP_ASP=0;
+function fitMap(){if(!MAP_ASP)return;const f=$('#fr'),w=f.clientWidth||innerWidth;f.style.height=Math.round(Math.max(300,Math.min(w*MAP_ASP*1.1+50,innerHeight-190)))+'px'}
+window.addEventListener('resize',fitMap);
+setTimeout(()=>{if(!MAP_ASP){const f=$('#fr');f.style.height=Math.round(Math.max(300,Math.min(f.clientWidth*0.95+40,innerHeight-190)))+'px'}},2500);
+function nk(n){var w=String(n).replace(/\([^)]*\)/g,' ').replace(/[.,]/g,' ').trim().split(/\s+/).filter(Boolean),M={e:'East',w:'West',n:'North',s:'South',ne:'Northeast',nw:'Northwest',se:'Southeast',sw:'Southwest'},T={st:'Street',ave:'Avenue',av:'Avenue',dr:'Drive',rd:'Road',ln:'Lane',ct:'Court',cir:'Circle',blvd:'Boulevard',hwy:'Highway',pkwy:'Parkway',trl:'Trail',pl:'Place',co:'County',cr:'County Road',fm:'FM',rr:'RR'};
+ var o=w.map(function(x,i){var l=x.toLowerCase();if(i===0&&M[l])return M[l];if(i>0&&T[l])return T[l];if(i===0&&l==='cr')return 'County Road';if(i===0&&l==='co')return 'County';return x.charAt(0).toUpperCase()+x.slice(1)});
+ return o.join(' ').replace(/^County County Road/,'County Road').replace(/^County Rd\b/,'County Road').replace(/^County Road Road/,'County Road')}
+function stOf(n){var a=STAT[nk(n)];return a&&a.s||''}
+function paintStreets(){const n=STW.length,d=STW.filter(x=>stOf(x)==='done').length,p=STW.filter(x=>stOf(x)==='part').length;
+  if($('#prog'))$('#prog').innerHTML='<div style="display:flex;justify-content:space-between;font-size:13px"><b>Streets worked: '+d+' of '+n+'</b><span style="color:#666">'+(p?p+' partly':'')+'</span></div><div style="height:9px;background:#dde1e6;border-radius:5px;margin-top:6px;overflow:hidden;display:flex"><div style="width:'+(n?100*d/n:0)+'%;background:#2e9e5b"></div><div style="width:'+(n?100*p/n:0)+'%;background:#f0b429"></div></div>'+(d+p<n?'<div style="font-size:12px;color:#555;margin-top:6px">Still to do: '+STW.filter(x=>!stOf(x)).map(esc).join(', ')+'</div>':'<div style="font-size:12px;color:#2e7d4f;margin-top:6px;font-weight:700">Every street has been worked.</div>');
+ $('#chips').innerHTML=STW.map(x=>'<button class="chip '+stOf(x)+'" onclick="openSt(this.dataset.s)" data-s="'+esc(x)+'"><i></i>'+esc(x)+'</button>').join('');
+ const f=$('#fr');try{f.contentWindow.postMessage({type:'streetStatus',map:STAT},'*')}catch(e){}}
+function openSt(n){if(!STW.includes(n)){status('That street is not on this territory\'s list.',true);return}STN=n;$('#sst').textContent=n;const a=STAT[nk(n)];
+ $('#ssi').textContent=a?(a.s==='done'?'Worked':'Partly worked')+' · '+a.date+(a.by?' · '+a.by:''):'Not worked yet';$('#ssm').style.color='#666';$('#ssm').textContent=a?'Tap the same button again, or Clear, to undo.':'';$('#ss').classList.add('on');hl(n);setTimeout(()=>$('#ss').scrollIntoView({behavior:'smooth',block:'nearest'}),60)}
+function hl(n){try{$('#fr').contentWindow.postMessage({type:'streetHL',name:n||''},'*')}catch(e){}}
+function closeSt(){$('#ss').classList.remove('on');hl('')}
+async function setSt(v){if(!STN)return;if(v&&stOf(STN)===v)v='';if(!OK){$('#ssm').style.color='#a00';$('#ssm').textContent='Not connected. Open this page from your territory link.';return}
+ $('#ssm').style.color='#555';$('#ssm').textContent='Saving…';
+ try{const d=await api({action:'setstreet',street:nk(STN),status:v,pub:($('#pn')&&$('#pn').value.trim())||''});if(!d.ok)throw 0;
+  if(v)STAT[nk(STN)]={s:v,date:today(),by:($('#pn')&&$('#pn').value.trim())||''};else delete STAT[nk(STN)];paintStreets();closeSt();await load()}
+ catch(e){$('#ssm').style.color='#a00';$('#ssm').textContent='Could not save. Check your connection and try again.'}}
+window.addEventListener('message',e=>{const d=e.data;if(!d)return;if(d.type==='streetTap'){const h=STW.find(x=>nk(x)===nk(d.street));if(h)openSt(h);else status('That street is not on this territory\'s list.',true)}if(d.type==='mapReady'){if(d.aspect){MAP_ASP=d.aspect;fitMap()}paintStreets()}});
+$('#fr').addEventListener('load',paintStreets);paintStreets();
+
 async function load(){
  if(!KEY){err('Open this page from your territory link. The link carries the key for this territory.');return}
  try{const r=await fetch(C.api+'?t='+encodeURIComponent(C.tid)+'&k='+encodeURIComponent(KEY));const d=await r.json();
   if(!d.ok){err('This link is no longer active. If the territory was completed, ask the servant for the new link.');OK=false;return}
-  OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
+  OK=true;err('');ROWS=d.rows||[];DONE=d.completed||'';STAT=d.streets||{};paintStreets();render()}catch(e){err('Could not reach the shared record. Check your connection and try again.')}}
 function key(r){return r.house+' '+r.street}
 function houseKey(h){return String(h).trim().toLowerCase()}
 function swRender(){const st=$('#st').value,box=$('#sw');if(!st||st==='__other'){const t=curStreet();if(!t){box.classList.add('hide');return}}

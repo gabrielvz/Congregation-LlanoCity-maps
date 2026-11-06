@@ -106,4 +106,41 @@ host.addEventListener('wheel',function(e){e.preventDefault();var r=host.getBound
 host.addEventListener('dblclick',function(e){var r=host.getBoundingClientRect();zoomAt(1.8,e.clientX-r.left,e.clientY-r.top);});
 if('ontouchstart' in window){var h=document.createElement('div');h.className='hint';h.textContent='Two fingers to zoom';host.appendChild(h);setTimeout(function(){h.style.display='none';},3500);}
 })();
-</script></body></html>
+</script><script>
+/* street status layer: colors streets and reports taps to the record page that frames this map */
+(function(){
+var svg=document.getElementById('s'),host=document.getElementById('m'),NS='http://www.w3.org/2000/svg';
+var inner=[].slice.call(svg.querySelectorAll('path[stroke="#ffffff"],path[stroke="#ffd98c"]'));
+var casing=[].slice.call(svg.querySelectorAll('g[stroke="#9d9d9d"] > path'));
+var labs=[].slice.call(svg.querySelectorAll('text')).map(function(t){var m=/rotate\((-?[\d.]+)/.exec(t.getAttribute('transform')||'');return{n:t.textContent.trim(),x:+t.getAttribute('x'),y:+t.getAttribute('y'),r:m?-parseFloat(m[1])*Math.PI/180:0}});
+function P(d){var a=d.replace(/[ML]/g,' ').trim().split(/\s+/).map(Number),o=[];for(var i=0;i+1<a.length;i+=2)o.push([a[i],a[i+1]]);return o}
+function ds(px,py,a,b){var dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy,t=l?((px-a[0])*dx+(py-a[1])*dy)/l:0;t=Math.max(0,Math.min(1,t));var x=a[0]+t*dx-px,y=a[1]+t*dy-py;return Math.sqrt(x*x+y*y)}
+var PRE=["", "West Haynie Street", "", "", "", "", "Oatman Street", "Ford Street", "", "", "West Main Street", "East Hamilton Street", "East Young Street", "Sheffield Avenue", "Wells", "", "Public Square", "Public Square", "", "", "", "", "", "East Haynie Street", "Hickory Street", "", "", "", "", "Vernon Avenue", "Vernon Avenue", "", "", "Bayley Street", "", "", "", "", "", "", "", "Chattanooga Avenue", "", "", "East Main Street", "", "", "West Dallas Street", "Anniston Avenue", "East Ellis Street", "East Ellis Street", "", "", "", "", "West Grayson Street", "Hurley Avenue", "West Burnet Street", "", "", "West Tarrant Street", "", "East Dallas Street", "East Dallas Street", "Market Street", "East Exchange Place", "", "", "", "Salem Avenue", "", "", "", "", "East Burnet Street", "East Burnet Street", "", "", "West Ellis Street", "East Tarrant Street", "East Grayson Street", "East Grayson Street", "Ash Street", "", "Fargo Avenue", "Bessemer Avenue", "Pittsburg Avenue", "Ford Street", "Berry Street", "Bessemer Avenue", "West Young Street", "East Young Street", "East Young Street", "West Young Street", "Anniston Avenue", "", "", "Oatman Street", "East Main Street", ""],PT=inner.map(function(p){return P(p.getAttribute('d'))}),NM=inner.map(function(_,i){return PRE[i]||''});
+labs.forEach(function(l){var bi=-1,bd=30,strict=true;for(var pass=0;pass<2&&bi<0;pass++){strict=(pass===0);PT.forEach(function(pts,i){for(var k=0;k+1<pts.length;k++){var sa=Math.atan2(pts[k+1][1]-pts[k][1],pts[k+1][0]-pts[k][0]);if(strict&&Math.abs(Math.sin(sa-l.r))>0.45)continue;var d=ds(l.x,l.y,pts[k],pts[k+1]);if(d<bd){bd=d;bi=i}}});}if(bi>=0&&!NM[bi])NM[bi]=l.n});
+function ang(a,b){return Math.atan2(b[1]-a[1],b[0]-a[0])}
+function ends(i){var p=PT[i],n=p.length;return[{pt:p[0],dir:ang(p[1],p[0])},{pt:p[n-1],dir:ang(p[n-2],p[n-1])}]}
+var ch=true,it=0;
+while(ch&&it++<12){ch=false;for(var i=0;i<PT.length;i++){if(!NM[i])continue;var ei=ends(i);for(var j=0;j<PT.length;j++){if(NM[j]||PT[j].length<2)continue;var ej=ends(j);
+ ei.forEach(function(a){ej.forEach(function(b){var dx=a.pt[0]-b.pt[0],dy=a.pt[1]-b.pt[1];if(dx*dx+dy*dy>9)return;var da=Math.abs(((a.dir-(b.dir+Math.PI))+3*Math.PI)%(2*Math.PI)-Math.PI);if(da<0.5&&!NM[j]){NM[j]=NM[i];ch=true}})})}}}
+function nk(n){var w=String(n).replace(/\([^)]*\)/g,' ').replace(/[.,]/g,' ').trim().split(/\s+/).filter(Boolean),M={e:'East',w:'West',n:'North',s:'South',ne:'Northeast',nw:'Northwest',se:'Southeast',sw:'Southwest'},T={st:'Street',ave:'Avenue',av:'Avenue',dr:'Drive',rd:'Road',ln:'Lane',ct:'Court',cir:'Circle',blvd:'Boulevard',hwy:'Highway',pkwy:'Parkway',trl:'Trail',pl:'Place',co:'County',cr:'County Road',fm:'FM',rr:'RR'};
+ var o=w.map(function(x,i){var l=x.toLowerCase();if(i===0&&M[l])return M[l];if(i>0&&T[l])return T[l];if(i===0&&l==='cr')return 'County Road';if(i===0&&l==='co')return 'County';return x.charAt(0).toUpperCase()+x.slice(1)});
+ return o.join(' ').replace(/^County County Road/,'County Road').replace(/^County Rd\b/,'County Road').replace(/^County Road Road/,'County Road')}
+var COL={done:'#2e9e5b',part:'#f0b429'},ORIG=inner.map(function(p){return p.getAttribute('stroke')});
+var hit=document.createElementNS(NS,'g');hit.setAttribute('fill','none');hit.setAttribute('stroke','transparent');hit.setAttribute('stroke-width','46');hit.setAttribute('stroke-linecap','round');hit.style.pointerEvents='stroke';
+var order=inner.map(function(_,i){return i});
+inner.forEach(function(p,i){if(!NM[i])return;var h=document.createElementNS(NS,'path');h.setAttribute('d',p.getAttribute('d'));h.setAttribute('data-n',NM[i]);h.style.cursor='pointer';hit.appendChild(h)});
+var poly=svg.querySelector('path[fill="none"][stroke="#000"]');svg.insertBefore(hit,poly||null);
+var down=null;host.addEventListener('pointerdown',function(e){down={x:e.clientX,y:e.clientY}});
+hit.addEventListener('click',function(e){var n=e.target.getAttribute&&e.target.getAttribute('data-n');if(!n)return;if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>8)return;if(window.parent&&window.parent!==window)window.parent.postMessage({type:'streetTap',street:n},'*')});
+var STAT={},HLN='';
+function paint(){inner.forEach(function(p,i){var s=STAT[nk(NM[i])],c=s&&COL[s.s];var h=HLN&&nk(NM[i])===HLN;p.setAttribute('stroke',h?'#1c4fa8':(c||ORIG[i]));p.setAttribute('stroke-width',h?'16':(c?'13':'10'));casing[i]&&casing[i].setAttribute('stroke',h?'#1c4fa8':(c?'#4a4a4a':'#9d9d9d'))})}
+window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='streetStatus'){STAT=d.map||{};paint()}if(d&&d.type==='streetHL'){HLN=d.name?nk(d.name):'';paint()}});
+window.__streetNames=function(){var o={};NM.forEach(function(n){if(n)o[n]=1});return Object.keys(o)};
+var pb=(svg.querySelector('path[fill="none"][stroke="#000"]')||svg).getBBox(),asp=pb.height/pb.width;if(window.parent&&window.parent!==window)window.parent.postMessage({type:'mapReady',aspect:asp},'*');
+var lg=document.createElement('div');lg.id='sgl';lg.style.cssText='position:absolute;left:8px;bottom:34px;z-index:2;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 8px;font:600 11px/1.6 Helvetica,Arial,sans-serif;color:#111;display:none';
+lg.innerHTML='<span style="display:inline-block;width:20px;height:6px;background:#2e9e5b;border-radius:3px;margin-right:5px;vertical-align:middle"></span>Worked<br><span style="display:inline-block;width:20px;height:6px;background:#f0b429;border-radius:3px;margin-right:5px;vertical-align:middle"></span>Partly worked';
+(host.parentNode||document.body).appendChild(lg);if(svg.querySelector('.mk'))lg.innerHTML+='<br><span style="display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #d00000;color:#d00000;font-size:10px;line-height:10px;text-align:center;margin-right:7px;vertical-align:middle;background:#fff">&#215;</span>Do Not Call';
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='streetStatus')lg.style.display='block'});
+})();
+</script>
+</body></html>
